@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_foot/widgets/constante.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
 import 'package:ln_foot/widgets/custom_text_field.dart';
@@ -43,59 +44,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
       print('Email: ${_emailController.text}');
       print('Password: ${_passwordController.text}');
       // Show success dialog
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-        ),
-        builder: (context) {
-          return DraggableScrollableSheet(
-            expand: false,
-            initialChildSize: 0.4, // Changed from 0.4 to 0.25 (1/4 of screen)
-            minChildSize: 0.32, // Changed from 0.2 to 0.15
-            maxChildSize: 0.7, // Changed from 0.8 to 0.4
-            builder: (context, scrollController) {
-              return SingleChildScrollView(
-                  controller: scrollController,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.all(1.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const SizedBox(height: 20),
-                          Image.asset(
-                            'images/checkmark-circle-02.png',
-                            height: 100,
-                          ),
-                          const SizedBox(height: 20),
-                          const Text(
-                            'Connexion réussie',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18),
-                          ),
-                          const SizedBox(height: 40),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: CustomButton(
-                                text: 'Fait',
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                }),
-                          ),
-                          const SizedBox(height: 4),
-                        ],
-                      ),
-                    ),
-                  ));
-            },
-          );
-        },
-      );
+      showSuccessBottomSheet(context, "Fait","Connexion réussie");
     } else {
       print('Login failed: Form is invalid');
     }
