@@ -50,14 +50,19 @@ class OnboardingScreen extends StatelessWidget {
               ),
 
               // Bottom section with button
-              CustomButton(
-                text: 'Commencer',
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                        builder: (context) => const LoginOptionsScreen()),
-                  );
-                },
+
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: CustomButton(
+                  text: 'Commencer',
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                          builder: (context) => const LoginOptionsScreen()),
+                    );
+                  },
+                ),
               ),
             ],
           ),
