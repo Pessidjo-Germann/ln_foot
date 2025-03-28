@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_foot/screen/forgot_password_screen.dart'; // Import forgot password screen
 import 'package:ln_foot/widgets/constante.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
@@ -108,8 +109,10 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      // TODO: Implement Forgot Password flow
-                      print('Forgot Password pressed');
+                      // Navigate to Forgot Password Screen
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
+                      );
                     },
                     child: const Text(
                       'Mot de passe oublié?',
