@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ln_foot/screen/login_options_screen.dart';
+import 'package:ln_foot/theme/app_theme.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
 
-  static const Color buttonOrange = Color(0xFFF9703B);
+  // Removed local buttonOrange definition
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +57,7 @@ class OnboardingScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: CustomButton(
                   text: 'Commencer',
+                  buttonColor: kAppOrangeColor,
                   onPressed: () {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(

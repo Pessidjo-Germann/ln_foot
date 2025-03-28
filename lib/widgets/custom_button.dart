@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-
+ 
 class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final bool isOutlined;
-  final Widget? icon;
+  final Widget? icon; // Keep icon optional
+  final Color? buttonColor; // Nouveau paramètre pour la couleur du bouton
+  final Color? textColor; // Nouveau paramètre pour la couleur du texte
 
-  static const Color buttonOrange = Color(0xFFF9703B);
+  // Removed static color constant - should come from theme
 
   const CustomButton({
     super.key,
@@ -14,42 +16,68 @@ class CustomButton extends StatelessWidget {
     required this.onPressed,
     this.isOutlined = false,
     this.icon,
+    this.buttonColor,
+    this.textColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (isOutlined) {
-      return OutlinedButton.icon(
-        icon: icon ?? const SizedBox.shrink(),
-        label: Text(text),
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.black87,
-          side: BorderSide(color: Colors.grey.shade300),
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-      );
-    }
+    final theme = Theme.of(context);
 
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: buttonOrange,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+    // Define base styles using theme properties, allowing overrides from specific themes
+    final ButtonStyle defaultStyle = TextButton.styleFrom(
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(
-        text,
-        style: const TextStyle(color: Colors.white),
+      textStyle: theme.textTheme.titleMedium?.copyWith(
+        fontWeight: FontWeight.bold,
       ),
+      foregroundColor: textColor,
     );
+
+    if (isOutlined) {
+      final outlinedStyle = theme.outlinedButtonTheme.style ??
+          OutlinedButton.styleFrom(
+              // foregroundColor: textColor ?? kAppOrangeColor,
+              // side: BorderSide(color: buttonColor ?? kAppOrangeColor),
+              );
+
+      final effectiveStyle = defaultStyle.merge(outlinedStyle);
+
+      return icon != null
+          ? OutlinedButton.icon(
+              icon: icon!,
+              label: Text(text),
+              onPressed: onPressed,
+              style: effectiveStyle,
+            )
+          : OutlinedButton(
+              onPressed: onPressed,
+              style: effectiveStyle,
+              child: Text(text),
+            );
+    } else {
+      final elevatedStyle = theme.elevatedButtonTheme.style ??
+          ElevatedButton.styleFrom(
+              //  backgroundColor: buttonColor ?? kAppOrangeColor,
+              //  foregroundColor: textColor ?? Colors.white,
+              );
+
+      final effectiveStyle = defaultStyle.merge(elevatedStyle);
+
+      return icon != null
+          ? ElevatedButton.icon(
+              icon: icon!,
+              label: Text(text),
+              onPressed: onPressed,
+              style: effectiveStyle,
+            )
+          : ElevatedButton(
+              onPressed: onPressed,
+              style: effectiveStyle,
+              child: Text(text),
+            );
+    }
   }
 }

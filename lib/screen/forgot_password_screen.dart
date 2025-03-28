@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ln_foot/screen/otp_verification_screen.dart'; // To navigate to OTP screen
+import 'package:ln_foot/utils/validators.dart'; // Import validators
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
 import 'package:ln_foot/widgets/custom_text_field.dart';
@@ -22,10 +23,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  // Basic email validation regex (can be moved to a utils file later)
-  bool _isValidEmail(String email) {
-    return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
-  }
+  // Removed local _isValidEmail function
 
   void _sendCode() {
     setState(() {
@@ -75,15 +73,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   controller: _emailController,
                   labelText: 'Email',
                   hintText: 'Entrez votre email',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Veuillez entrer votre adresse mail';
-                    }
-                    if (!_isValidEmail(value)) {
-                      return 'Veuillez entrer une adresse mail valide';
-                    }
-                    return null;
-                  },
+                  validator: Validators.validateEmail, // Use centralized validator
                 ),
                 const SizedBox(height: 40),
                 // Send Code Button

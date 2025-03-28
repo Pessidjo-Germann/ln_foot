@@ -2,13 +2,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:ln_foot/screen/email_login_screen.dart';
 import 'package:ln_foot/screen/signup_options_screen.dart';
+import 'package:ln_foot/theme/app_theme.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
+import 'package:ln_foot/widgets/social_button.dart';
 
 class LoginOptionsScreen extends StatelessWidget {
   const LoginOptionsScreen({super.key});
 
-  static const Color buttonOrange = Color(0xFFF9703B);
+  // Removed local buttonOrange definition
 
   @override
   Widget build(BuildContext context) {
@@ -27,23 +29,22 @@ class LoginOptionsScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              CustomButton(
-                text: 'Se Connecter avec Google',
-                onPressed: () {
-                  print('Google Sign In pressed');
-                },
-                isOutlined: true,
+              SocialButton(
                 icon: Image.asset('images/google icon.png', height: 20.0),
+                text: 'S\'inscrire avec Google',
+                onPressed: () {
+                  print('Google Sign Up pressed');
+                },
               ),
               const SizedBox(height: 16),
 
-              CustomButton(
-                text: 'Se Connecter avec Apple',
-                onPressed: () {
-                  print('Apple Sign In pressed');
-                },
-                isOutlined: true,
+// Apple Button
+              SocialButton(
                 icon: const Icon(Icons.apple, color: Colors.black),
+                text: 'S\'inscrire avec Apple',
+                onPressed: () {
+                  print('Apple Sign Up pressed');
+                },
               ),
               const SizedBox(height: 32),
 
@@ -86,7 +87,7 @@ class LoginOptionsScreen extends StatelessWidget {
                       TextSpan(
                         text: 'Inscrivez-vous',
                         style: const TextStyle(
-                          color: buttonOrange,
+                          color: kAppOrangeColor, // Use theme color
                           fontWeight: FontWeight.bold,
                           decoration: TextDecoration.underline,
                         ),

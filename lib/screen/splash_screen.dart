@@ -1,24 +1,20 @@
 import 'dart:async'; // Import async library for Timer
 import 'package:flutter/material.dart';
-import 'package:ln_foot/screen/onboarding_screen.dart'; 
+import 'package:ln_foot/screen/onboarding_screen.dart';
 
-class SplashScreen extends StatefulWidget { 
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
-  
-  static const Color splashBlue = Color(0xFF2A5298); 
-
   @override
-  State<SplashScreen> createState() => _SplashScreenState(); 
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> { 
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () { 
-    
-      Navigator.of(context).pushReplacement( 
+    Timer(const Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const OnboardingScreen()),
       );
     });
@@ -26,12 +22,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Use theme color for background
+    final theme = Theme.of(context);
+    final backgroundColor = theme.colorScheme.secondary;
+
     return Scaffold(
-      backgroundColor: SplashScreen.splashBlue, // Access color via class name
+      backgroundColor: backgroundColor,
       body: Center(
         child: Image.asset(
-          'images/LNFOOT2 1.png', // Path to your logo image
-          width: 150, // Adjust size as needed
+          'images/LNFOOT2 1.png',
+          width: 150,
         ),
       ),
     );

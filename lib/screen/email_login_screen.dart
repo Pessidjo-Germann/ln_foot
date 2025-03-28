@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ln_foot/screen/forgot_password_screen.dart'; // Import forgot password screen
-import 'package:ln_foot/widgets/constante.dart';
+import 'package:ln_foot/theme/app_theme.dart'; // Import theme
+import 'package:ln_foot/utils/bottom_sheet_utils.dart';
+import 'package:ln_foot/utils/validators.dart'; // Import validators
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
 import 'package:ln_foot/widgets/custom_text_field.dart';
@@ -19,7 +21,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
   bool _isPasswordVisible = false;
   bool _autovalidate = false;
 
-  static const Color buttonOrange = Color(0xFFF9703B);
+  // Removed local buttonOrange definition
 
   @override
   void dispose() {
@@ -28,12 +30,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
     super.dispose();
   }
 
-  // Basic email validation regex
-  bool _isValidEmail(String email) {
-    return RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
-  }
+  // Removed local _isValidEmail function
 
   void _login() {
     setState(() {
@@ -45,7 +42,10 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
       print('Email: ${_emailController.text}');
       print('Password: ${_passwordController.text}');
       // Show success dialog
-      showSuccessBottomSheet(context, "Fait","Connexion réussie");
+      showSuccessBottomSheet(context,
+          title: "Fait", buttonText: "Connexion réussie", onPressed: () {
+        Navigator.of(context).pop();
+      });
     } else {
       print('Login failed: Form is invalid');
     }
@@ -55,7 +55,8 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const CustomAppBar(title: 'Connexion avec Email'),
+      appBar: const CustomAppBar(
+          title: 'Connexion avec Email', showBackButton: true),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
@@ -72,15 +73,8 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                   controller: _emailController,
                   labelText: 'Email',
                   hintText: 'Entrez votre email',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Veuillez entrer votre adresse mail';
-                    }
-                    if (!_isValidEmail(value)) {
-                      return 'Veuillez entrer une adresse mail valide';
-                    }
-                    return null;
-                  },
+                  validator:
+                      Validators.validateEmail, // Use centralized validator
                 ),
                 const SizedBox(height: 24),
 
@@ -95,12 +89,9 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                       _isPasswordVisible = !_isPasswordVisible;
                     });
                   },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Veuillez entrer votre mot de passe';
-                    }
-                    return null;
-                  },
+                  // Use centralized validator for required field
+                  validator: (value) =>
+                      Validators.validateRequired(value, 'votre mot de passe'),
                 ),
                 const SizedBox(height: 16),
 
@@ -111,12 +102,14 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                     onPressed: () {
                       // Navigate to Forgot Password Screen
                       Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordScreen()),
                       );
                     },
                     child: const Text(
                       'Mot de passe oublié?',
-                      style: TextStyle(color: buttonOrange),
+                      style:
+                          TextStyle(color: kAppOrangeColor), // Use theme color
                     ),
                   ),
                 ),

@@ -1,9 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:ln_foot/widgets/constante.dart';
+import 'package:ln_foot/theme/app_theme.dart'; // Import theme
+import 'package:ln_foot/utils/bottom_sheet_utils.dart';
+import 'package:ln_foot/utils/validators.dart'; // Import validators
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_button.dart';
-import '../widgets/custom_text_field.dart';
+import '../widgets/custom_text_field.dart'; // Ensure this import is present
 
 class EmailSignupScreen extends StatefulWidget {
   const EmailSignupScreen({super.key});
@@ -30,12 +32,7 @@ class _EmailSignupScreenState extends State<EmailSignupScreen> {
     super.dispose();
   }
 
-  // Basic email validation regex
-  bool _isValidEmail(String email) {
-    return RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
-  }
+  // Removed local _isValidEmail function
 
   void _signup() {
     setState(() {
@@ -48,7 +45,9 @@ class _EmailSignupScreenState extends State<EmailSignupScreen> {
       print('Signup successful!');
       print('Email: ${_emailController.text}');
       print('Password: ${_passwordController.text}');
-      showSuccessBottomSheet(context, "Fait", "Inscription réussie");
+      showSuccessBottomSheet(context,title: "Fait",buttonText:  "Inscription réussie",onPressed:  () {
+                            Navigator.of(context).pop();
+                          });
     } else {
       print('Signup failed: Form or terms invalid');
       // Optionally show a snackbar if terms not accepted
@@ -86,15 +85,7 @@ class _EmailSignupScreenState extends State<EmailSignupScreen> {
                     controller: _emailController,
                     labelText: 'Email',
                     hintText: 'Entrez votre email',
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Veuillez entrer votre adresse mail';
-                      }
-                      if (!_isValidEmail(value)) {
-                        return 'Veuillez entrer une adresse mail valide';
-                      }
-                      return null;
-                    },
+                    validator: Validators.validateEmail, // Use centralized validator
                   ),
                   const SizedBox(height: 24),
 
@@ -110,15 +101,7 @@ class _EmailSignupScreenState extends State<EmailSignupScreen> {
                         _isPasswordVisible = !_isPasswordVisible;
                       });
                     },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Veuillez entrer votre mot de passe';
-                      }
-                      if (value.length < 8) {
-                        return 'Le mot de passe doit contenir au moins 8 caractères';
-                      }
-                      return null;
-                    },
+                    validator: Validators.validatePassword, // Use centralized validator
                   ),
                   const SizedBox(height: 24),
 
@@ -133,15 +116,9 @@ class _EmailSignupScreenState extends State<EmailSignupScreen> {
                         _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
                       });
                     },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Veuillez confirmer votre mot de passe';
-                      }
-                      if (value != _passwordController.text) {
-                        return 'Les mots de passe ne correspondent pas';
-                      }
-                      return null;
-                    },
+                    // Use centralized validator
+                    validator: (value) => Validators.validateConfirmPassword(
+                        value, _passwordController.text),
                   ),
                   const SizedBox(height: 24),
 
@@ -172,7 +149,7 @@ class _EmailSignupScreenState extends State<EmailSignupScreen> {
                               TextSpan(
                                 text: 'Les conditions générales',
                                 style: const TextStyle(
-                                  color: Color(0xFFF9703B),
+                                  color: kAppOrangeColor, // Use theme color
                                   decoration: TextDecoration.underline,
                                 ),
                                 recognizer: TapGestureRecognizer()

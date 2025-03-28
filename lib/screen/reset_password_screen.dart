@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ln_foot/screen/login_options_screen.dart'; // To navigate back to login after success
-import 'package:ln_foot/widgets/constante.dart'; // Import custom bottom sheet
+import 'package:ln_foot/screen/login_options_screen.dart';
+import 'package:ln_foot/utils/bottom_sheet_utils.dart'; 
+import 'package:ln_foot/utils/validators.dart';  
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
 import 'package:ln_foot/widgets/custom_text_field.dart';
@@ -48,8 +49,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       // Show success bottom sheet
       showSuccessBottomSheet(
         context,
-        'Continuer à vous connecter', // Button text
-        'Mot de passe mis à jour avec succès !', // Message text
+        title: 'Continuer à vous connecter',
+       buttonText:  'Mot de passe mis à jour avec succès !',
+       onPressed:  () {
+         
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => const LoginOptionsScreen(),
+            ),
+            (Route<dynamic> route) => false,
+          );
+        },
       );
 
       // After the bottom sheet is dismissed (by pressing the button), navigate back to login
@@ -73,7 +83,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const CustomAppBar(title: 'Créer un nouveau mot de passe'),
+      appBar: const CustomAppBar(
+          title: 'Créer un nouveau mot de passe', showBackButton: false),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
@@ -96,18 +107,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   isPasswordVisible: _isNewPasswordVisible,
                   onVisibilityToggle: () {
                     setState(() {
-                      _isNewPasswordVisible = !_isNewPasswordVisible;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Veuillez entrer le nouveau mot de passe';
-                    }
-                    if (value.length < 8) {
-                      return 'Le mot de passe doit contenir au moins 8 caractères';
-                    }
-                    return null;
-                  },
+                        _isNewPasswordVisible = !_isNewPasswordVisible;
+                      });
+                    },
+                    validator: Validators.validatePassword, // Use centralized validator
                 ),
                 const SizedBox(height: 24),
 
@@ -120,18 +123,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   isPasswordVisible: _isConfirmPasswordVisible,
                   onVisibilityToggle: () {
                     setState(() {
-                      _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Veuillez confirmer le nouveau mot de passe';
-                    }
-                    if (value != _newPasswordController.text) {
-                      return 'Les mots de passe ne correspondent pas';
-                    }
-                    return null;
-                  },
+                        _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                      });
+                    },
+                    // Use centralized validator
+                    validator: (value) => Validators.validateConfirmPassword(
+                        value, _newPasswordController.text),
                 ),
                 const SizedBox(height: 40),
 
