@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ln_foot/widgets/home/categories/category_item.dart';
 
 class CategoriesSection extends StatelessWidget {
   CategoriesSection({super.key});
 
-  // Nouvelle structure utilisant List<Map<String, dynamic>>
   final List<Map<String, dynamic>> categories = [
     {
       'icon': 'images/maillot_asset.svg',
@@ -84,64 +83,16 @@ class CategoriesSection extends StatelessWidget {
               separatorBuilder: (context, index) =>
                   const SizedBox(width: 20), // Spacing between items
               itemBuilder: (context, index) {
-                final category = categories[index];
-                return _CategoryItem(
-                  icon: category['icon'],
-                  label: category['name'],
+              //  final category = categories[index];
+                return CategoryItem(
+                  icon: categories[index]['icon'],
+                  label: categories[index]['name'],
                   onTap: () {
-                    print('Category ${category['name']} tapped');
+                    print('Category ${categories[index]['name']} tapped');
                   },
                 );
               },
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Helper widget for individual category items
-class _CategoryItem extends StatelessWidget {
-  final String icon;
-  final String label;
-  final VoidCallback onTap;
-
-  const _CategoryItem({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: SvgPicture.asset(
-              icon,
-              height: 24,
-              width: 24,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey.shade700,
-              fontWeight: FontWeight.w500,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
