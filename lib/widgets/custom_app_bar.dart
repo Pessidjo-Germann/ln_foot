@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showBackButton;
+  final List<Widget>? actions; // Add actions parameter
 
   const CustomAppBar({
     super.key,
     required this.title,
     this.showBackButton = true,
+    this.actions, // Initialize actions
   });
 
   @override
@@ -44,6 +46,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: titleTextStyle,
       ),
       centerTitle: true,
+      actions: actions, // Pass actions to the AppBar
     );
   }
 

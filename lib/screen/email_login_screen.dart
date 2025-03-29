@@ -7,6 +7,8 @@ import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
 import 'package:ln_foot/widgets/custom_text_field.dart';
 
+import 'home_screen.dart';
+
 class EmailLoginScreen extends StatefulWidget {
   const EmailLoginScreen({super.key});
 
@@ -44,7 +46,12 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
       // Show success dialog
       showSuccessBottomSheet(context,
           title: "Fait", buttonText: "Connexion réussie", onPressed: () {
-        Navigator.of(context).pop();
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+          (Route<dynamic> route) => false,
+        );
       });
     } else {
       print('Login failed: Form is invalid');
