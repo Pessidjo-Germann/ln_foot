@@ -44,10 +44,8 @@ class ProductCard extends StatelessWidget {
           mainAxisSize:
               MainAxisSize.min, // La carte prend la hauteur minimale nécessaire
           children: [
-            // --- Section Image (Adaptative) ---
             Stack(
               children: [
-                // Utilisation d'AspectRatio pour une hauteur d'image responsive
                 AspectRatio(
                   // Définit le ratio largeur:hauteur. 1.0 = carré, 4/3 = paysage léger, etc.
                   // Choisir un ratio qui convient au design général de votre application.
@@ -55,7 +53,6 @@ class ProductCard extends StatelessWidget {
                       1.0, // Image carrée par rapport à la largeur de la carte
                   child: Image.asset(
                     product.imageUrl,
-                    // width et height ne sont plus nécessaires ici, AspectRatio s'en charge
                     fit: BoxFit.cover, // Couvre l'espace de l'AspectRatio
                     semanticLabel: 'Image de ${product.name}',
                     // loadingBuilder: (context, child, loadingProgress) {
@@ -116,14 +113,7 @@ class ProductCard extends StatelessWidget {
                 ),
               ],
             ),
-
-            // --- Section Détails ---
-            // Utilisation de Flexible pour que cette section prenne l'espace vertical
-            // restant SI la Column parente a une hauteur contrainte.
-            // Ici, avec mainAxisSize: MainAxisSize.min, ce n'est pas strictement
-            // nécessaire mais ne nuit pas et peut aider dans certains contextes de layout.
             Flexible(
-              // Permet au Padding de s'étendre si nécessaire, mais ici se comportera comme sans Flexible car la Column parente a MainAxisSize.min
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 10.0),
                 child: Column(
@@ -149,7 +139,7 @@ class ProductCard extends StatelessWidget {
                         color: Colors.black87,
                         height: 1.2, // Ajustement de l'interligne si nécessaire
                       ),
-                      maxLines: 2, // Permet au nom d'aller sur 2 lignes
+                      maxLines: 1, // Permet au nom d'aller sur 2 lignes
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 6),
@@ -164,21 +154,21 @@ class ProductCard extends StatelessWidget {
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
+                            fontSize: 10,
                           ),
-                          maxLines:
-                              1, // Le prix ne devrait pas prendre plusieurs lignes
-                          overflow: TextOverflow.ellipsis, // Au cas où
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         if (product.oldPrice != null &&
                             product.oldPrice! > product.price) ...[
                           const SizedBox(width: 8),
                           Flexible(
-                            // Flexible pour que le vieux prix n'étire pas la Row si l'espace manque
                             child: Text(
                               '${_oldPriceNumberFormatter.format(product.oldPrice)} FCFA',
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 decoration: TextDecoration.lineThrough,
                                 color: Colors.grey.shade600,
+                                fontSize: 10,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -206,7 +196,6 @@ class ProductCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Flexible(
-                          // Flexible pour que le nombre d'avis ne cause pas d'overflow
                           child: Text(
                             '(${product.reviewCount} avis)',
                             style: theme.textTheme.bodySmall?.copyWith(
@@ -218,8 +207,6 @@ class ProductCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    // Ajouter un petit espace en bas si nécessaire, mais le padding s'en charge souvent
-                    // const SizedBox(height: 4),
                   ],
                 ),
               ),
