@@ -4,7 +4,9 @@ import 'package:ln_foot/widgets/home/search_bar_widget.dart'; // Import the Sear
 import 'package:ln_foot/widgets/home/categories_section.dart'; // Import the Categories Section
 import 'package:ln_foot/widgets/home/promo_banner.dart'; // Import the Promo Banner
 import 'package:ln_foot/widgets/home/special_offers_section.dart'; // Import the Special Offers Section
-import 'package:ln_foot/theme/app_theme.dart'; // Import for color constants
+import 'package:ln_foot/theme/app_theme.dart';
+
+import 'search_screen.dart'; // Import for color constants
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -34,7 +36,15 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SearchBarWidget(), // Add the Search Bar
+            SearchBarWidget(
+              isClickable: true,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SearchScreen()),
+                );
+              },
+            ),
             const SizedBox(height: 8), // Adjust space after search bar
 
             // Categories Section

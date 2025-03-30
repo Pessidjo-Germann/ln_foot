@@ -1,0 +1,70 @@
+# Structure du dossier `lib`
+
+Ce document décrit la structure du dossier `lib` et le rôle de ses principaux fichiers et sous-dossiers.
+
+## Fichiers à la racine
+
+*   `main.dart`: Point d'entrée principal de l'application Flutter. Initialise l'application (`runApp`), configure le thème global (`appThemeData`) et définit l'écran initial (`SplashScreen`).
+
+## Sous-dossiers
+
+### `model/`
+
+Contient les classes définissant la structure des données (modèles) utilisées dans l'application.
+
+*   `notification.dart`: Modèle pour les données d'une notification.
+*   `product.dart`: Modèle pour les données d'un produit.
+
+### `screen/`
+
+Contient les différents écrans (ou pages) de l'application. Chaque fichier `.dart` représente généralement une vue plein écran.
+
+*   `email_login_screen.dart`: Écran de connexion via email.
+*   `email_signup_screen.dart`: Écran d'inscription via email.
+*   `forgot_password_screen.dart`: Écran pour demander la réinitialisation du mot de passe.
+*   `home_screen.dart`: Écran principal (page d'accueil) de l'application.
+*   `login_options_screen.dart`: Écran affichant les différentes méthodes de connexion.
+*   `notification_screen.dart`: Écran affichant la liste des notifications.
+*   `onboarding_screen.dart`: Écran(s) d'introduction affiché(s) au premier lancement.
+*   `otp_verification_screen.dart`: Écran pour vérifier un code reçu par OTP (One-Time Password).
+*   `reset_password_screen.dart`: Écran pour définir un nouveau mot de passe après réinitialisation.
+*   `signup_options_screen.dart`: Écran affichant les différentes méthodes d'inscription.
+*   `splash_screen.dart`: Écran de chargement initial affiché au démarrage de l'application.
+
+### `theme/`
+
+Contient la configuration de l'apparence visuelle (thème) de l'application.
+
+*   `app_theme.dart`: Définit les styles globaux comme les couleurs, les polices, les thèmes des widgets (boutons, AppBar, etc.).
+
+### `utils/`
+
+Contient des classes et fonctions utilitaires réutilisables à travers l'application.
+
+*   `bottom_sheet_utils.dart`: Fonctions d'aide pour afficher des "bottom sheets" (panneaux glissant depuis le bas).
+*   `validators.dart`: Fonctions pour valider les entrées utilisateur (ex: format d'email, force du mot de passe).
+
+### `widgets/`
+
+Contient les composants d'interface utilisateur (widgets) réutilisables. Ce dossier est souvent subdivisé pour mieux organiser les widgets.
+
+*   **Widgets généraux (à la racine de `widgets/`)**: Widgets de base réutilisables partout.
+    *   `custom_app_bar.dart`: Une barre d'application personnalisée.
+    *   `custom_button.dart`: Un bouton personnalisé.
+    *   `custom_text_field.dart`: Un champ de saisie de texte personnalisé.
+    *   `social_button.dart`: Bouton pour l'authentification via réseaux sociaux (Google, Apple, etc.).
+*   **`common/`**: Widgets communs pouvant être utilisés dans différents contextes ou écrans.
+    *   `product_card.dart`: Carte UI pour afficher un aperçu d'un produit.
+*   **`home/`**: Widgets spécifiques à l'`home_screen`.
+    *   `categories_section.dart`: Section affichant les catégories de produits.
+    *   `home_app_bar.dart`: La barre d'application spécifique à l'écran d'accueil.
+    *   `promo_banner.dart`: Bannière pour afficher des promotions.
+    *   `search_bar_widget.dart`: Widget de barre de recherche.
+    *   `special_offers_section.dart`: Section affichant les offres spéciales.
+    *   **`categories/`**: Widgets liés à l'affichage des catégories dans la section `home`.
+        *   `category_item.dart`: Widget représentant un élément individuel dans la liste des catégories.
+*   **`notification/`**: Widgets spécifiques à l'`notification_screen`.
+    *   `date_header.dart`: En-tête pour regrouper les notifications par date.
+    *   `empty_notification_view.dart`: Widget affiché quand il n'y a aucune notification.
+    *   `notification_item.dart`: Widget représentant une notification individuelle dans la liste.
+    *   `notification_list_view.dart`: Widget affichant la liste scrollable des notifications.
