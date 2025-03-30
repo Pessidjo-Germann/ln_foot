@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ln_foot/model/product.dart';
+import 'package:ln_foot/screen/product_details_screen.dart';
 import 'package:ln_foot/widgets/common/product_card.dart'; // Import ProductCard and Product model
 import 'package:shimmer/shimmer.dart'; // Import shimmer
 
@@ -147,19 +148,22 @@ class _SpecialOffersSectionState extends State<SpecialOffersSection> {
       itemCount: _products.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 12, // Increased spacing slightly for better visuals
-        mainAxisSpacing: 12, // Increased spacing slightly
-        childAspectRatio: _gridChildAspectRatio, // USE THE ADJUSTED VALUE
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: _gridChildAspectRatio,
       ),
       itemBuilder: (context, index) {
         final product = _products[index];
         return ProductCard(
           product: product,
           onTap: () {
-            print('Product ${product.name} tapped');
-            // Navigate to product details screen, etc.
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ProductDetailsScreen(product: product)));
           },
-          onFavoriteTap: () => _toggleFavorite(index), // Use the helper method
+          onFavoriteTap: () => _toggleFavorite(index),
         );
       },
     );

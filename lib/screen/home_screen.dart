@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:ln_foot/widgets/home/home_app_bar.dart'; // Import the AppBar
-import 'package:ln_foot/widgets/home/search_bar_widget.dart'; // Import the Search Bar
+import 'package:ln_foot/widgets/home/home_app_bar.dart'; 
+import 'package:ln_foot/widgets/home/search_bar_widget.dart';  
 import 'package:ln_foot/widgets/home/categories_section.dart'; // Import the Categories Section
 import 'package:ln_foot/widgets/home/promo_banner.dart'; // Import the Promo Banner
 import 'package:ln_foot/widgets/home/special_offers_section.dart'; // Import the Special Offers Section
 import 'package:ln_foot/theme/app_theme.dart';
 
-import 'search_screen.dart'; // Import for color constants
+import 'search_screen.dart';  
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,10 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const HomeAppBar(), // Use the custom AppBar
+      appBar: const HomeAppBar(),  
       body: SingleChildScrollView(
-        // To allow scrolling if content overflows
-        child: Column(
+         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SearchBarWidget(
@@ -45,18 +44,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
             ),
-            const SizedBox(height: 8), // Adjust space after search bar
+            const SizedBox(height: 8),  
 
             // Categories Section
             CategoriesSection(), // Use the Categories Section widget
             // const SizedBox(height: 16), // Spacing is handled within CategoriesSection or below
 
-            // Promo Banner
-            const PromoBanner(), // Use the Promo Banner widget
+             const PromoBanner(), // Use the Promo Banner widget
             // const SizedBox(height: 24), // Spacing handled by PromoBanner padding or below
 
-            // Special Offers Section
-            const SpecialOffersSection(), // Use the Special Offers widget
+            const SpecialOffersSection(),
 
             const SizedBox(
                 height: 24), // Add some final padding at the bottom if needed

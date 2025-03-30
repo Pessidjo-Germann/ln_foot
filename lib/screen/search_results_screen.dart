@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_foot/screen/product_details_screen.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/model/product.dart';
 import 'package:ln_foot/widgets/common/product_card.dart';
@@ -148,8 +149,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                 return ProductCard(
                   product: product,
                   onTap: () {
-                    // Navigation vers la page de détails du produit
-                    print('Produit ${product.name} sélectionné');
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailsScreen(product: product)));
                   },
                   onFavoriteTap: () => _toggleFavorite(index),
                 );

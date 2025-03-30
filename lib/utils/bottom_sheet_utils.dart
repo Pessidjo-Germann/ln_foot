@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ln_foot/widgets/custom_button.dart'; // Assuming CustomButton is correctly placed
+import 'package:ln_foot/widgets/custom_button.dart';
 
 /// Shows a standardized success message bottom sheet.
 ///
@@ -15,7 +15,8 @@ void showSuccessBottomSheet(
 }) {
   showModalBottomSheet(
     context: context,
-    isScrollControlled: true, // Allows the sheet to take up more screen height if needed
+    isScrollControlled:
+        true, // Allows the sheet to take up more screen height if needed
     shape: const RoundedRectangleBorder(
       // Consistent rounded corners
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -23,8 +24,9 @@ void showSuccessBottomSheet(
     builder: (context) {
       // Use DraggableScrollableSheet for flexible height based on content
       return DraggableScrollableSheet(
-        expand: false, // Content doesn't need to expand to full height initially
-        initialChildSize: 0.4, // Sensible starting size
+        expand:
+            false,  
+        initialChildSize: 0.4,  
         minChildSize: 0.3, // Minimum size when dragging down
         maxChildSize: 0.7, // Maximum size when dragging up
         builder: (context, scrollController) {
@@ -32,7 +34,8 @@ void showSuccessBottomSheet(
             controller: scrollController,
             child: Padding(
               // Consistent padding
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min, // Take minimum vertical space
                 children: [
@@ -46,9 +49,11 @@ void showSuccessBottomSheet(
                   Text(
                     title,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold, // Example: Use theme style
-                        ) ??
-                        const TextStyle( // Fallback style
+                              fontWeight:
+                                  FontWeight.bold, // Example: Use theme style
+                            ) ??
+                        const TextStyle(
+                          // Fallback style
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),

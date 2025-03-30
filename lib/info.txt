@@ -28,6 +28,8 @@ Contient les différents écrans (ou pages) de l'application. Chaque fichier `.d
 *   `onboarding_screen.dart`: Écran(s) d'introduction affiché(s) au premier lancement.
 *   `otp_verification_screen.dart`: Écran pour vérifier un code reçu par OTP (One-Time Password).
 *   `reset_password_screen.dart`: Écran pour définir un nouveau mot de passe après réinitialisation.
+*   `search_screen.dart`: Écran affichant l'interface de recherche avec les suggestions et recherches populaires.
+*   `search_results_screen.dart`: Écran affichant les résultats d'une recherche de produits.
 *   `signup_options_screen.dart`: Écran affichant les différentes méthodes d'inscription.
 *   `splash_screen.dart`: Écran de chargement initial affiché au démarrage de l'application.
 
@@ -55,11 +57,12 @@ Contient les composants d'interface utilisateur (widgets) réutilisables. Ce dos
     *   `social_button.dart`: Bouton pour l'authentification via réseaux sociaux (Google, Apple, etc.).
 *   **`common/`**: Widgets communs pouvant être utilisés dans différents contextes ou écrans.
     *   `product_card.dart`: Carte UI pour afficher un aperçu d'un produit.
+    *   `product_loading_grid.dart`: Grille affichant des placeholders pendant le chargement des produits.
 *   **`home/`**: Widgets spécifiques à l'`home_screen`.
     *   `categories_section.dart`: Section affichant les catégories de produits.
     *   `home_app_bar.dart`: La barre d'application spécifique à l'écran d'accueil.
     *   `promo_banner.dart`: Bannière pour afficher des promotions.
-    *   `search_bar_widget.dart`: Widget de barre de recherche.
+    *   `search_bar_widget.dart`: Widget de barre de recherche (utilisé aussi dans `SearchScreen`). A été modifié pour être plus flexible (accepte un controller, callbacks, état `isSearching`).
     *   `special_offers_section.dart`: Section affichant les offres spéciales.
     *   **`categories/`**: Widgets liés à l'affichage des catégories dans la section `home`.
         *   `category_item.dart`: Widget représentant un élément individuel dans la liste des catégories.
@@ -68,3 +71,9 @@ Contient les composants d'interface utilisateur (widgets) réutilisables. Ce dos
     *   `empty_notification_view.dart`: Widget affiché quand il n'y a aucune notification.
     *   `notification_item.dart`: Widget représentant une notification individuelle dans la liste.
     *   `notification_list_view.dart`: Widget affichant la liste scrollable des notifications.
+*   **`search/`**: Widgets spécifiques aux écrans `search_screen` et `search_results_screen`.
+    *   `empty_search_result.dart`: Widget affiché quand une recherche ne retourne aucun résultat.
+    *   `popular_search_item.dart`: Widget représentant un élément dans la liste des recherches populaires.
+    *   `popular_searches_section.dart`: Section affichant la liste des recherches populaires.
+    *   `search_suggestion_item.dart`: Widget représentant un élément dans la liste des suggestions de recherche.
+    *   `search_suggestions_section.dart`: Section affichant la liste des suggestions de recherche.
