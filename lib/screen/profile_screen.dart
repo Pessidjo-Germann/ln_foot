@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ln_foot/screen/my_orders_screen.dart';
 import 'package:ln_foot/screen/notification_screen.dart'; // Added import
 import 'package:ln_foot/screen/payment_method_screen.dart'; // Added import
 import 'package:ln_foot/screen/profile_details_screen.dart';
+import 'package:ln_foot/widgets/common/logout_confirmation_dialog.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/profile/profile_menu_item.dart';
 
@@ -45,7 +47,10 @@ class ProfileScreen extends StatelessWidget {
               icon: Icons.list_alt_outlined, // Using a suitable icon
               title: 'Ma commande',
               onTap: () {
-                // TODO: Navigate to Orders Screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyOrdersScreen()),
+                );
                 print('Navigate to Orders');
               },
             ),
@@ -104,7 +109,7 @@ class ProfileScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.red, fontSize: 16),
               ),
               onTap: () {
-                // TODO: Implement logout logic (e.g., show confirmation dialog)
+                showLogoutDialog(context);
                 print('Logout tapped');
               },
               contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),

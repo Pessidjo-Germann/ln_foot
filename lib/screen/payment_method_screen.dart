@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import '../widgets/custom_app_bar.dart';
-import 'package:ln_foot/screen/add_card_screen.dart'; // Import the AddCardScreen
+import 'package:ln_foot/screen/add_card_screen.dart';
 
 import '../widgets/custom_button.dart';
-import '../widgets/payment/saved_card_item.dart'; // Import the new widget
-// TODO: Import widget for add card button
+import '../widgets/payment/saved_card_item.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
   const PaymentMethodScreen({super.key});

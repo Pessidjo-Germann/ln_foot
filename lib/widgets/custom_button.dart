@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_foot/theme/app_theme.dart';
  
 class CustomButton extends StatelessWidget {
   final String text;
@@ -39,7 +40,7 @@ class CustomButton extends StatelessWidget {
     if (isOutlined) {
       final outlinedStyle = theme.outlinedButtonTheme.style ??
           OutlinedButton.styleFrom(
-              // foregroundColor: textColor ?? kAppOrangeColor,
+             //  foregroundColor: textColor ?? kAppOrangeColor,
               // side: BorderSide(color: buttonColor ?? kAppOrangeColor),
               );
 
@@ -60,7 +61,7 @@ class CustomButton extends StatelessWidget {
     } else {
       final elevatedStyle = theme.elevatedButtonTheme.style ??
           ElevatedButton.styleFrom(
-              //  backgroundColor: buttonColor ?? kAppOrangeColor,
+               backgroundColor: buttonColor ?? kAppOrangeColor,
               //  foregroundColor: textColor ?? Colors.white,
               );
 
@@ -75,7 +76,11 @@ class CustomButton extends StatelessWidget {
             )
           : ElevatedButton(
               onPressed: onPressed,
-              style: effectiveStyle,
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  buttonColor?? kAppOrangeColor,
+                  ),
+              ),
               child: Text(text),
             );
     }

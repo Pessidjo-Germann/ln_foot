@@ -40,6 +40,7 @@ Contient les différents écrans (ou pages) de l'application. Chaque fichier `.d
 *   `payment_method_screen.dart`: Écran pour sélectionner ou gérer les méthodes de paiement.
 *   `profile_screen.dart`: Écran principal du compte utilisateur, affichant les options de menu (profil, commandes, etc.).
 *   `profile_details_screen.dart`: Écran permettant à l'utilisateur de voir et modifier ses informations personnelles.
+*   `my_orders_screen.dart`: Écran affichant la liste des commandes de l'utilisateur, triées par statut (en cours, complétées, à revoir).
 
 ### `theme/`
 
@@ -116,3 +117,9 @@ Contient les composants d'interface utilisateur (widgets) réutilisables. Ce dos
     *   `product_details_loading.dart`: Widget affichant un état de chargement pour les détails du produit.
 *   **`profile/`**: Widgets spécifiques aux écrans `profile_screen` et `profile_details_screen`.
     *   `profile_menu_item.dart`: Widget réutilisable pour afficher une option de menu dans l'écran de profil (icône, titre, action).
+*   **`my_orders/`**: Widgets spécifiques à l'`my_orders_screen`.
+    *   `order_status_tabs.dart`: Widget affichant les onglets pour filtrer les commandes par statut (En cours, Complete, Revoir).
+    *   `order_item_widget.dart`: Widget représentant une commande individuelle dans la liste. Affiche l'image, le nom, la taille, le prix et le statut/action (Suivi, Livré, Revoir/Voir l'avis).
+    *   `order_list.dart`: Widget affichant la liste scrollable des `OrderItemWidget` pour un statut donné.
+    *   `empty_orders_view.dart`: Widget affiché lorsqu'il n'y a aucune commande pour un statut sélectionné.
+    *   `review_bottom_sheet.dart`: Bottom sheet permettant à l'utilisateur de noter et laisser un avis sur une commande complétée.
