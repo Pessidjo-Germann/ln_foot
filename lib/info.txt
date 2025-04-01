@@ -33,6 +33,7 @@ Contient les différents écrans (ou pages) de l'application. Chaque fichier `.d
 *   `signup_options_screen.dart`: Écran affichant les différentes méthodes d'inscription.
 *   `splash_screen.dart`: Écran de chargement initial affiché au démarrage de l'application.
 *   `product_details_screen.dart`: Écran affichant les détails d'un produit spécifique.
+*   `cart_screen.dart`: Écran affichant le panier d'achat.
 
 ### `theme/`
 
@@ -46,6 +47,7 @@ Contient des classes et fonctions utilitaires réutilisables à travers l'applic
 
 *   `bottom_sheet_utils.dart`: Fonctions d'aide pour afficher des "bottom sheets" (panneaux glissant depuis le bas).
 *   `validators.dart`: Fonctions pour valider les entrées utilisateur (ex: format d'email, force du mot de passe).
+*   `bottom_sheet_review_all.dart`: Fonction d'aide pour afficher une "bottom sheet" avec toutes les évaluations.
 
 ### `widgets/`
 
@@ -59,6 +61,11 @@ Contient les composants d'interface utilisateur (widgets) réutilisables. Ce dos
 *   **`common/`**: Widgets communs pouvant être utilisés dans différents contextes ou écrans.
     *   `product_card.dart`: Carte UI pour afficher un aperçu d'un produit.
     *   `product_loading_grid.dart`: Grille affichant des placeholders pendant le chargement des produits.
+*   **`cart/`**: Widgets spécifiques à l'`cart_screen`.
+    *   `cart_item_list.dart`: Widget affichant la liste des articles dans le panier.
+    *   `cart_item_widget.dart`: Widget représentant un article individuel dans le panier.
+    *   `cart_summary.dart`: Widget affichant le résumé du panier (total, etc.).
+    *   `remove_item.dart`: Widget (probablement un bouton ou icône) pour supprimer un article du panier.
 *   **`home/`**: Widgets spécifiques à l'`home_screen`.
     *   `categories_section.dart`: Section affichant les catégories de produits.
     *   `home_app_bar.dart`: La barre d'application spécifique à l'écran d'accueil.
@@ -77,7 +84,8 @@ Contient les composants d'interface utilisateur (widgets) réutilisables. Ce dos
     *   `popular_search_item.dart`: Widget représentant un élément dans la liste des recherches populaires.
     *   `popular_searches_section.dart`: Section affichant la liste des recherches populaires.
     *   `search_suggestion_item.dart`: Widget représentant un élément dans la liste des suggestions de recherche.
-    *   `search_suggestions_section.dart`: Section affichant la liste des suggestions de recherche.
+        *   `search_suggestions_section.dart`: Section affichant la liste des suggestions de recherche.
+        *   `search_input_field.dart`: Champ de saisie de texte spécifique pour la recherche.
 *   **`product_details/`**: Widgets spécifiques à l'`product_details_screen`.
     *   `add_to_cart_section.dart`: Section inférieure contenant le bouton "Ajouter la carte".
     *   `color_selector.dart`: Widget pour sélectionner la couleur du produit.
@@ -87,3 +95,6 @@ Contient les composants d'interface utilisateur (widgets) réutilisables. Ce dos
     *   `product_info_section.dart`: Section affichant le nom, le prix et la note du produit.
     *   `reviews_section.dart`: Section extensible affichant les évaluations et avis des clients.
     *   `size_selector.dart`: Widget pour sélectionner la taille du produit.
+    *   `review_item.dart`: Widget représentant un avis client individuel.
+    *   `loading_bottom_sheet.dart`: Bottom sheet affichée pendant certaines opérations de chargement.
+    *   `product_details_loading.dart`: Widget affichant un état de chargement pour les détails du produit.

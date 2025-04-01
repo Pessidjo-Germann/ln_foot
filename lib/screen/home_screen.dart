@@ -7,6 +7,7 @@ import 'package:ln_foot/widgets/home/promo_banner.dart'; // Import the Promo Ban
 import 'package:ln_foot/widgets/home/special_offers_section.dart'; // Import the Special Offers Section
 import 'package:ln_foot/theme/app_theme.dart';
 
+import 'saved_items_screen.dart';
 import 'search_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  // Handle navigation item taps
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> screens = [
     const HomeContent(),
-    const Center(child: Text('Enregistré')),
+    const SavedItemsScreen(),
     const CartScreen(),
     const Center(child: Text('Account')),
   ];
