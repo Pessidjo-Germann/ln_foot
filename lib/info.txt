@@ -34,6 +34,12 @@ Contient les différents écrans (ou pages) de l'application. Chaque fichier `.d
 *   `splash_screen.dart`: Écran de chargement initial affiché au démarrage de l'application.
 *   `product_details_screen.dart`: Écran affichant les détails d'un produit spécifique.
 *   `cart_screen.dart`: Écran affichant le panier d'achat.
+*   `saved_items_screen.dart`: Écran affichant les articles sauvegardés/favoris.
+*   `add_card_screen.dart`: Écran pour ajouter une nouvelle carte de paiement.
+*   `checkout_screen.dart`: Écran du processus de paiement.
+*   `payment_method_screen.dart`: Écran pour sélectionner ou gérer les méthodes de paiement.
+*   `profile_screen.dart`: Écran principal du compte utilisateur, affichant les options de menu (profil, commandes, etc.).
+*   `profile_details_screen.dart`: Écran permettant à l'utilisateur de voir et modifier ses informations personnelles.
 
 ### `theme/`
 
@@ -61,6 +67,11 @@ Contient les composants d'interface utilisateur (widgets) réutilisables. Ce dos
 *   **`common/`**: Widgets communs pouvant être utilisés dans différents contextes ou écrans.
     *   `product_card.dart`: Carte UI pour afficher un aperçu d'un produit.
     *   `product_loading_grid.dart`: Grille affichant des placeholders pendant le chargement des produits.
+*   **`checkout/`**: Widgets spécifiques à l'`checkout_screen`.
+    *   `address_section.dart`: Section pour afficher/modifier l'adresse de livraison.
+    *   `order_summary_section.dart`: Section affichant le résumé de la commande.
+    *   `payment_method_section.dart`: Section pour sélectionner la méthode de paiement.
+    *   `payment_success_dialog.dart`: Dialogue affiché après un paiement réussi.
 *   **`cart/`**: Widgets spécifiques à l'`cart_screen`.
     *   `cart_item_list.dart`: Widget affichant la liste des articles dans le panier.
     *   `cart_item_widget.dart`: Widget représentant un article individuel dans le panier.
@@ -86,6 +97,11 @@ Contient les composants d'interface utilisateur (widgets) réutilisables. Ce dos
     *   `search_suggestion_item.dart`: Widget représentant un élément dans la liste des suggestions de recherche.
         *   `search_suggestions_section.dart`: Section affichant la liste des suggestions de recherche.
         *   `search_input_field.dart`: Champ de saisie de texte spécifique pour la recherche.
+*   **`payment/`**: Widgets liés à la gestion des paiements.
+    *   `saved_card_item.dart`: Widget affichant une carte de paiement enregistrée.
+*   **`saved_items/`**: Widgets spécifiques à l'`saved_items_screen`.
+    *   `empty_saved_items_view.dart`: Widget affiché quand il n'y a aucun article sauvegardé.
+    *   `shimmer_product_card.dart`: Carte produit avec effet shimmer pour l'état de chargement.
 *   **`product_details/`**: Widgets spécifiques à l'`product_details_screen`.
     *   `add_to_cart_section.dart`: Section inférieure contenant le bouton "Ajouter la carte".
     *   `color_selector.dart`: Widget pour sélectionner la couleur du produit.
@@ -98,3 +114,5 @@ Contient les composants d'interface utilisateur (widgets) réutilisables. Ce dos
     *   `review_item.dart`: Widget représentant un avis client individuel.
     *   `loading_bottom_sheet.dart`: Bottom sheet affichée pendant certaines opérations de chargement.
     *   `product_details_loading.dart`: Widget affichant un état de chargement pour les détails du produit.
+*   **`profile/`**: Widgets spécifiques aux écrans `profile_screen` et `profile_details_screen`.
+    *   `profile_menu_item.dart`: Widget réutilisable pour afficher une option de menu dans l'écran de profil (icône, titre, action).

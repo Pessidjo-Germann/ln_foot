@@ -69,7 +69,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Notifications',
-        showBackButton: true, // Assuming back button is needed
+        showBackButton: true,
+        onBackButtonPressed: ()=>Navigator.pop(context),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_none_outlined,

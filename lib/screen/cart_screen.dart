@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_foot/screen/checkout_screen.dart';
 import 'package:ln_foot/screen/home_screen.dart';
 import 'package:ln_foot/widgets/product_details/add_to_cart_section.dart';
 import '../widgets/custom_app_bar.dart';
@@ -148,9 +149,7 @@ class _CartScreenState extends State<CartScreen> {
         AddToCartSection(
           title: 'Passer à la caisse',
           onAddToCart: () {
-            // showReviewsAll(context, (scrollController) {
-            //   return RemoveCartItemDialog(item: item, onConfirm: () {});
-            // });
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckoutScreen()));
           },
         ),
       ]),
