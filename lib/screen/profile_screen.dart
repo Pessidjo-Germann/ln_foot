@@ -1,0 +1,118 @@
+import 'package:flutter/material.dart';
+import 'package:ln_foot/screen/notification_screen.dart'; // Added import
+import 'package:ln_foot/screen/payment_method_screen.dart'; // Added import
+import 'package:ln_foot/screen/profile_details_screen.dart';
+import 'package:ln_foot/widgets/custom_app_bar.dart';
+import 'package:ln_foot/widgets/profile/profile_menu_item.dart';
+
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomAppBar(
+        title: 'Compte',
+        showBackButton: true, 
+        onBackButtonPressed: ()=>Navigator.pop(context),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_none_outlined), // Or your custom notification icon
+            onPressed: () {
+              // TODO: Navigate to Notification Screen
+              Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen()));
+            },
+          ),
+          const SizedBox(width: 16), // Add some padding
+        ],
+      ),
+      body: SingleChildScrollView( // Use SingleChildScrollView if content might overflow
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+        child: Column(
+          children: [
+            // Profile Menu Items
+            ProfileMenuItem(
+              icon: Icons.person_outline,
+              title: 'Votre Profile',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfileDetailsScreen()),
+                );
+              },
+            ),
+            ProfileMenuItem(
+              icon: Icons.list_alt_outlined, // Using a suitable icon
+              title: 'Ma commande',
+              onTap: () {
+                // TODO: Navigate to Orders Screen
+                print('Navigate to Orders');
+              },
+            ),
+            ProfileMenuItem(
+              icon: Icons.payment_outlined,
+              title: 'Modes de paiement',
+              onTap: () {
+                 Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PaymentMethodScreen()),
+                );
+              },
+            ),
+            ProfileMenuItem(
+              icon: Icons.notifications_none_outlined,
+              title: 'Notifications',
+              onTap: () {
+                 Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const NotificationScreen()),
+                );
+              },
+            ),
+             ProfileMenuItem(
+              icon: Icons.lock_outline,
+              title: 'politique de confidentialité',
+              onTap: () {
+                // TODO: Navigate to Privacy Policy Screen or show dialog/webview
+                print('Navigate to Privacy Policy');
+              },
+            ),
+             ProfileMenuItem(
+              icon: Icons.help_outline,
+              title: 'Centre d\'aide',
+              onTap: () {
+                // TODO: Navigate to Help Center Screen
+                print('Navigate to Help Center');
+              },
+            ),
+             ProfileMenuItem(
+              icon: Icons.people_outline, // Using a suitable icon
+              title: 'Inviter des amis',
+              onTap: () {
+                // TODO: Implement Invite Friends functionality
+                print('Invite Friends');
+              },
+            ),
+
+            const SizedBox(height: 30), // Spacer before logout
+
+            // Logout Button
+            ListTile(
+              leading: const Icon(Icons.logout, color: Colors.red, size: 24),
+              title: const Text(
+                'Se déconnecter',
+                style: TextStyle(color: Colors.red, fontSize: 16),
+              ),
+              onTap: () {
+                // TODO: Implement logout logic (e.g., show confirmation dialog)
+                print('Logout tapped');
+              },
+              contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
+              visualDensity: VisualDensity.compact,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ln_foot/screen/cart_screen.dart';
+import 'package:ln_foot/screen/profile_screen.dart';
 import 'package:ln_foot/widgets/home/home_app_bar.dart';
 import 'package:ln_foot/widgets/home/search_bar_widget.dart';
 import 'package:ln_foot/widgets/home/categories_section.dart'; // Import the Categories Section
@@ -30,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const HomeContent(),
     const SavedItemsScreen(),
     const CartScreen(),
-    const Center(child: Text('Account')),
+    const ProfileScreen(),
   ];
 
   @override
