@@ -70,7 +70,8 @@ class ProductInfoSection extends StatelessWidget {
                 SizedBox(width: 1),
                 TextButton(
                     onPressed: () {
-                      showReviewsAll(context, [
+                      showReviewsAll(context,
+                  (scrollController)=>    ReviewListWidget(list: [
                         ReviewItem(
                           rating: 5,
                           author: 'Shipon',
@@ -90,7 +91,7 @@ class ProductInfoSection extends StatelessWidget {
                           comment:
                               'Des achats incroyables ! J\'utilise LNFOOT depuis un certain temps et je suis impressionné par la sélection diversifiée de produits disponibles.',
                         ),
-                      ]);
+                      ],scrollController: scrollController));
                     },
                     child: Text(
                       '($reviewCount Review)',

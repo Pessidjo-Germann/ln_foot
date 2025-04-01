@@ -114,7 +114,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ''; // Example: Default to Black name
 
     return Scaffold(
-      appBar: CustomAppBar(title: 'Product Details'),
+      appBar: CustomAppBar(
+          title: 'Product Details',
+          onBackButtonPressed: () => Navigator.pop(context)),
       body: _isLoading
           ? ProductDetailsLoadingView()
           : SingleChildScrollView(

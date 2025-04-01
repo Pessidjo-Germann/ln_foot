@@ -32,6 +32,7 @@ Contient les différents écrans (ou pages) de l'application. Chaque fichier `.d
 *   `search_results_screen.dart`: Écran affichant les résultats d'une recherche de produits.
 *   `signup_options_screen.dart`: Écran affichant les différentes méthodes d'inscription.
 *   `splash_screen.dart`: Écran de chargement initial affiché au démarrage de l'application.
+*   `product_details_screen.dart`: Écran affichant les détails d'un produit spécifique.
 
 ### `theme/`
 
@@ -77,3 +78,12 @@ Contient les composants d'interface utilisateur (widgets) réutilisables. Ce dos
     *   `popular_searches_section.dart`: Section affichant la liste des recherches populaires.
     *   `search_suggestion_item.dart`: Widget représentant un élément dans la liste des suggestions de recherche.
     *   `search_suggestions_section.dart`: Section affichant la liste des suggestions de recherche.
+*   **`product_details/`**: Widgets spécifiques à l'`product_details_screen`.
+    *   `add_to_cart_section.dart`: Section inférieure contenant le bouton "Ajouter la carte".
+    *   `color_selector.dart`: Widget pour sélectionner la couleur du produit.
+    *   `product_description_section.dart`: Section affichant la description détaillée du produit.
+    *   `product_details_app_bar.dart`: La barre d'application spécifique à l'écran de détails du produit.
+    *   `product_image_section.dart`: Section affichant l'image principale du produit et le bouton favori.
+    *   `product_info_section.dart`: Section affichant le nom, le prix et la note du produit.
+    *   `reviews_section.dart`: Section extensible affichant les évaluations et avis des clients.
+    *   `size_selector.dart`: Widget pour sélectionner la taille du produit.

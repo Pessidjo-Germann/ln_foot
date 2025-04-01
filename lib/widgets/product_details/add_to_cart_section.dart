@@ -4,11 +4,13 @@ import 'package:ln_foot/widgets/custom_button.dart';
 class AddToCartSection extends StatelessWidget {
   final VoidCallback onAddToCart;
   final bool canAddToCart; 
+  final String title;
 
   const AddToCartSection({
     super.key,
     required this.onAddToCart,
     this.canAddToCart = true, 
+    this.title = 'Ajouter au panier',
   }) ;
 
   @override
@@ -35,7 +37,7 @@ class AddToCartSection extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: CustomButton(
-          text: 'Ajouter la carte', 
+          text: title, 
           onPressed: canAddToCart ? onAddToCart : () {},
           buttonColor: canAddToCart ? theme.primaryColor : Colors.grey, 
           textColor: Colors.white,

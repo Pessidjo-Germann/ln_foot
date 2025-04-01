@@ -108,7 +108,11 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: widget.searchQuery, showBackButton: true),
+      appBar: CustomAppBar(
+        title: widget.searchQuery,
+        showBackButton: true,
+        onBackButtonPressed: () => Navigator.pop(context),
+      ),
       body: SafeArea(
         child: _isLoading
             ? ProductLoadingGrid()
@@ -149,7 +153,11 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                 return ProductCard(
                   product: product,
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailsScreen(product: product)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ProductDetailsScreen(product: product)));
                   },
                   onFavoriteTap: () => _toggleFavorite(index),
                 );
