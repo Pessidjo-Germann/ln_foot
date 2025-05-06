@@ -37,7 +37,7 @@ class NotificationListView extends StatelessWidget {
               },
               separatorBuilder: (context, itemIndex) => Divider(
                 height: 1,
-                thickness: 1,
+               thickness: 0.4,
                 indent: 64, // Indent to align with text
                 color: Colors.grey[200],
               ),

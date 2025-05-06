@@ -56,7 +56,7 @@ class PopularSearchesSection extends StatelessWidget {
         Expanded(
           child: ListView.separated(
             itemCount: popularSearches.length,
-            separatorBuilder: (context, index) => const Divider(height: 1, color: Colors.grey), // Use theme color later
+            separatorBuilder: (context, index) => const Divider(height: 1, thickness: 0.4,color: Colors.grey), // Use theme color later
             itemBuilder: (context, index) {
               final itemText = popularSearches[index];
               return PopularSearchItem(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ln_foot/model/product.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_foot/bloc/product/product_bloc.dart';
+ 
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/product_details/loading_bottom_sheet.dart';
 import 'package:ln_foot/widgets/product_details/product_details_loading.dart';
@@ -10,9 +12,10 @@ import 'package:ln_foot/widgets/product_details/size_selector.dart';
 import 'package:ln_foot/widgets/product_details/color_selector.dart';
 import 'package:ln_foot/widgets/product_details/add_to_cart_section.dart';
 import 'package:ln_foot/widgets/product_details/reviews_section.dart';
+import 'package:lnFoot_api/api.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  final Product product;
+  final ProductDto product;
 
   const ProductDetailsScreen({super.key, required this.product});
 
@@ -24,21 +27,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   String? _selectedSize;
   Color? _selectedColor;
   bool _isFavorite = false;
-  bool _isLoading = true;
+  ProductDto? _loadedProduct;
 
-  final product = Product(
-    name: 'Maillot',
-    category: 'Vêtements',
-    price: 10000.0,
-    imageUrl: 'images/maillot_asset.svg',
-    rating: 4.3,
-    reviewCount: 16,
-    isFavorite: false,
-  );
-
-  final String productDescription =
-      'Conçu pour le travail ou le week-end, ce t-shirt uni se porte aussi bien habillé que décontracté et confère à toutes vos tenues le look épuré souhaité. Chaque haut est confectionné en coton confortable, avec des manches courtes et un col ras du cou.\nFacile d\'entretien, ce t-shirt peut être lavé avec des couleurs similaires en cycle délicat.\nFabriqués à partir de matériaux issus de sources responsables et fidèles à l\'esprit Gap, nos essentiels du quotidien sont disponibles dans une large gamme de coupes, de tailles, de couleurs unies et d\'imprimés. Gap défend un style américain unique et optimiste qui comble les écarts entre les individus, les générations et les cultures.';
-  final List<String> availableSizes = ['S', 'M', 'L', 'XL', 'XXI'];
   final Map<Color, String> availableColorsMap = {
     Colors.red: 'Rouge',
     Colors.purple: 'Violet',
@@ -50,19 +40,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    _isFavorite = product.isFavorite;
-    // _selectedColor = availableColorsMap.keys.first;
-    _loadProductDetails();
+    // _isFavorite = widget.product.isFavorite ?? false; // isFavorite n'est pas dans ProductDto
+    _isFavorite = false; // Initialiser à false par défaut
+    context.read<ProductBloc>().add(LoadProductById(widget.product.id!));
   }
 
-  Future<void> _loadProductDetails() async {
-    await Future.delayed(const Duration(seconds: 2));
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
+
 
   void _handleSizeSelected(String? size) {
     setState(() {
@@ -95,10 +78,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     }
     // TODO: Implement actual add to cart logic
     print(
-        'Added to cart: ${product.name}, Size: $_selectedSize, Color: ${availableColorsMap[_selectedColor] ?? _selectedColor}');
+        'Added to cart: ${_loadedProduct!.name}, Size: $_selectedSize, Color: ${availableColorsMap[_selectedColor] ?? _selectedColor}');
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${product.name} ajouté au panier !'),
+        content: Text('${_loadedProduct!.name} ajouté au panier !'),
         duration: Duration(seconds: 2),
       ),
     );
@@ -111,21 +94,28 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     final String initialColorName = availableColorsMap[
             availableColorValues.firstWhere((c) => c == Colors.black,
                 orElse: () => availableColorValues.first)] ??
-        ''; // Example: Default to Black name
+        '';
 
     return Scaffold(
       appBar: CustomAppBar(
-          title: 'Product Details',
+          title: 'Détails du produit',
           onBackButtonPressed: () => Navigator.pop(context)),
-      body: _isLoading
-          ? ProductDetailsLoadingView()
-          : SingleChildScrollView(
+      body: BlocBuilder<ProductBloc, ProductState>(
+        builder: (context, state) {
+          if (state is ProductLoading) {
+            return ProductDetailsLoadingView();
+          } else if (state is ProductLoaded) {
+            final product = state.product;
+            setState(() {
+              _loadedProduct = product;
+            });
+            return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 16),
                   ProductImageSection(
-                    imageUrl: product.imageUrl,
+                    imageUrl: product.imageUrl ?? '',
                     initialIsFavorite: _isFavorite,
                     onFavoriteToggle: _handleFavoriteToggle,
                   ),
@@ -136,21 +126,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ProductInfoSection(
-                          name: product.name,
-                          price: product.price,
-                          rating: product.rating,
-                          reviewCount: product.reviewCount,
+                          name: product.name ?? '',
+                          price: (product.price ?? 0).toDouble(),
+                         rating:  0, // rating n'est pas dans ProductDto
+                           reviewCount:  0, // reviewCount n'est pas dans ProductDto
                         ),
                         SizedBox(height: 16),
-                        Divider(),
+                        Divider(thickness: 0.4),
                         SizedBox(height: 16),
                         ProductDescriptionSection(
-                            description: productDescription),
+                            description: product.description ?? ''),
                         SizedBox(height: 16),
-                        Divider(),
+                        Divider(thickness: 0.4),
                         SizedBox(height: 16),
                         SizeSelector(
-                          availableSizes: availableSizes,
+                          availableSizes: product.sizes ?? [],
                           selectedSize: _selectedSize,
                           onSizeSelected: _handleSizeSelected,
                         ),
@@ -159,11 +149,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           availableColors: availableColorValues,
                           selectedColor: _selectedColor,
                           onColorSelected: _handleColorSelected,
-                          initialColorName:
-                              initialColorName, // Pass default color name
+                          initialColorName: initialColorName,
                         ),
                         SizedBox(height: 16),
-                        Divider(),
+                        Divider(thickness: 0.4),
                         SizedBox(height: 16),
                         ReviewsSection(),
                         SizedBox(height: 100),
@@ -172,13 +161,26 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                 ],
               ),
-            ),
-      bottomSheet: _isLoading
-          ? LoadingBottomSheet()
-          : AddToCartSection(
-              onAddToCart: _handleAddToCart,
-              canAddToCart: canAddToCart,
-            ),
+            );
+          } else if (state is ProductError) {
+            return Center(
+              child: Text('Erreur: ${state.message}'),
+            );
+          }
+          return ProductDetailsLoadingView();
+        },
+      ),
+      bottomSheet: BlocBuilder<ProductBloc, ProductState>(
+        builder: (context, state) {
+          if (state is ProductLoading) {
+            return LoadingBottomSheet();
+          }
+          return AddToCartSection(
+            onAddToCart: _handleAddToCart,
+            canAddToCart: canAddToCart,
+          );
+        },
+      ),
     );
   }
 }

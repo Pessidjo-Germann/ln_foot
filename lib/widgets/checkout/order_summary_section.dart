@@ -37,7 +37,7 @@ class OrderSummarySection extends StatelessWidget {
         _buildSummaryRow(context, 'Total', _formatCurrency(subtotal)),
         _buildSummaryRow(context, 'Frais de livraison', _formatCurrency(shippingFee)),
         _buildSummaryRow(context, 'Rabais', '-${_formatCurrency(discount)}'), // Show discount as negative
-        const Divider(height: 24, thickness: 1, color: Colors.black12),
+        const Divider(height: 24,thickness: 0.4, color: Colors.black12),
         _buildSummaryRow(context, 'Total', _formatCurrency(total), isTotal: true),
       ],
     );

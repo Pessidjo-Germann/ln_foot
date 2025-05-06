@@ -54,7 +54,7 @@ class ProductDetailsLoadingView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Divider(),
+                const Divider(thickness: 0.4),
                 const SizedBox(height: 16),
                 // Shimmer pour la description
                 Shimmer.fromColors(
@@ -90,7 +90,7 @@ class ProductDetailsLoadingView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Divider(),
+                const Divider(thickness: 0.4),
                 const SizedBox(height: 16),
                 // Shimmer pour les tailles
                 Shimmer.fromColors(
@@ -154,7 +154,7 @@ class ProductDetailsLoadingView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Divider(),
+                const Divider(thickness: 0.4),
                 const SizedBox(height: 16),
                 // Shimmer pour les avis
                 Shimmer.fromColors(

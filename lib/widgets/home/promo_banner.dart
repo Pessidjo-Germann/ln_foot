@@ -26,11 +26,12 @@ class _PromoBannerState extends State<PromoBanner> {
     
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 1.0),
       child: Column(
         children: [
           Container(
             height: bannerHeight,
+            width: double.infinity,
             child: PageView.builder(
               controller: _pageController,
               itemCount: _totalPages,

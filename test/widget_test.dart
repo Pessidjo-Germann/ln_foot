@@ -7,15 +7,22 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:ln_foot/service.dart'; // Import AuthService
 import 'package:ln_foot/main.dart';
 
 void main() {
+  // Instantiate AuthService for the test
+  final authService = AuthService();
+
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    // Provide the required authService instance to MyApp
+    await tester.pumpWidget(MyApp(authService: authService));
 
     // Verify that our counter starts at 0.
+    // Note: This part of the test will likely fail now because
+    // the default screen is SplashScreen, not the counter app.
+    // This test should be updated or removed if it's no longer relevant.
     expect(find.text('0'), findsOneWidget);
     expect(find.text('1'), findsNothing);
 

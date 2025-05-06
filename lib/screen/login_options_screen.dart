@@ -1,6 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart'; // Import flutter_bloc
+import 'package:ln_foot/bloc/auth/auth_bloc.dart'; // Import AuthBloc
 import 'package:ln_foot/screen/email_login_screen.dart';
+import 'package:ln_foot/screen/home_screen.dart'; // Import HomeScreen for navigation
 import 'package:ln_foot/screen/signup_options_screen.dart';
 import 'package:ln_foot/theme/app_theme.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
@@ -16,10 +19,37 @@ class LoginOptionsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: const CustomAppBar(
-        title: 'Connexion sur LNSHOP',
+    
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthLoading) {
+         
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              const SnackBar(content: Text('Connexion en cours...')),
+            );
+        } else if (state is AuthAuthenticated) {
+          // Navigate to home screen on successful authentication
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const HomeScreen()), // Navigate to HomeScreen
+            (Route<dynamic> route) => false, // Remove all previous routes
+          );
+        } else if (state is AuthError) {
+          // Show error message
+          debugPrint('AuthError: ${state.message}');
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(content: Text('Erreur de connexion: ${state.message}')),
+            );
+        }
+      },
+      child: Scaffold( // Original Scaffold is now a child of BlocListener
+        backgroundColor: Colors.white,
+        appBar: const CustomAppBar(
+          title: 'Connexion sur LNSHOP',
         showBackButton: false,
       ),
       body: SafeArea(
@@ -31,9 +61,10 @@ class LoginOptionsScreen extends StatelessWidget {
             children: [
               SocialButton(
                 icon: Image.asset('images/google icon.png', height: 20.0),
-                text: 'S\'inscrire avec Google',
+                text: 'Se connecter avec Google', // Changed text slightly for clarity
                 onPressed: () {
-                  print('Google Sign Up pressed');
+                  // Dispatch LoginRequested event when Google button is pressed
+                  context.read<AuthBloc>().add(LoginRequested());
                 },
               ),
               const SizedBox(height: 16),
@@ -51,7 +82,7 @@ class LoginOptionsScreen extends StatelessWidget {
               // Divider with "Ou"
               Row(
                 children: [
-                  Expanded(child: Divider(color: Colors.grey.shade300)),
+                  Expanded(child: Divider(color: Colors.grey.shade300,thickness: 0.4)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text(
@@ -60,7 +91,7 @@ class LoginOptionsScreen extends StatelessWidget {
                           ?.copyWith(color: Colors.grey.shade600),
                     ),
                   ),
-                  Expanded(child: Divider(color: Colors.grey.shade300)),
+                  Expanded(child: Divider(color: Colors.grey.shade300,thickness: 0.4)),
                 ],
               ),
               const SizedBox(height: 32),
@@ -109,6 +140,6 @@ class LoginOptionsScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
+    )); // End of Scaffold
+  } // Add missing closing parenthesis for BlocListener
 }

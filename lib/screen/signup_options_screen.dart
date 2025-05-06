@@ -51,7 +51,7 @@ class SignupOptionsScreen extends StatelessWidget {
               // Divider with "Ou"
               Row(
                 children: [
-                  Expanded(child: Divider(color: Colors.grey.shade300)),
+                  Expanded(child: Divider(color: Colors.grey.shade300,thickness: 0.4)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text(
@@ -60,7 +60,7 @@ class SignupOptionsScreen extends StatelessWidget {
                           ?.copyWith(color: Colors.grey.shade600),
                     ),
                   ),
-                  Expanded(child: Divider(color: Colors.grey.shade300)),
+                  Expanded(child: Divider(color: Colors.grey.shade300,thickness: 0.4)),
                 ],
               ),
               const SizedBox(height: 32),

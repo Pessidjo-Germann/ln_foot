@@ -40,7 +40,7 @@ class SearchSuggestionsSection extends StatelessWidget {
     return ListView.separated(
       itemCount: filteredSuggestions.length,
       separatorBuilder: (context, index) =>
-          const Divider(height: 1, color: Colors.grey), // Use theme color later
+          const Divider(height: 1,thickness: 0.4, color: Colors.grey), // Use theme color later
       itemBuilder: (context, index) {
         final suggestion = filteredSuggestions[index];
         return SearchSuggestionItem(

@@ -43,7 +43,7 @@ class OrderList extends StatelessWidget {
             ),
               const Divider(
                 height: 1,
-                thickness: 1,
+                thickness: 0.4 ,
                 indent: 16,
                 endIndent: 16,
                 color: Color(0xFFEEEEEE),

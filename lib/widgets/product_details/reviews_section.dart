@@ -41,7 +41,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Divider(height: 4, thickness: 1),
+                Divider(height: 4, thickness: 0.4),
                 Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                   Text('4.8/5', style: TextStyle(fontSize: 18)),
                   SizedBox(width: 5),
@@ -53,7 +53,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                     ],
                   ),
                 ]),
-                Divider(height: 4, thickness: 1),
+                Divider(height: 4,thickness: 0.4),
                 SizedBox(height: 16),
                 ReviewItem(
                   rating: 5,
@@ -61,7 +61,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                   date: '20 Mars 2025',
                   comment: 'Excellent produit, très confortable !',
                 ),
-                Divider(height: 24, thickness: 1),
+                Divider(height: 24, thickness: 0.4),
                 ReviewItem(
                   rating: 4,
                   author: 'Utilisateur Lambda',

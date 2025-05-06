@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_foot/bloc/order/order_bloc.dart';
 import 'package:ln_foot/screen/checkout_screen.dart';
-import 'package:ln_foot/screen/home_screen.dart';
 import 'package:ln_foot/widgets/product_details/add_to_cart_section.dart';
+import 'package:lnFoot_api/api.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/cart/cart_item_list.dart';
 import '../widgets/cart/cart_summary.dart';
 import '../widgets/cart/cart_item_widget.dart';
 
 class CartScreen extends StatefulWidget {
-  // Keep as StatelessWidget for now
   const CartScreen({super.key});
 
   @override
@@ -54,7 +55,6 @@ class _CartScreenState extends State<CartScreen> {
     setState(() {
       final itemIndex = cartItems.indexWhere((item) => item.id == itemId);
       if (itemIndex != -1) {
-        // Create a new CartItem with increased quantity
         final updatedItem = CartItem(
           id: cartItems[itemIndex].id,
           image: cartItems[itemIndex].image,
@@ -64,7 +64,6 @@ class _CartScreenState extends State<CartScreen> {
           quantity: cartItems[itemIndex].quantity + 1,
         );
 
-        // Replace the old item with the updated one
         cartItems[itemIndex] = updatedItem;
       }
     });
@@ -74,7 +73,6 @@ class _CartScreenState extends State<CartScreen> {
     setState(() {
       final itemIndex = cartItems.indexWhere((item) => item.id == itemId);
       if (itemIndex != -1 && cartItems[itemIndex].quantity > 1) {
-        // Create a new CartItem with decreased quantity
         final updatedItem = CartItem(
           id: cartItems[itemIndex].id,
           image: cartItems[itemIndex].image,
@@ -84,7 +82,6 @@ class _CartScreenState extends State<CartScreen> {
           quantity: cartItems[itemIndex].quantity - 1,
         );
 
-        // Replace the old item with the updated one
         cartItems[itemIndex] = updatedItem;
       }
     });
@@ -98,62 +95,86 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Placeholder data - replace with actual cart data logic
-    // Added unique IDs for Dismissible keys
-
-    // Calculate totals based on the CartItem list
     final double subtotal =
         cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
-    const double shipping = 20.00; // Example value
-    const double discount = 10.00; // Example value
+    const double shipping = 20.00;
+    const double discount = 10.00;
     final double total = subtotal + shipping - discount;
 
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: 'Mon panier',
-        showBackButton: true,
-        onBackButtonPressed: () => Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen())),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications_none_outlined),
-            onPressed: () {
-              // TODO: Navigate to notifications or handle tap
-            },
-          ),
-        ],
-      ),
-      body: Column(children: [
-        Expanded(
-          // Use SingleChildScrollView directly to allow content scrolling if needed
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                CartItemList(
-                  items: cartItems,
-                  onIncreaseQuantity: _handleIncreaseQuantity,
-                  onDecreaseQuantity: _handleDecreaseQuantity,
-                  onRemoveItem: _handleRemoveItem, // Added trailing comma
-                ),
-                const Divider(height: 1, thickness: 0.4),
-                CartSummary(
-                  subtotal: subtotal,
-                  shipping: shipping,
-                  discount: discount,
-                  total: total,
-                ),
-              ],
+    return BlocListener<OrderBloc, OrderState>(
+      listener: (context, state) {
+        if (state is OrderCreated) {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const CheckoutScreen()));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('Commande créée avec succès'),
+              backgroundColor: Colors.green));
+        } else if (state is OrderError) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(state.message), backgroundColor: Colors.red));
+        }
+      },
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: 'Mon panier',
+          showBackButton: true,
+          onBackButtonPressed: () => Navigator.pop(context),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.notifications_none_outlined),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        body: Column(children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  CartItemList(
+                    items: cartItems,
+                    onIncreaseQuantity: _handleIncreaseQuantity,
+                    onDecreaseQuantity: _handleDecreaseQuantity,
+                    onRemoveItem: _handleRemoveItem,
+                  ),
+                  const Divider(height: 1, thickness: 0.4),
+                  CartSummary(
+                    subtotal: subtotal,
+                    shipping: shipping,
+                    discount: discount,
+                    total: total,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        AddToCartSection(
-          title: 'Passer à la caisse',
-          onAddToCart: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckoutScreen()));
-          },
-        ),
-      ]),
-      // Checkout Button
+          AddToCartSection(
+            title: 'Passer à la caisse',
+            onAddToCart: () {
+              if (cartItems.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('Votre panier est vide'),
+                    backgroundColor: Colors.orange));
+                return;
+              }
+
+              final orderItems = cartItems
+                  .map((item) => OrderItemDto(
+                        coloredProductId: item.id,
+                        quantity: item.quantity,
+                        size: item.size,
+                      ))
+                  .toList();
+
+              final orderData = OrderDto(
+                orderItems: orderItems,
+              );
+
+              context.read<OrderBloc>().add(CreateOrder(orderData: orderData));
+            },
+          ),
+        ]),
+      ),
     );
   }
 }

@@ -40,7 +40,7 @@ class ReviewListWidget extends StatelessWidget {
           Text("Rating & Reviews",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           SizedBox(height: 2),
-          Divider(),
+          Divider(thickness: 0.4),
           SizedBox(height: 16),
           Expanded(
             child: ListView.builder(

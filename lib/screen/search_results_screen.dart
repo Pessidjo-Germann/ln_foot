@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart'; // Import Bloc
+import 'package:lnFoot_api/api.dart';
+import 'package:ln_foot/bloc/saved_items/saved_items_bloc.dart'; // Import SavedItemsBloc
+
 import 'package:ln_foot/screen/product_details_screen.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
-import 'package:ln_foot/model/product.dart';
+import 'package:ln_foot/model/product.dart'; // Garder Product pour l'instant
 import 'package:ln_foot/widgets/common/product_card.dart';
 import 'package:ln_foot/widgets/search/empty_search_result.dart';
 
@@ -17,7 +21,8 @@ class SearchResultsScreen extends StatefulWidget {
 
 class _SearchResultsScreenState extends State<SearchResultsScreen> {
   bool _isLoading = true;
-  List<Product> _searchResults = [];
+  List<ProductDto> _searchResults = [];
+  // Garder la logique de recherche locale pour cet exemple
 
   // Définir le ratio d'aspect pour les éléments de la grille
   static const double _gridChildAspectRatio = 0.58;
@@ -26,19 +31,20 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   void initState() {
     super.initState();
     _fetchSearchResults();
+    // Pas besoin de charger SavedItems ici car il est chargé dans main.dart
   }
 
   Future<void> _fetchSearchResults() async {
     // Simuler un délai réseau
     await Future.delayed(const Duration(seconds: 1));
 
+    // Utiliser les données d'exemple pour la recherche locale
+    final sampleProducts = _getSampleProducts();
+
     setState(() {
-      _searchResults = _getSampleProducts()
+      _searchResults = sampleProducts
           .where((product) =>
-              product.name
-                  .toLowerCase()
-                  .contains(widget.searchQuery.toLowerCase()) ||
-              product.category
+              product.name!
                   .toLowerCase()
                   .contains(widget.searchQuery.toLowerCase()))
           .toList();
@@ -47,63 +53,67 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
     });
   }
 
-  List<Product> _getSampleProducts() {
-    return const [
-      Product(
+  // Données d'exemple (gardées pour la démo de recherche locale)
+  List<ProductDto> _getSampleProducts() {
+    // Assurez-vous que les produits ont des IDs uniques si possible
+    return [
+       ProductDto(
+        id: 'sample1', // Ajouter un ID
         imageUrl: 'images/Rectangle 857.png',
         name: 'Godass Nike Extra Long Name To Test Wrapping Behavior',
-        category: 'Chaussure',
+       // category: 'Chaussure',
         price: 25000,
-        oldPrice: 30000,
-        rating: 4.8,
-        reviewCount: 1270,
-        isFavorite: false,
+       // oldPrice: 30000,
+       // rating: 4.8,
+       // reviewCount: 1270,
+       // isFavorite: false, // Sera déterminé par le Bloc
       ),
-      Product(
+      ProductDto(
+        id: 'sample2', // Ajouter un ID
         imageUrl: 'images/Rectangle 857.png',
         name: 'Maillot',
-        category: 'Maillot',
+       // category: 'Maillot',
         price: 10000,
-        oldPrice: 15000,
-        rating: 4.8,
-        reviewCount: 1520,
-        isFavorite: true,
+        //oldPrice: 15000,
+        //rating: 4.8,
+        // reviewCount: 1520,
+        // isFavorite: false, // Sera déterminé par le Bloc
       ),
-      Product(
+       ProductDto(
+        id: 'sample3', // Ajouter un ID
         imageUrl: 'images/Rectangle 857.png',
         name: 'Ballon Pro',
-        category: 'Ballon',
+      //  category: 'Ballon',
         price: 8000,
-        rating: 4.7,
-        reviewCount: 95,
+        // rating: 4.7,
+        // reviewCount: 95,
+        // isFavorite: false,
       ),
-      Product(
+        ProductDto(
+        id: 'sample4', // Ajouter un ID
         imageUrl: 'images/Rectangle 857.png',
         name: 'Short Adidas Performance Ultra Light Weight',
-        category: 'Vetement',
+       // category: 'Vetement',
         price: 7500,
-        rating: 4.5,
-        reviewCount: 80,
+        // rating: 4.5,
+        // reviewCount: 80,
+        // isFavorite: false,
       ),
     ];
   }
 
+  // Supprimer _toggleFavorite car géré par le Bloc
+  /*
   void _toggleFavorite(int index) {
     setState(() {
       final product = _searchResults[index];
       final updatedProduct = Product(
-        imageUrl: product.imageUrl,
-        name: product.name,
-        category: product.category,
-        price: product.price,
-        oldPrice: product.oldPrice,
-        rating: product.rating,
-        reviewCount: product.reviewCount,
-        isFavorite: !product.isFavorite,
+        // ... (copie avec isFavorite inversé)
       );
       _searchResults[index] = updatedProduct;
     });
   }
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +125,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
       ),
       body: SafeArea(
         child: _isLoading
-            ? ProductLoadingGrid()
+            ? ProductLoadingGrid() // Afficher le chargement initial
             : _searchResults.isEmpty
                 ? EmptySearchResults(searchQuery: widget.searchQuery)
                 : _buildResultsView(),
@@ -140,26 +150,78 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: GridView.builder(
-              itemCount: _searchResults.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: _gridChildAspectRatio,
-              ),
-              itemBuilder: (context, index) {
-                final product = _searchResults[index];
-                return ProductCard(
-                  product: product,
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ProductDetailsScreen(product: product)));
+            // Utiliser BlocBuilder pour l'état des favoris
+            child: BlocBuilder<SavedItemsBloc, SavedItemsState>(
+              builder: (context, savedState) {
+                Set<String?> savedItemIds = {};
+                if (savedState is SavedItemsLoaded) {
+                  savedItemIds =
+                      savedState.items.map((item) => item.id).toSet();
+                }
+
+                return GridView.builder(
+                  itemCount: _searchResults.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: _gridChildAspectRatio,
+                  ),
+                  itemBuilder: (context, index) {
+                    final product = _searchResults[index];
+                    final isFavorite = savedItemIds.contains(product.id);
+
+                    // Créer une copie du produit avec le bon état isFavorite
+                    final displayProduct = ProductDto(
+                      id: product.id,
+                      name: product.name,
+                      // category: product.category,
+                      imageUrl: product.imageUrl,
+                      price: product.price,
+                      // oldPrice: product.oldPrice,
+                      // rating: product.rating,
+                      // reviewCount: product.reviewCount,
+                      // isFavorite: isFavorite, // Utiliser l'état du Bloc
+                    );
+
+                    return ProductCard(
+                      product: displayProduct,
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProductDetailsScreen(
+                                    product: displayProduct)));
+                      },
+                      // onFavoriteTap: () {
+                      //   if (product.id != null) {
+                      //     // Créer un ProductDto minimal pour le BLoC si nécessaire
+                      //     // Ou adapter le BLoC pour accepter juste l'ID
+                      //     final productDto = ProductDto(
+                      //         id: product.id,
+                      //         name: product
+                      //             .name /* autres champs si AddSavedItem les requiert */);
+
+                      //     if (isFavorite) {
+                      //       context
+                      //           .read<SavedItemsBloc>()
+                      //           .add(RemoveSavedItem(product.id!));
+                      //     } else {
+                      //       // Assurez-vous que AddSavedItem peut gérer ce DTO
+                      //       context
+                      //           .read<SavedItemsBloc>()
+                      //           .add(AddSavedItem(productDto));
+                      //     }
+                      //   } else {
+                      //     ScaffoldMessenger.of(context).showSnackBar(
+                      //       const SnackBar(
+                      //           content: Text(
+                      //               'Erreur: ID de produit manquant pour l\'action favorite.')),
+                      //     );
+                      //   }
+                      // },
+                    );
                   },
-                  onFavoriteTap: () => _toggleFavorite(index),
                 );
               },
             ),

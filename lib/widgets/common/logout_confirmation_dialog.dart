@@ -53,7 +53,7 @@ class LogoutConfirmationDialog extends StatelessWidget {
           const SizedBox(height: 16.0),
 
           // Divider
-          const Divider(),
+          const Divider(thickness: 0.4),
           const SizedBox(height: 16.0),
 
           // Confirmation Message
