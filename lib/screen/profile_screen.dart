@@ -86,18 +86,10 @@ class ProfileScreen extends StatelessWidget {
               icon: Icons.help_outline,
               title: 'Centre d\'aide',
               onTap: () {
-                // TODO: Navigate to Help Center Screen
-                print('Navigate to Help Center');
+                
               },
             ),
-             ProfileMenuItem(
-              icon: Icons.people_outline, // Using a suitable icon
-              title: 'Inviter des amis',
-              onTap: () {
-                // TODO: Implement Invite Friends functionality
-                print('Invite Friends');
-              },
-            ),
+           
 
             const SizedBox(height: 30), // Spacer before logout
 

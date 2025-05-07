@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.ln_foot"
+    namespace = "com.lnfoot"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,9 +21,9 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.ln_foot"
+        applicationId = "com.lnfoot"
         manifestPlaceholders = [
-            appAuthRedirectScheme: 'com.monapp' // mets ici ton vrai schéma de redirection
+            appAuthRedirectScheme: 'com.lnfoot'  
         ]
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.

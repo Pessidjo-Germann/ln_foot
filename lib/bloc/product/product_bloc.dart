@@ -1,15 +1,17 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lnFoot_api/api.dart'; 
-import 'package:http/http.dart';  
+import 'package:lnFoot_api/api.dart';
+import 'package:ln_foot/service/fake_product_service.dart';
+import 'package:http/http.dart';
 
 part 'product_event.dart';
 part 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
-  final ProductControllerApi productControllerApi;
+  // Remplacer l'API par notre service de données fictives
+  final FakeProductService _fakeProductService = FakeProductService();
 
-  ProductBloc({required this.productControllerApi}) : super(ProductInitial()) {
+  ProductBloc() : super(ProductInitial()) {
     on<LoadAllProducts>(_onLoadAllProducts);
     on<LoadProductById>(_onLoadProductById);
     on<CreateProduct>(_onCreateProduct);
@@ -21,10 +23,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       LoadAllProducts event, Emitter<ProductState> emit) async {
     emit(ProductLoading());
     try {
-      final products = await productControllerApi.getAllProducts();
-      emit(ProductsLoaded(products ?? []));
-    } on ApiException catch (e) {
-      emit(ProductError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      final products = await _fakeProductService.getAllProducts();
+      emit(ProductsLoaded(products));
     } catch (e) {
       emit(ProductError('An unexpected error occurred: ${e.toString()}'));
     }
@@ -34,15 +34,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       LoadProductById event, Emitter<ProductState> emit) async {
     emit(ProductLoading());
     try {
-      final product =
-          await productControllerApi.getProductById(event.productId);
-      if (product != null) {
-        emit(ProductLoaded(product));
-      } else {
-        emit(const ProductError('Product not found.'));
-      }
-    } on ApiException catch (e) {
-      emit(ProductError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      final product = await _fakeProductService.getProductById(event.productId);
+      emit(ProductLoaded(product));
     } catch (e) {
       emit(ProductError('An unexpected error occurred: ${e.toString()}'));
     }
@@ -52,27 +45,18 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       CreateProduct event, Emitter<ProductState> emit) async {
     emit(ProductLoading());
     try {
-      // Note: L'appel API utilise des paramètres nommés.
-      final createdProduct = await productControllerApi.createProduct(
-        event.price,
-        event.categoryNames,
-        id: event.id,
-        imageUrl: event.imageUrl,
-        file:
-            event.file, // Assurez-vous que MultipartFile est géré correctement
-        name: event.name,
-        description: event.description,
-        stockQuantity: event.stockQuantity,
-        sizes: event.sizes,
-      );
-      if (createdProduct != null) {
-        emit(ProductCreated(createdProduct));
-        // Optionnel: add(LoadAllProducts()); // Pour rafraîchir la liste
-      } else {
-        emit(const ProductError('Product creation failed silently.'));
-      }
-    } on ApiException catch (e) {
-      emit(ProductError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      final productData = {
+        'name': event.name,
+        'price': event.price,
+        'categoryNames': event.categoryNames,
+        'description': event.description,
+        'stockQuantity': event.stockQuantity,
+        'sizes': event.sizes,
+      };
+
+      final createdProduct =
+          await _fakeProductService.createProduct(productData);
+      emit(ProductCreated(createdProduct));
     } catch (e) {
       emit(ProductError('An unexpected error occurred: ${e.toString()}'));
     }
@@ -82,18 +66,11 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       UpdateProduct event, Emitter<ProductState> emit) async {
     emit(ProductLoading());
     try {
-      final updatedProduct = await productControllerApi.updateProduct(
+      final updatedProduct = await _fakeProductService.updateProduct(
         event.productId,
-        productDto: event.productData, // L'API attend un ProductDto
+        event.productData.toJson(),
       );
-      if (updatedProduct != null) {
-        emit(ProductUpdated(updatedProduct));
-        // Optionnel: add(LoadAllProducts()); // Pour rafraîchir la liste
-      } else {
-        emit(const ProductError('Product update failed silently.'));
-      }
-    } on ApiException catch (e) {
-      emit(ProductError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(ProductUpdated(updatedProduct));
     } catch (e) {
       emit(ProductError('An unexpected error occurred: ${e.toString()}'));
     }
@@ -103,11 +80,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       DeleteProduct event, Emitter<ProductState> emit) async {
     emit(ProductLoading());
     try {
-      await productControllerApi.deleteProduct(event.productId);
+      await _fakeProductService.deleteProduct(event.productId);
       emit(ProductDeleted());
-      // Optionnel: add(LoadAllProducts()); // Pour rafraîchir la liste
-    } on ApiException catch (e) {
-      emit(ProductError('API Error ${e.code}: ${e.message ?? e.toString()}'));
     } catch (e) {
       emit(ProductError('An unexpected error occurred: ${e.toString()}'));
     }

@@ -1,4 +1,4 @@
-package com.example.ln_foot
+package com.lnfoot
 
 import io.flutter.embedding.android.FlutterActivity
 

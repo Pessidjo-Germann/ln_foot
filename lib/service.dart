@@ -1,12 +1,13 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
+
 class AuthService {
   final FlutterAppAuth _appAuth = FlutterAppAuth();
   final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
   final String clientId = 'ln-foot-01';
-  final String redirectUrl = 'com.monapp://callback';
-  final List<String> scopes = ['openid', 'profile', 'email', 'offline_access'];
+  final String redirectUrl = 'com.lnfoot://callback';
+  final List<String> scopes = ['openid', 'profile', 'email'];
 
   final AuthorizationServiceConfiguration _serviceConfiguration =
       AuthorizationServiceConfiguration(
@@ -32,7 +33,8 @@ class AuthService {
     }
 
     await _secureStorage.write(key: 'access_token', value: result.accessToken);
-    await _secureStorage.write(key: 'refresh_token', value: result.refreshToken);
+    await _secureStorage.write(
+        key: 'refresh_token', value: result.refreshToken);
 
     return result.accessToken!;
   }

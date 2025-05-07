@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_foot/bloc/order/order_bloc.dart';
 import 'package:ln_foot/screen/checkout_screen.dart';
+import 'package:ln_foot/screen/home_screen.dart';
 import 'package:ln_foot/widgets/product_details/add_to_cart_section.dart';
 import 'package:lnFoot_api/api.dart';
 import '../widgets/custom_app_bar.dart';
@@ -118,7 +119,8 @@ class _CartScreenState extends State<CartScreen> {
         appBar: CustomAppBar(
           title: 'Mon panier',
           showBackButton: true,
-          onBackButtonPressed: () => Navigator.pop(context),
+          onBackButtonPressed: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const HomeScreen())),
           actions: [
             IconButton(
               icon: const Icon(Icons.notifications_none_outlined),
@@ -150,6 +152,7 @@ class _CartScreenState extends State<CartScreen> {
           ),
           AddToCartSection(
             title: 'Passer à la caisse',
+            canAddToCart: false,
             onAddToCart: () {
               if (cartItems.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

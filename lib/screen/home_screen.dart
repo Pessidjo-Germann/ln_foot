@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_foot/bloc/product/product_bloc.dart';
 import 'package:ln_foot/screen/cart_screen.dart';
 import 'package:ln_foot/screen/profile_screen.dart';
 import 'package:ln_foot/widgets/home/home_app_bar.dart';
@@ -39,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed, 
+        type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         selectedItemColor: kAppOrangeColor,
@@ -73,32 +75,59 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class HomeContent extends StatelessWidget {
+class HomeContent extends StatefulWidget {
   const HomeContent({super.key});
 
   @override
+  State<HomeContent> createState() => _HomeContentState();
+}
+
+class _HomeContentState extends State<HomeContent>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProducts();
+  }
+
+  void _loadProducts() {
+    context.read<ProductBloc>().add(LoadAllProducts());
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
-       appBar: const HomeAppBar(), 
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SearchBarWidget(
-              isClickable: true,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SearchScreen()),
-                );
-              },
-            ),
-            const SizedBox(height: 8),
-            CategoriesSection(),
-            const PromoBanner(),
-            const SpecialOffersSection(),
-            const SizedBox(height: 24),
-          ],
+      appBar: const HomeAppBar(),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _loadProducts();
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SearchBarWidget(
+                isClickable: true,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SearchScreen()),
+                  );
+                },
+              ),
+              const SizedBox(height: 8),
+              CategoriesSection(),
+              const PromoBanner(),
+              const SpecialOffersSection(),
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
       ),
     );
