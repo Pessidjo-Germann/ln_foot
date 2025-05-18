@@ -7,6 +7,7 @@ import 'package:ln_foot/screen/privacy_policy_screen.dart'; // Import PrivacyPol
 import 'package:ln_foot/widgets/common/logout_confirmation_dialog.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/profile/profile_menu_item.dart';
+import 'package:url_launcher/url_launcher.dart'; // Import url_launcher
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -98,7 +99,18 @@ class ProfileScreen extends StatelessWidget {
             ProfileMenuItem(
               icon: Icons.help_outline,
               title: 'Centre d\'aide',
-              onTap: () {},
+              onTap: () async {
+                const phone = '678558841';
+                final url = Uri.parse('https://wa.me/$phone');
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Impossible d\'ouvrir WhatsApp.')),
+                  );
+                }
+              },
             ),
 
             const SizedBox(height: 30), // Spacer before logout
