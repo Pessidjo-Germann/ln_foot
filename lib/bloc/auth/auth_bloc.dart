@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ln_foot/service.dart';
- 
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -10,32 +9,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthService authService;
 
   AuthBloc({required this.authService}) : super(AuthInitial()) {
-    on<LoginRequested>(_onLoginRequested);
-    on<LogoutRequested>(_onLogoutRequested);
-    on<AppStarted>(_onAppStarted);
-  }
+    on<AppStarted>((event, emit) async {
+      emit(AuthLoading());
+      await for (final isLoggedIn in authService.authStream) {
+        if (isLoggedIn) {
+          final user = await authService.getUserInfo();
+          emit(Authenticated(user!));
+        } else {
+          emit(Unauthenticated());
+        }
+      }
+    });
 
-  Future<void> _onLoginRequested(LoginRequested event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
-    try {
-      final token = await authService.loginWithKeycloak();
-      emit(AuthAuthenticated(token: token));
-    } catch (e) {
-      emit(AuthError(message: e.toString()));
-    }
-  }
+    on<LoginRequested>((event, emit) async {
+      emit(AuthLoading());
+      final success = await authService.login();
+      if (success) {
+        final user = await authService.getUserInfo();
+        emit(Authenticated(user!));
+      } else {
+        emit(AuthError('Login failed'));
+      }
+    });
 
-  Future<void> _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) async {
-    await authService.logout();
-    emit(AuthUnauthenticated());
-  }
-
-  Future<void> _onAppStarted(AppStarted event, Emitter<AuthState> emit) async {
-    final loggedIn = await authService.isLoggedIn();
-    if (loggedIn) {
-      emit(AuthAuthenticated(token: '...'));
-    } else {
-      emit(AuthUnauthenticated());
-    }
+    on<LogoutRequested>((event, emit) async {
+      await authService.logout();
+      emit(Unauthenticated());
+    });
   }
 }
