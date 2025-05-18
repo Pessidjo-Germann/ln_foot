@@ -11,6 +11,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required this.authService}) : super(AuthInitial()) {
     on<AppStarted>((event, emit) async {
       emit(AuthLoading());
+      // Vérification immédiate du token
+      final token = await authService.getAccessToken();
+      if (token != null && token.isNotEmpty) {
+        final user = await authService.getUserInfo();
+        emit(Authenticated(user!));
+      } else {
+        emit(Unauthenticated());
+      }
+      // Ensuite, écoute du flux pour les changements dynamiques
       await for (final isLoggedIn in authService.authStream) {
         if (isLoggedIn) {
           final user = await authService.getUserInfo();

@@ -1,5 +1,7 @@
-import 'dart:async'; // Import async library for Timer
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_foot/bloc/auth/auth_bloc.dart';
+import 'package:ln_foot/screen/home_screen.dart';
 import 'package:ln_foot/screen/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -10,28 +12,42 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool _navigated = false;
+
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
-      );
-    });
+    // Plus de Timer ici : navigation uniquement via BlocListener
+  }
+
+  void _navigateOnce(Widget page) {
+    if (_navigated) return;
+    _navigated = true;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => page),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Use theme color for background
     final theme = Theme.of(context);
     final backgroundColor = theme.colorScheme.secondary;
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      body: Center(
-        child: Image.asset(
-          'images/LNFOOT2 1.png',
-          width: 150,
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is Authenticated) {
+            _navigateOnce(const HomeScreen());
+          } else if (state is Unauthenticated) {
+            _navigateOnce(const OnboardingScreen());
+          }
+        },
+        child: Center(
+          child: Image.asset(
+            'images/LNFOOT2 1.png',
+            width: 150,
+          ),
         ),
       ),
     );

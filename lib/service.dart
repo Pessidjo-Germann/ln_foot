@@ -8,6 +8,7 @@ import 'package:keycloak_wrapper/keycloak_wrapper.dart';
 
 class AuthService {
   final KeycloakWrapper _keycloak;
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   AuthService._(this._keycloak);
 
@@ -16,19 +17,39 @@ class AuthService {
       config: KeycloakConfig(
         bundleIdentifier: 'com.lnfoot',
         clientId: 'ln-foot-01',
-     
         frontendUrl: 'https://lnfoot-auth.hublots.co',
         realm: 'lnfoot',
       ),
     );
-
-    await wrapper.initialize();  
+    await wrapper.initialize();
     return AuthService._(wrapper);
   }
 
   Stream<bool> get authStream => _keycloak.authenticationStream;
-  Future<bool> login() => _keycloak.login();
-  Future<bool> logout() => _keycloak.logout();
+
+  Future<bool> login() async {
+    final result = await _keycloak.login();
+    if (result) {
+      final token = _keycloak.accessToken;
+      if (token != null) {
+        await _secureStorage.write(key: 'access_token', value: token);
+      }
+    }
+    return result;
+  }
+
+  Future<bool> logout() async {
+    final result = await _keycloak.logout();
+    await _secureStorage.delete(key: 'access_token');
+    return result;
+  }
+
+  Future<String?> getAccessToken() async {
+    final storedToken = await _secureStorage.read(key: 'access_token');
+    return storedToken ?? _keycloak.accessToken;
+  }
+
+  String? getRefreshToken() => _keycloak.refreshToken;
   Future<Map<String, dynamic>?> getUserInfo() => _keycloak.getUserInfo();
 }
 

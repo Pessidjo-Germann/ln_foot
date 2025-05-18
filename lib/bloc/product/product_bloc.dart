@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:lnFoot_api/api.dart';
 import 'package:http/http.dart';
 
@@ -7,10 +8,11 @@ part 'product_event.dart';
 part 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
-  // Remplacer l'API par notre service de données fictives
-  final ProductControllerApi _productApi = ProductControllerApi();
+  final ProductControllerApi _productApi;
 
-  ProductBloc() : super(ProductInitial()) {
+  ProductBloc({required ProductControllerApi productApi})
+      : _productApi = productApi,
+        super(ProductInitial()) {
     on<LoadAllProducts>(_onLoadAllProducts);
     on<LoadProductById>(_onLoadProductById);
     on<CreateProduct>(_onCreateProduct);
@@ -23,6 +25,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     emit(ProductLoading());
     try {
       final products = await _productApi.getAllProducts();
+      debugPrint('Products: $products');
       emit(ProductsLoaded(products ?? []));
     } catch (e) {
       emit(ProductError('An unexpected error occurred: ${e.toString()}'));

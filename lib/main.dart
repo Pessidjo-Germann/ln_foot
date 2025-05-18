@@ -12,22 +12,31 @@ import 'package:lnFoot_api/api.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final authService = await AuthService.create();  
-  final orderControllerApi = OrderControllerApi();
+  final authService = await AuthService.create();
+  final token = await authService.getAccessToken();
+  final apiClient = ApiClient();
+  if (token != null && token.isNotEmpty) {
+    apiClient.setAuthToken(token);
+  }
+  final productApi = ProductControllerApi(apiClient);
+  final orderControllerApi = OrderControllerApi(apiClient);
   runApp(MyApp(
     authService: authService,
     orderControllerApi: orderControllerApi,
+    productApi: productApi,
   ));
 }
 
 class MyApp extends StatelessWidget {
   final AuthService authService;
   final OrderControllerApi orderControllerApi;
+  final ProductControllerApi productApi;
 
   const MyApp({
     super.key,
     required this.authService,
     required this.orderControllerApi,
+    required this.productApi,
   });
 
   @override
@@ -38,7 +47,8 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthBloc(authService: authService)..add(AppStarted()),
         ),
         BlocProvider<ProductBloc>(
-          create: (_) => ProductBloc()..add(LoadAllProducts()),
+          create: (_) =>
+              ProductBloc(productApi: productApi)..add(LoadAllProducts()),
         ),
         BlocProvider<SavedItemsBloc>(
           create: (_) => SavedItemsBloc()..add(LoadSavedItems()),
@@ -50,8 +60,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'LN Foot',
         theme: appThemeData,
-        home:
-            const SplashScreen(), 
+        home: const SplashScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );

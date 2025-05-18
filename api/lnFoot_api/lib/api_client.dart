@@ -21,7 +21,9 @@ class ApiClient {
 
   var _client = Client();
   final _defaultHeaderMap = <String, String>{};
-
+   void setAuthToken(String token) {
+    defaultHeaderMap['Authorization'] = 'Bearer $token';
+  }
   /// Returns the current HTTP [Client] instance to use in this class.
   ///
   /// The return value is guaranteed to never be null.

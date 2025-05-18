@@ -20,6 +20,7 @@ class KeycloakService {
   Future<bool> login() => _keycloak.login();
 
   Future<bool> logout() => _keycloak.logout();
+   
 
   Future<Map<String, dynamic>?> getUserInfo() => _keycloak.getUserInfo();
 }
