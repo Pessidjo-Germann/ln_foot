@@ -3,6 +3,7 @@ import 'package:ln_foot/screen/my_orders_screen.dart';
 import 'package:ln_foot/screen/notification_screen.dart'; // Added import
 import 'package:ln_foot/screen/payment_method_screen.dart'; // Added import
 import 'package:ln_foot/screen/profile_details_screen.dart';
+import 'package:ln_foot/screen/privacy_policy_screen.dart'; // Import PrivacyPolicyScreen
 import 'package:ln_foot/widgets/common/logout_confirmation_dialog.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/profile/profile_menu_item.dart';
@@ -15,20 +16,25 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Compte',
-        showBackButton: true, 
-        onBackButtonPressed: ()=>Navigator.pop(context),
+        showBackButton: true,
+        onBackButtonPressed: () => Navigator.pop(context),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_none_outlined), // Or your custom notification icon
+            icon: const Icon(Icons
+                .notifications_none_outlined), // Or your custom notification icon
             onPressed: () {
               // TODO: Navigate to Notification Screen
-              Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NotificationScreen()));
             },
           ),
           const SizedBox(width: 16), // Add some padding
         ],
       ),
-      body: SingleChildScrollView( // Use SingleChildScrollView if content might overflow
+      body: SingleChildScrollView(
+        // Use SingleChildScrollView if content might overflow
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
         child: Column(
           children: [
@@ -39,7 +45,8 @@ class ProfileScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ProfileDetailsScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const ProfileDetailsScreen()),
                 );
               },
             ),
@@ -49,7 +56,8 @@ class ProfileScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MyOrdersScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const MyOrdersScreen()),
                 );
                 print('Navigate to Orders');
               },
@@ -58,9 +66,10 @@ class ProfileScreen extends StatelessWidget {
               icon: Icons.payment_outlined,
               title: 'Modes de paiement',
               onTap: () {
-                 Navigator.push(
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const PaymentMethodScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const PaymentMethodScreen()),
                 );
               },
             ),
@@ -68,28 +77,29 @@ class ProfileScreen extends StatelessWidget {
               icon: Icons.notifications_none_outlined,
               title: 'Notifications',
               onTap: () {
-                 Navigator.push(
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const NotificationScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const NotificationScreen()),
                 );
               },
             ),
-             ProfileMenuItem(
+            ProfileMenuItem(
               icon: Icons.lock_outline,
               title: 'politique de confidentialité',
               onTap: () {
-                // TODO: Navigate to Privacy Policy Screen or show dialog/webview
-                print('Navigate to Privacy Policy');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PrivacyPolicyScreen()),
+                );
               },
             ),
-             ProfileMenuItem(
+            ProfileMenuItem(
               icon: Icons.help_outline,
               title: 'Centre d\'aide',
-              onTap: () {
-                
-              },
+              onTap: () {},
             ),
-           
 
             const SizedBox(height: 30), // Spacer before logout
 
@@ -104,7 +114,8 @@ class ProfileScreen extends StatelessWidget {
                 showLogoutDialog(context);
                 print('Logout tapped');
               },
-              contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
               visualDensity: VisualDensity.compact,
             ),
           ],

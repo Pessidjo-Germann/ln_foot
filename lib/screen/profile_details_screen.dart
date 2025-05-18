@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_foot/bloc/auth/auth_bloc.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
-import 'package:ln_foot/widgets/custom_button.dart'; 
+import 'package:ln_foot/widgets/custom_button.dart';
 
 class ProfileDetailsScreen extends StatefulWidget {
   const ProfileDetailsScreen({super.key});
@@ -11,13 +13,12 @@ class ProfileDetailsScreen extends StatefulWidget {
 
 class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController(text: 'Cody Fisher');
-  final _emailController = TextEditingController(text: 'cody.fisher45@example.com');
-  final _dobController = TextEditingController(text: '12/07/1990');
-  final _phoneController = TextEditingController(text: '+237 671 524 727');
-  String? _selectedGender = 'Male'; // Default example value
-
-  // TODO: Add logic to load actual user data
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _dobController = TextEditingController();
+  final _phoneController = TextEditingController();
+  String? _selectedGender;
+  bool _initialized = false;
 
   @override
   void dispose() {
@@ -26,6 +27,16 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     _dobController.dispose();
     _phoneController.dispose();
     super.dispose();
+  }
+
+  void _initUserData(Map<String, dynamic> user) {
+    if (_initialized) return;
+    _nameController.text = user['name'] ?? '';
+    _emailController.text = user['email'] ?? '';
+    _dobController.text = user['birthdate'] ?? '';
+    _phoneController.text = user['phone_number'] ?? '';
+    _selectedGender = user['gender'] ?? null;
+    _initialized = true;
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -38,7 +49,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     if (picked != null) {
       // TODO: Format the date as needed (e.g., using intl package)
       setState(() {
-        _dobController.text = "${picked.day}/${picked.month}/${picked.year}"; // Simple format
+        _dobController.text =
+            "${picked.day}/${picked.month}/${picked.year}"; // Simple format
       });
     }
   }
@@ -49,7 +61,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
       appBar: CustomAppBar(
         title: 'Mon profile',
         showBackButton: true,
-        onBackButtonPressed: ()=> Navigator.pop(context),
+        onBackButtonPressed: () => Navigator.pop(context),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_none_outlined),
@@ -61,55 +73,65 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
           const SizedBox(width: 16),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTextField(
-                label: 'Nom et prénom',
-                controller: _nameController,
-                // validator: (value) => ..., // Add validation if needed
+      body: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          if (state is AuthLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is Authenticated) {
+            _initUserData(state.user);
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTextField(
+                      label: 'Nom et prénom',
+                      controller: _nameController,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildTextField(
+                      label: 'Adresse email',
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    const SizedBox(height: 16),
+                    // _buildDateField(
+                    //   label: 'Date de naissance',
+                    //   controller: _dobController,
+                    //   onTap: () => _selectDate(context),
+                    // ),
+                    // const SizedBox(height: 16),
+                    // _buildGenderDropdown(
+                    //   label: 'Genre',
+                    //   value: _selectedGender,
+                    //   onChanged: (newValue) {
+                    //     setState(() {
+                    //       _selectedGender = newValue;
+                    //     });
+                    //   },
+                    // ),
+                    // const SizedBox(height: 16),
+                    // _buildPhoneField(
+                    //   label: 'Numéro de téléphone',
+                    //   controller: _phoneController,
+                    // ),
+                    const SizedBox(height: 32),
+                  ],
+                ),
               ),
-              const SizedBox(height: 16),
-              _buildTextField(
-                label: 'Adresse email',
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                // validator: (value) => ..., // Add validation if needed
-              ),
-              const SizedBox(height: 16),
-              _buildDateField(
-                label: 'Date de naissance',
-                controller: _dobController,
-                onTap: () => _selectDate(context),
-              ),
-              const SizedBox(height: 16),
-              _buildGenderDropdown(
-                label: 'Genre',
-                value: _selectedGender,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedGender = newValue;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildPhoneField(
-                label: 'Numéro de téléphone',
-                controller: _phoneController,
-                // TODO: Implement country code picker if needed
-              ),
-              const SizedBox(height: 32),
-            ],
-          ),
-        ),
+            );
+          } else if (state is AuthError) {
+            return Center(child: Text('Erreur: ${state.message}'));
+          } else {
+            return const Center(child: Text('Aucune information utilisateur.'));
+          }
+        },
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: CustomButton( // Using CustomButton based on info.txt
+        child: CustomButton(
           text: 'Enregistré',
           onPressed: () {
             if (_formKey.currentState!.validate()) {
@@ -120,12 +142,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
               print('DOB: ${_dobController.text}');
               print('Gender: $_selectedGender');
               print('Phone: ${_phoneController.text}');
-              // Optionally show a success message/snackbar
-
               Navigator.pop(context);
             }
           },
-          // TODO: Adjust styling if CustomButton allows (e.g., background color)
         ),
       ),
     );
@@ -144,9 +163,12 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.w500)), // Or use Theme
+        Text(label,
+            style:
+                const TextStyle(fontWeight: FontWeight.w500)), // Or use Theme
         const SizedBox(height: 8),
-        TextFormField( // Using standard TextFormField, replace with CustomTextField if it fits
+        TextFormField(
+          // Using standard TextFormField, replace with CustomTextField if it fits
           controller: controller,
           keyboardType: keyboardType,
           validator: validator,
@@ -166,7 +188,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
               borderRadius: BorderRadius.circular(8.0),
               borderSide: BorderSide(color: Theme.of(context).primaryColor),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
             suffixIcon: suffixIcon,
           ),
         ),
@@ -210,19 +233,20 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
               .toList(),
           onChanged: onChanged,
           decoration: InputDecoration(
-             border: OutlineInputBorder(
+            border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.0),
               borderSide: BorderSide(color: Colors.grey.shade300),
             ),
-             enabledBorder: OutlineInputBorder(
+            enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.0),
               borderSide: BorderSide(color: Colors.grey.shade300),
             ),
-             focusedBorder: OutlineInputBorder(
+            focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.0),
               borderSide: BorderSide(color: Theme.of(context).primaryColor),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
           ),
           // validator: (value) => value == null ? 'Please select gender' : null, // Optional validation
         ),
@@ -230,12 +254,12 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     );
   }
 
-   // Helper for Phone Field (basic implementation)
+  // Helper for Phone Field (basic implementation)
   Widget _buildPhoneField({
     required String label,
     required TextEditingController controller,
   }) {
-     // TODO: Integrate a country code picker package (e.g., intl_phone_field) for better UX
+    // TODO: Integrate a country code picker package (e.g., intl_phone_field) for better UX
     return _buildTextField(
       label: label,
       controller: controller,
