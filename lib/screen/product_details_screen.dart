@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_foot/bloc/product/product_bloc.dart';
+import 'package:ln_foot/bloc/colored_product/colored_product_bloc.dart';
+import 'package:ln_foot/bloc/review/review_bloc.dart';
 
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/product_details/loading_bottom_sheet.dart';
@@ -28,19 +30,40 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Color? _selectedColor;
   bool _isFavorite = false;
 
-  final Map<Color, String> availableColorsMap = {
-    Colors.red: 'Rouge',
-    Colors.purple: 'Violet',
-    Colors.black: 'Noir',
-    Colors.blue: 'Bleu',
-    Colors.pink: 'Rose',
-  };
+  // Replace static color map and color logic with dynamic colors from ColoredProductBloc
+  late List<ColoredProductDto> _coloredProducts = [];
+  late Map<Color, String> _availableColorsMap = {};
+
+  Color? _colorFromNameOrCode(String? name) {
+    // TODO: Map backend color name/code to Flutter Color
+    switch (name?.toLowerCase()) {
+      case 'rouge':
+      case 'red':
+        return Colors.red;
+      case 'noir':
+      case 'black':
+        return Colors.black;
+      case 'bleu':
+      case 'blue':
+        return Colors.blue;
+      case 'rose':
+      case 'pink':
+        return Colors.pink;
+      case 'violet':
+      case 'purple':
+        return Colors.purple;
+      default:
+        return Colors.grey;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _isFavorite = false;
     context.read<ProductBloc>().add(LoadProductById(widget.product.id!));
+    // Charger dynamiquement les couleurs pour ce produit
+    context.read<ColoredProductBloc>().add(LoadColoredProducts());
   }
 
   void _handleSizeSelected(String? size) {
@@ -73,7 +96,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     }
 
     print(
-        'Added to cart: ${product.name}, Size: $_selectedSize, Color: ${availableColorsMap[_selectedColor] ?? _selectedColor}');
+        'Added to cart: [200m${product.name}, Size: $_selectedSize, Color: ${_availableColorsMap[_selectedColor] ?? _selectedColor}[0m');
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('${product.name} ajouté au panier !'),
@@ -85,82 +108,113 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final bool canAddToCart = _selectedSize != null && _selectedColor != null;
-    final List<Color> availableColorValues = availableColorsMap.keys.toList();
-    final String initialColorName = availableColorsMap[
-            availableColorValues.firstWhere((c) => c == Colors.black,
-                orElse: () => availableColorValues.first)] ??
+    final List<Color> availableColorValues = _availableColorsMap.keys.toList();
+    final String initialColorName = _availableColorsMap[
+            availableColorValues.isNotEmpty
+                ? availableColorValues.first
+                : Colors.grey] ??
         '';
 
     return Scaffold(
       appBar: CustomAppBar(
           title: 'Détails du produit',
           onBackButtonPressed: () => Navigator.pop(context)),
-      body: BlocBuilder<ProductBloc, ProductState>(
-        builder: (context, state) {
-          if (state is ProductLoading) {
-            return const ProductDetailsLoadingView();
-          } else if (state is ProductLoaded) {
-            final product = widget.product;
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16),
-                  ProductImageSection(
-                    imageUrl: product.imageUrl ?? '',
-                    initialIsFavorite: _isFavorite,
-                    onFavoriteToggle: _handleFavoriteToggle,
-                  ),
-                  const SizedBox(height: 24),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ProductInfoSection(
-                          name: product.name ?? '',
-                          price: (product.price ?? 0).toDouble(),
-                          rating: 0,
-                          reviewCount: 0,
-                        ),
-                        const SizedBox(height: 16),
-                        const Divider(thickness: 0.4),
-                        const SizedBox(height: 16),
-                        ProductDescriptionSection(
-                            description: product.description ?? ''),
-                        const SizedBox(height: 16),
-                        const Divider(thickness: 0.4),
-                        const SizedBox(height: 16),
-                        SizeSelector(
-                          availableSizes: product.sizes ?? [],
-                          selectedSize: _selectedSize,
-                          onSizeSelected: _handleSizeSelected,
-                        ),
-                        const SizedBox(height: 24),
-                        ColorSelector(
-                          availableColors: availableColorValues,
-                          selectedColor: _selectedColor,
-                          onColorSelected: _handleColorSelected,
-                          initialColorName: initialColorName,
-                        ),
-                        const SizedBox(height: 16),
-                        const Divider(thickness: 0.4),
-                        const SizedBox(height: 16),
-                        const ReviewsSection(),
-                        const SizedBox(height: 100),
-                      ],
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<ColoredProductBloc, ColoredProductState>(
+            listener: (context, state) {
+              if (state is ColoredProductsLoaded) {
+                setState(() {
+                  _coloredProducts = state.coloredProducts
+                      .where((c) => c.productId == widget.product.id)
+                      .toList();
+                  _availableColorsMap = {
+                    for (var c in _coloredProducts)
+                      if (_colorFromNameOrCode(c.name) != null)
+                        _colorFromNameOrCode(c.name)!: c.name ?? ''
+                  };
+                });
+              }
+            },
+          ),
+          BlocListener<ReviewBloc, ReviewState>(
+            listener: (context, state) {
+              if (state is ReviewsLoaded) {
+                setState(() {
+                  // Handle loaded reviews if needed
+                });
+              }
+            },
+          ),
+        ],
+        child: BlocBuilder<ProductBloc, ProductState>(
+          builder: (context, state) {
+            if (state is ProductLoading) {
+              return const ProductDetailsLoadingView();
+            } else if (state is ProductLoaded) {
+              final product = widget.product;
+
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 16),
+                    ProductImageSection(
+                      imageUrl: product.imageUrl!,
+                      initialIsFavorite: _isFavorite,
+                      onFavoriteToggle: _handleFavoriteToggle,
                     ),
-                  ),
-                ],
-              ),
-            );
-          } else if (state is ProductError) {
-            return Center(
-              child: Text('Erreur: ${state.message}'),
-            );
-          }
-          return const ProductDetailsLoadingView();
-        },
+                    const SizedBox(height: 24),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ProductInfoSection(
+                            name: product.name ?? '',
+                            price: product.price.toDouble(),
+                            rating: 0,
+                            reviewCount: 0,
+                          ),
+                          const SizedBox(height: 16),
+                          const Divider(thickness: 0.4),
+                          const SizedBox(height: 16),
+                          ProductDescriptionSection(
+                              description: product.description ?? ''),
+                          const SizedBox(height: 16),
+                          const Divider(thickness: 0.4),
+                          const SizedBox(height: 16),
+                          SizeSelector(
+                            availableSizes: product.sizes,
+                            selectedSize: _selectedSize,
+                            onSizeSelected: _handleSizeSelected,
+                          ),
+                          const SizedBox(height: 24),
+                          ColorSelector(
+                            availableColors: availableColorValues,
+                            selectedColor: _selectedColor,
+                            onColorSelected: _handleColorSelected,
+                            initialColorName: initialColorName,
+                          ),
+                          const SizedBox(height: 16),
+                          const Divider(thickness: 0.4),
+                          const SizedBox(height: 16),
+                          ReviewsSection(productId: product.id!),
+                          const SizedBox(height: 100),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            } else if (state is ProductError) {
+              return Center(
+                child: Text('Erreur: ${state.message}'),
+              );
+            }
+            return const ProductDetailsLoadingView();
+          },
+        ),
       ),
       bottomSheet: BlocBuilder<ProductBloc, ProductState>(
         builder: (context, state) {

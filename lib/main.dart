@@ -5,6 +5,8 @@ import 'package:ln_foot/bloc/product/product_bloc.dart';
 import 'package:ln_foot/bloc/saved_items/saved_items_bloc.dart';
 import 'package:ln_foot/bloc/order/order_bloc.dart';
 import 'package:ln_foot/bloc/category/category_bloc.dart';
+import 'package:ln_foot/bloc/colored_product/colored_product_bloc.dart';
+import 'package:ln_foot/bloc/review/review_bloc.dart';
 import 'package:ln_foot/screen/splash_screen.dart';
 import 'package:ln_foot/theme/app_theme.dart';
 import 'package:ln_foot/service.dart';
@@ -26,11 +28,15 @@ void main() async {
   final productApi = ProductControllerApi(apiClient);
   final orderControllerApi = OrderControllerApi(apiClient);
   final categoryControler = CategoryControllerApi(apiClient);
+  final coloredProductControllerApi = ColoredProductControllerApi(apiClient);
+  final reviewControllerApi = ReviewControllerApi(apiClient);
   runApp(MyApp(
     authService: authService,
     orderControllerApi: orderControllerApi,
     productApi: productApi,
     categoryControllerApi: categoryControler,
+    coloredProductControllerApi: coloredProductControllerApi,
+    reviewControllerApi: reviewControllerApi,
   ));
 }
 
@@ -39,13 +45,18 @@ class MyApp extends StatelessWidget {
   final OrderControllerApi orderControllerApi;
   final ProductControllerApi productApi;
   final CategoryControllerApi categoryControllerApi;
+  final ColoredProductControllerApi coloredProductControllerApi;
+  final ReviewControllerApi reviewControllerApi;
 
-  const MyApp(
-      {super.key,
-      required this.authService,
-      required this.orderControllerApi,
-      required this.productApi,
-      required this.categoryControllerApi});
+  const MyApp({
+    super.key,
+    required this.authService,
+    required this.orderControllerApi,
+    required this.productApi,
+    required this.categoryControllerApi,
+    required this.coloredProductControllerApi,
+    required this.reviewControllerApi,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +80,13 @@ class MyApp extends StatelessWidget {
           create: (_) =>
               CategoryBloc(categoryControllerApi: categoryControllerApi)
                 ..add(LoadAllCategories()),
+        ),
+        BlocProvider<ColoredProductBloc>(
+          create: (_) => ColoredProductBloc(
+              coloredProductControllerApi: coloredProductControllerApi),
+        ),
+        BlocProvider<ReviewBloc>(
+          create: (_) => ReviewBloc(reviewControllerApi: reviewControllerApi),
         ),
       ],
       child: MaterialApp(

@@ -44,14 +44,10 @@ class _ProductImageSectionState extends State<ProductImageSection> {
       child: Stack(
         children: [
           Center(
-            child: SvgPicture.asset(
+            child: Image.network(
               widget.imageUrl,
-              fit: BoxFit.contain, // Adjust fit as needed
+              fit: BoxFit.cover, // Adjust fit as needed
               height: 250, // Set a reasonable height, adjust as needed
-              placeholderBuilder: (BuildContext context) => Container(
-                height: 250, // Match height
-                child: Center(child: CircularProgressIndicator()),
-              ),
             ),
           ),
           Positioned(
