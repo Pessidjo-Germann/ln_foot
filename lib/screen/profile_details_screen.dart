@@ -39,21 +39,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     _initialized = true;
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(), // Or parse from existing data
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-    if (picked != null) {
-      // TODO: Format the date as needed (e.g., using intl package)
-      setState(() {
-        _dobController.text =
-            "${picked.day}/${picked.month}/${picked.year}"; // Simple format
-      });
-    }
-  }
+ 
 
   @override
   Widget build(BuildContext context) {

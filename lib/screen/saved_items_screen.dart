@@ -17,8 +17,7 @@ class SavedItemsScreen extends StatefulWidget {
 }
 
 class _SavedItemsScreenState extends State<SavedItemsScreen> {
-
-    // bool _isLoading = true; // Supprimé
+  // bool _isLoading = true; // Supprimé
 
   @override
   void initState() {
@@ -69,13 +68,11 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
             // Utiliser GridView.builder pour le shimmer pour correspondre à la mise en page
             return GridView.builder(
               padding: const EdgeInsets.all(16.0),
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, // Two items per row
                 crossAxisSpacing: 16.0,
                 mainAxisSpacing: 16.0,
-                childAspectRatio:
-                    0.6, // Adjust aspect ratio as needed
+                childAspectRatio: 0.6, // Adjust aspect ratio as needed
               ),
               itemCount: 6, // Nombre de placeholders shimmer
               itemBuilder: (context, index) => const ShimmerProductCard(),
@@ -111,39 +108,17 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
                       ),
                       itemCount: items.length,
                       itemBuilder: (context, index) {
-                        final product = items[index];
-                        // Convertir ProductDto en Product si ProductCard attend Product
-                        // Assurez-vous que ProductCard peut gérer ProductDto ou adaptez ici
-                        final displayProduct = ProductDto(
-                          id: product.id,
-                          name: product.name ?? 'Nom inconnu',
-                      //    category: product.category?.name ?? 'Catégorie inconnue', // Ajustez selon votre modèle
-                          imageUrl: 'images/placeholder.png', // Prend la première image ou un placeholder
-                          price: product.price ?? 0,
-                        //  oldPrice: product.oldPrice,
-                          //rating: product.rating ?? 0.0,
-                          //reviewCount: product.reviewCount ?? 0,
-                          //isFavorite: true, // Toujours vrai dans cet écran
-                          // Ajoutez d'autres champs si nécessaire
-                        );
+                        final item = items[index];
                         return ProductCard(
-                          product: displayProduct, // Passer le produit converti
+                          product: item,
                           onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ProductDetailsScreen(product: displayProduct))), // Passer le produit converti
-                          // onFavoriteTap: () {
-                          //   // Déclencher l'événement de suppression
-                          //   if (product.id != null) {
-                          //       context.read<SavedItemsBloc>().add(RemoveSavedItem(product.id!));
-                          //   } else {
-                          //       // Gérer le cas où l'ID est null (ne devrait pas arriver si bien sauvegardé)
-                          //       ScaffoldMessenger.of(context).showSnackBar(
-                          //         const SnackBar(content: Text('Erreur: ID de produit manquant.')),
-                          //       );
-                          //   }
-                          // },
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductDetailsScreen(
+                                product: item,
+                              ),
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -163,30 +138,4 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
       ),
     );
   }
-}
-
-// Définition de la classe Product (si elle n'existe pas déjà ou pour correspondre)
-// Assurez-vous que cette définition correspond à celle utilisée par ProductCard
-class Product {
-  final String? id;
-  final String name;
-  final String category;
-  final String imageUrl;
-  final double price;
-  final double? oldPrice;
-  final double rating;
-  final int reviewCount;
-  final bool isFavorite;
-
-  const Product({
-    this.id,
-    required this.name,
-    required this.category,
-    required this.imageUrl,
-    required this.price,
-    this.oldPrice,
-    required this.rating,
-    required this.reviewCount,
-    required this.isFavorite,
-  });
 }

@@ -162,6 +162,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     const SizedBox(height: 16),
                     ProductImageSection(
                       imageUrl: product.imageUrl!,
+                      product: product,
                       initialIsFavorite: _isFavorite,
                       onFavoriteToggle: _handleFavoriteToggle,
                     ),

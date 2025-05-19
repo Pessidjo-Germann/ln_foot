@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:lnFoot_api/api.dart';
+import 'package:ln_foot/bloc/saved_items/saved_items_bloc.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductDto product;
@@ -90,13 +92,39 @@ class ProductCard extends StatelessWidget {
                         elevation: 1.0,
                         child: InkWell(
                           borderRadius: BorderRadius.circular(8.0),
-                          onTap: onFavoriteTap,
+                          onTap: () {
+                            final bloc = context.read<SavedItemsBloc>();
+                            final state = bloc.state;
+                            if (state is SavedItemsLoaded) {
+                              final isFavorite = state.items
+                                  .any((item) => item.id == product.id);
+                              if (isFavorite) {
+                                bloc.add(RemoveSavedItem(product.id!));
+                              } else {
+                                bloc.add(AddSavedItem(product));
+                              }
+                            }
+                            if (onFavoriteTap != null) onFavoriteTap!();
+                          },
                           child: Padding(
                             padding: const EdgeInsets.all(6.0),
-                            child: Icon(
-                              Icons.favorite_border,
-                              color: Colors.grey.shade700,
-                              size: 22,
+                            child: BlocBuilder<SavedItemsBloc, SavedItemsState>(
+                              builder: (context, state) {
+                                bool isFavorite = false;
+                                if (state is SavedItemsLoaded) {
+                                  isFavorite = state.items
+                                      .any((item) => item.id == product.id);
+                                }
+                                return Icon(
+                                  isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: isFavorite
+                                      ? const Color(0xFFF16A26)
+                                      : Colors.grey.shade700,
+                                  size: 22,
+                                );
+                              },
                             ),
                           ),
                         ),

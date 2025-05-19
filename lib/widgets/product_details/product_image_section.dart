@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ln_foot/bloc/saved_items/saved_items_bloc.dart';
+import 'package:lnFoot_api/api.dart';
 
 class ProductImageSection extends StatefulWidget {
   final String imageUrl;
+  final ProductDto product;
   final bool initialIsFavorite;
   final VoidCallback? onFavoriteToggle;
 
   const ProductImageSection({
     super.key,
     required this.imageUrl,
+    required this.product,
     this.initialIsFavorite = false,
     this.onFavoriteToggle,
   });
@@ -24,13 +29,6 @@ class _ProductImageSectionState extends State<ProductImageSection> {
   void initState() {
     super.initState();
     isFavorite = widget.initialIsFavorite;
-  }
-
-  void _toggleFavorite() {
-    setState(() {
-      isFavorite = !isFavorite;
-    });
-    widget.onFavoriteToggle?.call(); // Call the callback if provided
   }
 
   @override
@@ -66,14 +64,33 @@ class _ProductImageSectionState extends State<ProductImageSection> {
                   ),
                 ],
               ),
-              child: IconButton(
-                icon: Icon(
-                  isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color:
-                      isFavorite ? Colors.red : Colors.grey, // Use theme colors
-                ),
-                onPressed: _toggleFavorite,
-                tooltip: 'Ajouter aux favoris',
+              child: BlocBuilder<SavedItemsBloc, SavedItemsState>(
+                builder: (context, state) {
+                  bool isSaved = false;
+                  if (state is SavedItemsLoaded) {
+                    isSaved =
+                        state.items.any((item) => item.id == widget.product.id);
+                  }
+                  return IconButton(
+                    icon: Icon(
+                      isSaved ? Icons.favorite : Icons.favorite_border,
+                      color: isSaved ? const Color(0xFFF16A26) : Colors.grey,
+                    ),
+                    onPressed: () {
+                      final bloc = context.read<SavedItemsBloc>();
+                      if (state is SavedItemsLoaded) {
+                        if (isSaved) {
+                          bloc.add(RemoveSavedItem(widget.product.id!));
+                        } else {
+                          bloc.add(AddSavedItem(widget.product));
+                        }
+                      }
+                      widget.onFavoriteToggle?.call();
+                    },
+                    tooltip:
+                        isSaved ? 'Retirer des favoris' : 'Ajouter aux favoris',
+                  );
+                },
               ),
             ),
           ),
