@@ -34,9 +34,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
       final authState = context.read<AuthBloc>().state;
       if (authState is Authenticated) {
         _userId = authState.user['sub'] ?? authState.user['id'];
-        debugPrint('User ID: $_userId');
+        debugPrint('User ID 1: $_userId');
         if (_userId != null) {
-          debugPrint('User ID: $_userId');
+          debugPrint('User ID 3: $_userId');
           context.read<OrderBloc>().add(LoadUserOrders(userId: _userId!));
         }
       }

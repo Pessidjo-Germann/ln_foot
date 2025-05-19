@@ -43,23 +43,28 @@ class ProductLoadingGrid extends StatelessWidget {
                     aspectRatio: 1.0,
                     child: Container(color: Colors.white),
                   ),
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(width: 60, height: 12.0, color: Colors.white),
-                          const SizedBox(height: 4),
-                          Container(width: double.infinity, height: 16.0, color: Colors.white),
-                          const SizedBox(height: 4),
-                          Container(width: double.infinity * 0.7, height: 16.0, color: Colors.white),
-                          const SizedBox(height: 8),
-                          Container(width: 80, height: 14.0, color: Colors.white),
-                          const SizedBox(height: 10),
-                          Container(width: 100, height: 12.0, color: Colors.white),
-                        ],
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(width: 60, height: 12.0, color: Colors.white),
+                        const SizedBox(height: 4),
+                        Container(
+                            width: double.infinity,
+                            height: 16.0,
+                            color: Colors.white),
+                        const SizedBox(height: 4),
+                        Container(
+                            width: double.infinity * 0.7,
+                            height: 16.0,
+                            color: Colors.white),
+                        const SizedBox(height: 8),
+                        Container(width: 80, height: 14.0, color: Colors.white),
+                        const SizedBox(height: 10),
+                        Container(
+                            width: 100, height: 12.0, color: Colors.white),
+                      ],
                     ),
                   ),
                 ],

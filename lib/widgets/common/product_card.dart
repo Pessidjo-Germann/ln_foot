@@ -1,144 +1,184 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lnFoot_api/api.dart'; // Use ProductDto from API
+import 'package:lnFoot_api/api.dart';
 
 class ProductCard extends StatelessWidget {
-  final ProductDto product; // Change type to ProductDto
+  final ProductDto product;
   final VoidCallback? onTap;
-  // final VoidCallback? onFavoriteTap; // Remove favorite tap for now
+  final VoidCallback? onFavoriteTap;
+
+  static final NumberFormat _currencyFormatter = NumberFormat.currency(
+    locale: 'fr_CM',
+    symbol: '',
+    decimalDigits: 0,
+  );
 
   const ProductCard({
     super.key,
     required this.product,
     this.onTap,
-    // this.onFavoriteTap, // Remove favorite tap for now
+    this.onFavoriteTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final NumberFormat currencyFormatter = NumberFormat.currency(
-      locale: 'fr_CM',
-      symbol: '',
-      decimalDigits: 0,
-    );
-    final NumberFormat oldPriceNumberFormatter =
-        NumberFormat.decimalPattern('fr_CM');
-    print(product.imageUrl);
+
     return GestureDetector(
-        onTap: onTap,
-        child: Card(
-          elevation: 1.5,
-          shadowColor: Colors.grey.withOpacity(0.15),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Container(
-            
-            margin: const EdgeInsets.only(bottom: 1.0),  
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,  
-              children: [
-                
-                Stack(
+      onTap: onTap,
+      child: Card(
+        elevation: 1.5,
+        shadowColor: Colors.grey.withOpacity(0.15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: SizedBox(
+          height: 380, // Fixed height for the card
+          child: Column(
+            children: [
+              AspectRatio(
+                aspectRatio: 1.0,
+                child: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(12.0),
-                        topRight: Radius.circular(16.0),
-                      ),
-                      // Use Image.network for URLs, handle null
-                      child: product.imageUrl != null && product.imageUrl!.isNotEmpty
-                          ? Image.network( // Use Image.network
-                              product.imageUrl!,
-                              height: 120,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Container(
-                                  height: 120, // Match image height
-                                  color: Colors.grey.shade200,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      value: loadingProgress.expectedTotalBytes != null
-                                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                          : null,
-                                    ),
-                                  ),
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) => Container(
-                                height: 120, // Match image height
-                                color: Colors.grey.shade200,
-                                child: Icon(Icons.broken_image, color: Colors.grey.shade400, size: 40),
+                    if (product.imageUrl != null &&
+                        product.imageUrl!.isNotEmpty)
+                      Image.network(
+                        product.imageUrl!,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            color: Colors.grey.shade200,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
                               ),
-                            )
-                          : Container( // Placeholder if no image URL
-                              height: 120,
-                              color: Colors.grey.shade200,
-                              child: Icon(Icons.image_not_supported, color: Colors.grey.shade400, size: 40),
                             ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          color: Colors.grey.shade200,
+                          child: Icon(
+                            Icons.broken_image_outlined,
+                            color: Colors.grey.shade400,
+                            size: 40,
+                          ),
+                        ),
+                      )
+                    else
+                      Container(
+                        color: Colors.grey.shade200,
+                        child: Icon(
+                          Icons.image_not_supported,
+                          color: Colors.grey.shade400,
+                          size: 40,
+                        ),
+                      ),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Material(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(8.0),
+                        elevation: 1.0,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(8.0),
+                          onTap: onFavoriteTap,
+                          child: Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Icon(
+                              Icons.favorite_border,
+                              color: Colors.grey.shade700,
+                              size: 22,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    // Favorite button removed for now
                   ],
                 ),
-
-                // Details Section
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12.0, vertical: 10.0), // Adjusted padding
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Use product name as title, handle null
+                      // if (product.categoryNames.isNotEmpty) ...[
+                      //   Text(
+                      //     product.categoryNames.join(', '),
+                      //     style: theme.textTheme.bodySmall?.copyWith(
+                      //       color: Colors.grey.shade600,
+                      //       fontWeight: FontWeight.w500,
+                      //     ),
+                      //     maxLines: 1,
+                      //     overflow: TextOverflow.ellipsis,
+                      //   ),
+                      //   const SizedBox(height: 4),
+                      // ],
                       Text(
-                        product.name ?? 'Unnamed Product', // Use name from DTO
-                        style: theme.textTheme.titleMedium?.copyWith( // Adjusted style slightly
-                          fontWeight: FontWeight.w600, // Slightly bolder
+                        product.name ?? 'Unnamed Product',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
                           color: Colors.black87,
                         ),
-                        maxLines: 2, // Allow two lines for name
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4), // Spacing
-                      // Display categories if available
-                      if (product.categoryNames.isNotEmpty)
-                        Text(
-                          product.categoryNames.join(', '), // Join categories
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.grey.shade600,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                      const SizedBox(height: 4),
+                      Text(
+                        '${_currencyFormatter.format(product.price)} FCFA',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                          fontSize: 13,
                         ),
-
-                      const SizedBox(height: 8), // Spacing
-                      // Price Section
+                      ),
+                      const Spacer(),
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
                         children: [
+                          Icon(
+                            Icons.star_rounded,
+                            color: Colors.amber.shade700,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 4),
                           Text(
-                            '${currencyFormatter.format(product.price)} Fcfa', // Use price from DTO
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
+                            '4.5',
+                            style: theme.textTheme.bodyMedium?.copyWith(
                               color: Colors.black87,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                          // Old price removed
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              '(0 avis)',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: Colors.grey.shade600,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ],
                       ),
-                      // Rating section removed
-                    ], // Closes children list for inner Column
-                  ), // Closes inner Column
-                ), // Closes Padding
-              ], // Closes children list for outer Column
-            ), // Closes outer Column
-          ), // Closes SizedBox
-        )); // Closes Card
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
