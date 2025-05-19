@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:ln_foot/bloc/cart/cart_bloc.dart';
 import 'package:ln_foot/widgets/cart/remove_item.dart';
 
-class CartItem {
-  final String id; 
+class CartItemData {
+  final String id;
   final String image;
   final String name;
   final String size;
   final double price;
   final int quantity;
 
-  CartItem({
+  const CartItemData({
     required this.id,
     required this.image,
     required this.name,
@@ -23,7 +24,7 @@ class CartItemWidget extends StatelessWidget {
   final CartItem item;
   final VoidCallback onIncreaseQuantity;
   final VoidCallback onDecreaseQuantity;
-  final VoidCallback onRemoveItem; 
+  final VoidCallback onRemoveItem;
 
   const CartItemWidget({
     super.key,
@@ -36,34 +37,32 @@ class CartItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final priceStyle = theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold);
-    final detailStyle = theme.textTheme.bodyMedium?.copyWith(color: Colors.grey[600]);
+    final priceStyle =
+        theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold);
+    final detailStyle =
+        theme.textTheme.bodyMedium?.copyWith(color: Colors.grey[600]);
 
     return Dismissible(
-      key: Key(item.id),  
+      key: Key(item.product.id!),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
         onRemoveItem();
       },
       confirmDismiss: (direction) async {
-         
+        final result = await showDialog<bool>(
+          context: context,
+          builder: (context) {
+            return RemoveCartItemDialog(
+                item: item,
+                onConfirm: () => Navigator.of(context).pop(true),
+                onCancel: () => Navigator.of(context).pop(false));
+          },
+        );
 
-       final result= await showDialog<bool>(
-        context: context,
-        builder: (context) {
-    
-          return RemoveCartItemDialog(
-            item: item,
-            onConfirm: ()=>Navigator.of(context).pop(true),
-            onCancel:  () => Navigator.of(context).pop(false));
-        },
-      );
-       
-       
-    return  result;
+        return result;
       },
       background: Container(
-        color: Colors.red[100],  
+        color: Colors.red[100],
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: const Icon(Icons.delete_outline, color: Colors.red),
@@ -76,8 +75,8 @@ class CartItemWidget extends StatelessWidget {
             // Product Image
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset(  
-                item.image,
+              child: Image.network(
+                item.product.imageUrl!,
                 width: 70,
                 height: 70,
                 fit: BoxFit.cover,
@@ -85,7 +84,8 @@ class CartItemWidget extends StatelessWidget {
                   width: 70,
                   height: 70,
                   color: Colors.grey[200],
-                  child: Icon(Icons.image_not_supported, color: Colors.grey[400]),
+                  child:
+                      Icon(Icons.image_not_supported, color: Colors.grey[400]),
                 ),
               ),
             ),
@@ -95,11 +95,12 @@ class CartItemWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(item.name, style: theme.textTheme.titleMedium),
+                  Text(item.product.name!, style: theme.textTheme.titleMedium),
                   const SizedBox(height: 4.0),
                   Text('Taille: ${item.size}', style: detailStyle),
                   const SizedBox(height: 8.0),
-                  Text('${item.price.toStringAsFixed(0)}FCFA', style: priceStyle), // Format as needed
+                  Text('${item.product.price.toStringAsFixed(0)}FCFA',
+                      style: priceStyle), // Format as needed
                 ],
               ),
             ),
@@ -118,13 +119,16 @@ class CartItemWidget extends StatelessWidget {
         _buildQuantityButton(
           context: context,
           icon: Icons.remove,
-          onPressed: item.quantity > 0 ? onDecreaseQuantity : null, 
+          onPressed: item.quantity > 0 ? onDecreaseQuantity : null,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Text(
             item.quantity.toString(),
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
         _buildQuantityButton(
@@ -151,10 +155,10 @@ class CartItemWidget extends StatelessWidget {
         padding: const EdgeInsets.all(6.0),
         decoration: BoxDecoration(
           color: onPressed == null
-              ? Colors.grey[300] 
+              ? Colors.grey[300]
               : isAddButton
-                  ? colorScheme.primary  
-                  : Colors.grey[200],  
+                  ? colorScheme.primary
+                  : Colors.grey[200],
           borderRadius: BorderRadius.circular(4.0),
         ),
         child: Icon(
@@ -163,8 +167,8 @@ class CartItemWidget extends StatelessWidget {
           color: onPressed == null
               ? Colors.grey[500]
               : isAddButton
-                  ? colorScheme.onPrimary  
-                  : Colors.black, 
+                  ? colorScheme.onPrimary
+                  : Colors.black,
         ),
       ),
     );

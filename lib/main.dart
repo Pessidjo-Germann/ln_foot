@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_foot/bloc/auth/auth_bloc.dart';
+import 'package:ln_foot/bloc/cart/cart_bloc.dart';
 import 'package:ln_foot/bloc/product/product_bloc.dart';
 import 'package:ln_foot/bloc/saved_items/saved_items_bloc.dart';
 import 'package:ln_foot/bloc/order/order_bloc.dart';
@@ -84,6 +85,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<ColoredProductBloc>(
           create: (_) => ColoredProductBloc(
               coloredProductControllerApi: coloredProductControllerApi),
+        ),
+        BlocProvider<CartBloc>(
+          create: (_) => CartBloc()..add(LoadCart()),
         ),
         BlocProvider<ReviewBloc>(
           create: (_) => ReviewBloc(reviewControllerApi: reviewControllerApi),

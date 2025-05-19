@@ -1,10 +1,9 @@
-
 import 'package:flutter/material.dart';
-import 'package:ln_foot/widgets/cart/cart_item_widget.dart';
+import 'package:ln_foot/bloc/cart/cart_bloc.dart';
 
 class RemoveCartItemDialog extends StatelessWidget {
   final CartItem item;
-  final VoidCallback onConfirm,onCancel;
+  final VoidCallback onConfirm, onCancel;
 
   const RemoveCartItemDialog({
     super.key,
@@ -32,8 +31,8 @@ class RemoveCartItemDialog extends StatelessWidget {
               // Product image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  item.image,
+                child: Image.network(
+                  item.product.imageUrl!,
                   width: 50,
                   height: 50,
                   fit: BoxFit.cover,
@@ -53,7 +52,7 @@ class RemoveCartItemDialog extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.name,
+                      item.product.name!,
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
@@ -69,7 +68,7 @@ class RemoveCartItemDialog extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '\$${item.price.toStringAsFixed(2)}',
+                      '\$${item.product.price.toStringAsFixed(2)}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -85,7 +84,7 @@ class RemoveCartItemDialog extends StatelessWidget {
       actions: [
         // Cancel button
         TextButton(
-          onPressed:onCancel,
+          onPressed: onCancel,
           style: TextButton.styleFrom(
             backgroundColor: Colors.grey[200],
             foregroundColor: Colors.black87,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:ln_foot/bloc/cart/cart_bloc.dart';
 import 'cart_item_widget.dart';
 
 class CartItemList extends StatelessWidget {
@@ -57,9 +58,9 @@ class CartItemList extends StatelessWidget {
         final item = items[index];
         return CartItemWidget(
           item: item,
-          onIncreaseQuantity: () => onIncreaseQuantity(item.id),
-          onDecreaseQuantity: () => onDecreaseQuantity(item.id),
-          onRemoveItem: () => onRemoveItem(item.id),
+          onIncreaseQuantity: () => onIncreaseQuantity(item.product.id!),
+          onDecreaseQuantity: () => onDecreaseQuantity(item.product.id!),
+          onRemoveItem: () => onRemoveItem(item.product.id!),
         );
       },
       separatorBuilder: (context, index) => const Divider(

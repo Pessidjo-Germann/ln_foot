@@ -13,7 +13,6 @@ import 'package:ln_foot/widgets/product_details/product_description_section.dart
 import 'package:ln_foot/widgets/product_details/size_selector.dart';
 import 'package:ln_foot/widgets/product_details/color_selector.dart';
 import 'package:ln_foot/widgets/product_details/add_to_cart_section.dart';
-import 'package:ln_foot/widgets/product_details/reviews_section.dart';
 import 'package:lnFoot_api/api.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
