@@ -17,7 +17,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Plus de Timer ici : navigation uniquement via BlocListener
+    // Déclenche la vérification du token stocké au démarrage
+    context.read<AuthBloc>().add(CheckTokenStored());
   }
 
   void _navigateOnce(Widget page) {

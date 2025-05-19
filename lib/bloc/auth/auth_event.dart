@@ -7,6 +7,8 @@ abstract class AuthEvent extends Equatable {
 
 class AppStarted extends AuthEvent {}
 
+class CheckTokenStored extends AuthEvent {}
+
 class LoginRequested extends AuthEvent {}
 
 class LogoutRequested extends AuthEvent {}

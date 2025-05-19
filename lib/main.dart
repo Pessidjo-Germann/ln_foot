@@ -4,6 +4,7 @@ import 'package:ln_foot/bloc/auth/auth_bloc.dart';
 import 'package:ln_foot/bloc/product/product_bloc.dart';
 import 'package:ln_foot/bloc/saved_items/saved_items_bloc.dart';
 import 'package:ln_foot/bloc/order/order_bloc.dart';
+import 'package:ln_foot/bloc/category/category_bloc.dart';
 import 'package:ln_foot/screen/splash_screen.dart';
 import 'package:ln_foot/theme/app_theme.dart';
 import 'package:ln_foot/service.dart';
@@ -14,16 +15,22 @@ void main() async {
 
   final authService = await AuthService.create();
   final token = await authService.getAccessToken();
+  final refresh = authService.getRefreshToken();
+  debugPrint('Refresh token: $refresh');
+  debugPrint('Token: $token');
+
   final apiClient = ApiClient();
   if (token != null && token.isNotEmpty) {
     apiClient.setAuthToken(token);
   }
   final productApi = ProductControllerApi(apiClient);
   final orderControllerApi = OrderControllerApi(apiClient);
+  final categoryControler = CategoryControllerApi(apiClient);
   runApp(MyApp(
     authService: authService,
     orderControllerApi: orderControllerApi,
     productApi: productApi,
+    categoryControllerApi: categoryControler,
   ));
 }
 
@@ -31,20 +38,22 @@ class MyApp extends StatelessWidget {
   final AuthService authService;
   final OrderControllerApi orderControllerApi;
   final ProductControllerApi productApi;
+  final CategoryControllerApi categoryControllerApi;
 
-  const MyApp({
-    super.key,
-    required this.authService,
-    required this.orderControllerApi,
-    required this.productApi,
-  });
+  const MyApp(
+      {super.key,
+      required this.authService,
+      required this.orderControllerApi,
+      required this.productApi,
+      required this.categoryControllerApi});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
-          create: (_) => AuthBloc(authService: authService)..add(AppStarted()),
+          create: (_) =>
+              AuthBloc(authService: authService)..add(CheckTokenStored()),
         ),
         BlocProvider<ProductBloc>(
           create: (_) =>
@@ -55,6 +64,11 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<OrderBloc>(
           create: (_) => OrderBloc(orderControllerApi: orderControllerApi),
+        ),
+        BlocProvider<CategoryBloc>(
+          create: (_) =>
+              CategoryBloc(categoryControllerApi: categoryControllerApi)
+                ..add(LoadAllCategories()),
         ),
       ],
       child: MaterialApp(

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_foot/bloc/product/product_bloc.dart';
 import 'package:ln_foot/screen/cart_screen.dart';
 import 'package:ln_foot/screen/profile_screen.dart';
+import 'package:ln_foot/service.dart';
 import 'package:ln_foot/widgets/home/home_app_bar.dart';
 import 'package:ln_foot/widgets/home/search_bar_widget.dart';
 import 'package:ln_foot/widgets/home/categories_section.dart'; // Import the Categories Section
@@ -86,7 +87,6 @@ class _HomeContentState extends State<HomeContent>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-
   @override
   void initState() {
     super.initState();

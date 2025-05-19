@@ -31,6 +31,7 @@ class AuthService {
     final result = await _keycloak.login();
     if (result) {
       final token = _keycloak.accessToken;
+      debugPrint("les tokens sont : $token");
       if (token != null) {
         await _secureStorage.write(key: 'access_token', value: token);
       }
@@ -46,11 +47,16 @@ class AuthService {
 
   Future<String?> getAccessToken() async {
     final storedToken = await _secureStorage.read(key: 'access_token');
-    return storedToken ?? _keycloak.accessToken;
+
+    return storedToken;
   }
 
   String? getRefreshToken() => _keycloak.refreshToken;
   Future<Map<String, dynamic>?> getUserInfo() => _keycloak.getUserInfo();
+  Future<bool> isLoggedIn() async {
+    final token = await _secureStorage.read(key: 'access_token');
+    return token != null && token.isNotEmpty;
+  }
 }
 
 

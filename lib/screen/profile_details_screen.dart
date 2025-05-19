@@ -79,6 +79,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
             return const Center(child: CircularProgressIndicator());
           } else if (state is Authenticated) {
             _initUserData(state.user);
+            debugPrint('User data initialized: ${state.user}');
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Form(

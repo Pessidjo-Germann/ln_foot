@@ -15,7 +15,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final token = await authService.getAccessToken();
       if (token != null && token.isNotEmpty) {
         final user = await authService.getUserInfo();
-        emit(Authenticated(user!));
+        if (user != null) {
+          emit(Authenticated(user));
+        } else {
+          emit(Unauthenticated());
+        }
       } else {
         emit(Unauthenticated());
       }
@@ -44,6 +48,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogoutRequested>((event, emit) async {
       await authService.logout();
       emit(Unauthenticated());
+    });
+
+    on<CheckTokenStored>((event, emit) async {
+      emit(AuthLoading());
+      final isLoggedIn = await authService.isLoggedIn();
+      if (isLoggedIn) {
+        emit(Authenticated(
+            {})); // On ne charge pas l'utilisateur, juste l'état connecté
+      } else {
+        emit(Unauthenticated());
+      }
     });
   }
 }
