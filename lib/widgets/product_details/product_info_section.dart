@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_foot/bloc/review/review_bloc.dart';
 import 'package:ln_foot/utils/bottom_sheet_review_all.dart';
-
-import 'review_item.dart'; // For currency formatting
+import 'package:ln_foot/widgets/product_details/review_item.dart';
 
 class ProductInfoSection extends StatelessWidget {
   final String name;
   final double price;
   final double rating;
   final int reviewCount;
+  final String productId;
 
   const ProductInfoSection({
     super.key,
@@ -16,15 +18,15 @@ class ProductInfoSection extends StatelessWidget {
     required this.price,
     required this.rating,
     required this.reviewCount,
+    required this.productId,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Consider using theme text styles from app_theme.dart
     final currencyFormatter = NumberFormat.currency(
-      locale: 'fr_FR', // Adjust locale as needed
-      symbol: 'FCFA', // Currency symbol
-      decimalDigits: 0, // No decimal digits as per image
+      locale: 'fr_FR',
+      symbol: 'FCFA',
+      decimalDigits: 0,
     );
 
     return Column(
@@ -32,19 +34,19 @@ class ProductInfoSection extends StatelessWidget {
       children: [
         Text(
           name,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               currencyFormatter.format(price),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
@@ -53,53 +55,72 @@ class ProductInfoSection extends StatelessWidget {
             Row(
               children: [
                 Container(
-                    padding: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Icon(Icons.star, color: Colors.amber, size: 18)),
-                SizedBox(width: 3),
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Icon(Icons.star, color: Colors.amber, size: 18),
+                ),
+                const SizedBox(width: 3),
                 Text(
                   '$rating',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
-                SizedBox(width: 1),
-                TextButton(
-                    onPressed: () {
-                      showReviewsAll(context,
-                  (scrollController)=>    ReviewListWidget(list: [
-                        ReviewItem(
-                          rating: 5,
-                          author: 'Shipon',
-                          date: '10 Mar 2024',
-                          comment:
-                              'Super expérience de magasinage ! J\'utilise LNFOOT depuis un certain temps, maintenant et je suis impressionné par la large gamme de produits disponibles.',
-                          imageUrls: [
-                            'images/product1.png',
-                            'images/product2.png',
-                            'images/product3.png',
-                          ],
+                const SizedBox(width: 1),
+                BlocBuilder<ReviewBloc, ReviewState>(
+                  builder: (context, state) {
+                    return TextButton(
+                      onPressed: () {
+                        context.read<ReviewBloc>().add(LoadAllReviews());
+                        showReviewsAll(
+                          context,
+                          (scrollController) =>
+                              BlocBuilder<ReviewBloc, ReviewState>(
+                            builder: (context, state) {
+                              if (state is ReviewsLoaded) {
+                                final productReviews = state.reviews
+                                    .where((review) =>
+                                        review.productId == productId)
+                                    .toList();
+
+                                return ReviewListWidget(
+                                  list: productReviews
+                                      .map((review) => ReviewItem(
+                                            rating: review.rating,
+                                            author: 'Anonymous',
+                                            date: 'N/A',
+                                            comment: review.comment,
+                                          ))
+                                      .toList(),
+                                  scrollController: scrollController,
+                                );
+                              }
+                              if (state is ReviewLoading) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              return const Center(
+                                child: Text('Pas d\'avis disponible'),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      child: Text(
+                        '($reviewCount Review)',
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
                         ),
-                        ReviewItem(
-                          rating: 5,
-                          author: 'Vessel',
-                          date: '10 Mar 2024',
-                          comment:
-                              'Des achats incroyables ! J\'utilise LNFOOT depuis un certain temps et je suis impressionné par la sélection diversifiée de produits disponibles.',
-                        ),
-                      ],scrollController: scrollController));
-                    },
-                    child: Text(
-                      '($reviewCount Review)',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
                       ),
-                    )),
+                    );
+                  },
+                ),
               ],
             ),
           ],

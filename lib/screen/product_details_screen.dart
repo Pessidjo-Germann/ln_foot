@@ -33,7 +33,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   // Replace static color map and color logic with dynamic colors from ColoredProductBloc
   late List<ColoredProductDto> _coloredProducts = [];
   late Map<Color, String> _availableColorsMap = {};
-
+  List<ReviewDto> reviews = [];
   Color? _colorFromNameOrCode(String? name) {
     // TODO: Map backend color name/code to Flutter Color
     switch (name?.toLowerCase()) {
@@ -142,6 +142,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               if (state is ReviewsLoaded) {
                 setState(() {
                   // Handle loaded reviews if needed
+                  reviews = state.reviews;
                 });
               }
             },
@@ -175,14 +176,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             price: product.price.toDouble(),
                             rating: 0,
                             reviewCount: 0,
+                            productId: product.id!,
                           ),
                           const SizedBox(height: 16),
-                          const Divider(thickness: 0.4),
+                          // const Divider(thickness: 0.4),
                           const SizedBox(height: 16),
                           ProductDescriptionSection(
                               description: product.description ?? ''),
                           const SizedBox(height: 16),
-                          const Divider(thickness: 0.4),
+                          const Divider(thickness: 0.15),
                           const SizedBox(height: 16),
                           SizeSelector(
                             availableSizes: product.sizes,
@@ -197,9 +199,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             initialColorName: initialColorName,
                           ),
                           const SizedBox(height: 16),
-                          const Divider(thickness: 0.4),
-                          const SizedBox(height: 16),
-                          ReviewsSection(productId: product.id!),
+                          const Divider(thickness: 0.1),
+
+                          // ReviewsSection(productId: product.id!),
                           const SizedBox(height: 100),
                         ],
                       ),
