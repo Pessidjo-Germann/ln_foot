@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_foot/bloc/category/category_bloc.dart';
 import 'package:ln_foot/bloc/product/product_bloc.dart';
 import 'package:ln_foot/screen/cart_screen.dart';
 import 'package:ln_foot/screen/profile_screen.dart';
@@ -91,10 +92,15 @@ class _HomeContentState extends State<HomeContent>
   void initState() {
     super.initState();
     _loadProducts();
+    _loadCategories();
   }
 
   void _loadProducts() {
     context.read<ProductBloc>().add(LoadAllProducts());
+  }
+
+  void _loadCategories() {
+    context.read<CategoryBloc>().add(LoadAllCategories());
   }
 
   @override
@@ -105,6 +111,7 @@ class _HomeContentState extends State<HomeContent>
       body: RefreshIndicator(
         onRefresh: () async {
           _loadProducts();
+          _loadCategories();
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),

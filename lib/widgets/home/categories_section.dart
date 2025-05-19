@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_foot/bloc/category/category_bloc.dart';
 import 'package:ln_foot/widgets/home/categories/category_item.dart';
-import 'package:lnFoot_api/api.dart';
+import 'package:ln_foot/widgets/home/categories/category_shimmer.dart';
 
 class CategoriesSection extends StatelessWidget {
-  CategoriesSection({super.key});
+  const CategoriesSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
         if (state is CategoryLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const CategoryShimmerList();
         } else if (state is CategoriesLoaded) {
           final categories = state.categories;
           return Padding(
@@ -41,7 +41,7 @@ class CategoriesSection extends StatelessWidget {
                         // Style the button to look like plain text
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
-                        //  minimumSize:  Size(50, 30), 
+                          //  minimumSize:  Size(50, 30),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           alignment: Alignment.centerRight,
                           foregroundColor: Colors.grey,
