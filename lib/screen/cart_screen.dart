@@ -146,7 +146,8 @@ class _CartScreenState extends State<CartScreen> {
 
                     final orderItems = cartState.items
                         .map((item) => OrderItemDto(
-                              coloredProductId: item.product.id!,
+                              id: item.product.id!,
+                              coloredProductId: item.color,
                               quantity: item.quantity,
                               size: item.size,
                             ))
@@ -155,7 +156,7 @@ class _CartScreenState extends State<CartScreen> {
                     final orderData = OrderDto(
                       orderItems: orderItems,
                     );
-
+                    debugPrint(orderData.toString());
                     context
                         .read<OrderBloc>()
                         .add(CreateOrder(orderData: orderData));

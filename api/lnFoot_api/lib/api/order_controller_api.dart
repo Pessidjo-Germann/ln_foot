@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
-
 class OrderControllerApi {
-  OrderControllerApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
+  OrderControllerApi([ApiClient? apiClient])
+      : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -20,7 +20,9 @@ class OrderControllerApi {
   /// Parameters:
   ///
   /// * [OrderDto] orderDto (required):
-  Future<Response> createOrderWithHttpInfo(OrderDto orderDto,) async {
+  Future<Response> createOrderWithHttpInfo(
+    OrderDto orderDto,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/api/orders';
 
@@ -32,7 +34,6 @@ class OrderControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
-
 
     return apiClient.invokeAPI(
       path,
@@ -48,17 +49,26 @@ class OrderControllerApi {
   /// Parameters:
   ///
   /// * [OrderDto] orderDto (required):
-  Future<OrderDto?> createOrder(OrderDto orderDto,) async {
-    final response = await createOrderWithHttpInfo(orderDto,);
+  Future<OrderDto?> createOrder(
+    OrderDto orderDto,
+  ) async {
+    final response = await createOrderWithHttpInfo(
+      orderDto,
+    );
+    print(response.body);
+    print(response.reasonPhrase);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'OrderDto',) as OrderDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'OrderDto',
+      ) as OrderDto;
     }
     return null;
   }
@@ -67,10 +77,11 @@ class OrderControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> deleteOrderWithHttpInfo(String id,) async {
+  Future<Response> deleteOrderWithHttpInfo(
+    String id,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/orders/{id}'
-      .replaceAll('{id}', id);
+    final path = r'/api/orders/{id}'.replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -80,7 +91,6 @@ class OrderControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -96,8 +106,12 @@ class OrderControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<void> deleteOrder(String id,) async {
-    final response = await deleteOrderWithHttpInfo(id,);
+  Future<void> deleteOrder(
+    String id,
+  ) async {
+    final response = await deleteOrderWithHttpInfo(
+      id,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -107,7 +121,9 @@ class OrderControllerApi {
   /// Parameters:
   ///
   /// * [String] userId (required):
-  Future<Response> getAllOrdersWithHttpInfo(String userId,) async {
+  Future<Response> getAllOrdersWithHttpInfo(
+    String userId,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/api/orders';
 
@@ -118,10 +134,9 @@ class OrderControllerApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-      queryParams.addAll(_queryParams('', 'userId', userId));
+    queryParams.addAll(_queryParams('', 'userId', userId));
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -137,20 +152,25 @@ class OrderControllerApi {
   /// Parameters:
   ///
   /// * [String] userId (required):
-  Future<List<OrderDto>?> getAllOrders(String userId,) async {
-    final response = await getAllOrdersWithHttpInfo(userId,);
+  Future<List<OrderDto>?> getAllOrders(
+    String userId,
+  ) async {
+    final response = await getAllOrdersWithHttpInfo(
+      userId,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<OrderDto>') as List)
-        .cast<OrderDto>()
-        .toList(growable: false);
-
+      return (await apiClient.deserializeAsync(responseBody, 'List<OrderDto>')
+              as List)
+          .cast<OrderDto>()
+          .toList(growable: false);
     }
     return null;
   }
@@ -159,10 +179,11 @@ class OrderControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> getOrderByIdWithHttpInfo(String id,) async {
+  Future<Response> getOrderByIdWithHttpInfo(
+    String id,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/orders/{id}'
-      .replaceAll('{id}', id);
+    final path = r'/api/orders/{id}'.replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -173,7 +194,6 @@ class OrderControllerApi {
 
     const contentTypes = <String>[];
 
-
     return apiClient.invokeAPI(
       path,
       'GET',
@@ -188,17 +208,24 @@ class OrderControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<OrderDto?> getOrderById(String id,) async {
-    final response = await getOrderByIdWithHttpInfo(id,);
+  Future<OrderDto?> getOrderById(
+    String id,
+  ) async {
+    final response = await getOrderByIdWithHttpInfo(
+      id,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'OrderDto',) as OrderDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'OrderDto',
+      ) as OrderDto;
     }
     return null;
   }
@@ -207,7 +234,9 @@ class OrderControllerApi {
   /// Parameters:
   ///
   /// * [String] userId (required):
-  Future<Response> getUserOrdersWithHttpInfo(String userId,) async {
+  Future<Response> getUserOrdersWithHttpInfo(
+    String userId,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/api/orders/me';
 
@@ -218,10 +247,9 @@ class OrderControllerApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-      queryParams.addAll(_queryParams('', 'userId', userId));
+    queryParams.addAll(_queryParams('', 'userId', userId));
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -237,20 +265,25 @@ class OrderControllerApi {
   /// Parameters:
   ///
   /// * [String] userId (required):
-  Future<List<OrderDto>?> getUserOrders(String userId,) async {
-    final response = await getUserOrdersWithHttpInfo(userId,);
+  Future<List<OrderDto>?> getUserOrders(
+    String userId,
+  ) async {
+    final response = await getUserOrdersWithHttpInfo(
+      userId,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<OrderDto>') as List)
-        .cast<OrderDto>()
-        .toList(growable: false);
-
+      return (await apiClient.deserializeAsync(responseBody, 'List<OrderDto>')
+              as List)
+          .cast<OrderDto>()
+          .toList(growable: false);
     }
     return null;
   }
@@ -261,10 +294,12 @@ class OrderControllerApi {
   /// * [String] id (required):
   ///
   /// * [OrderDto] orderDto (required):
-  Future<Response> updateOrderWithHttpInfo(String id, OrderDto orderDto,) async {
+  Future<Response> updateOrderWithHttpInfo(
+    String id,
+    OrderDto orderDto,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/orders/{id}'
-      .replaceAll('{id}', id);
+    final path = r'/api/orders/{id}'.replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody = orderDto;
@@ -274,7 +309,6 @@ class OrderControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
-
 
     return apiClient.invokeAPI(
       path,
@@ -292,17 +326,26 @@ class OrderControllerApi {
   /// * [String] id (required):
   ///
   /// * [OrderDto] orderDto (required):
-  Future<OrderDto?> updateOrder(String id, OrderDto orderDto,) async {
-    final response = await updateOrderWithHttpInfo(id, orderDto,);
+  Future<OrderDto?> updateOrder(
+    String id,
+    OrderDto orderDto,
+  ) async {
+    final response = await updateOrderWithHttpInfo(
+      id,
+      orderDto,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'OrderDto',) as OrderDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'OrderDto',
+      ) as OrderDto;
     }
     return null;
   }

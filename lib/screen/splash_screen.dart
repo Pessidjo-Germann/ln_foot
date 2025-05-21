@@ -57,7 +57,11 @@ class _SplashScreenState extends State<SplashScreen> {
               ..showSnackBar(
                 SnackBar(content: Text('Erreur de connexion: ${state.message}')),
               );
-          }
+          _navigateOnce(OnboardingScreen(
+              apiClient: widget.apiClient,
+            ));
+          } 
+          
           
            else if (state is Unauthenticated) {
             _navigateOnce(OnboardingScreen(

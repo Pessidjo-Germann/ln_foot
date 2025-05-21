@@ -84,16 +84,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   void _handleAddToCart(ProductDto product) {
-    if (_selectedSize == null || _selectedColor == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Veuillez sélectionner une taille et une couleur.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      return;
-    }
+    // if (_selectedSize == null || _selectedColor == null) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(
+    //       content: Text('Veuillez sélectionner une taille et une couleur.'),
+    //       duration: Duration(seconds: 2),
+    //     ),
+    //   );
+    //   return;
+    // }
 
+   debugPrint(product.toString());
     final colorName = _availableColorsMap[_selectedColor] ?? '';
     context.read<CartBloc>().add(
           AddToCart(
@@ -107,7 +108,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool canAddToCart = _selectedSize != null && _selectedColor != null;
+    final bool canAddToCart = _selectedSize != null || _selectedColor != null;
     final List<Color> availableColorValues = _availableColorsMap.keys.toList();
     final String initialColorName = _availableColorsMap[
             availableColorValues.isNotEmpty
