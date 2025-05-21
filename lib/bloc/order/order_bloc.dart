@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:lnFoot_api/api.dart'; // Import depuis le package API lnFoot_api
- 
+
+import 'package:ln_foot/constants/error_messages.dart';
 part 'order_event.dart';
 part 'order_state.dart';
 
@@ -26,9 +27,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final orders = await orderControllerApi.getAllOrders(event.userId);
       emit(OrdersLoaded(orders ?? []));
     } on ApiException catch (e) {
-      emit(OrderError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(OrderError(ErrorMessages.orderUpdateFailed));
     } catch (e) {
-      emit(OrderError('An unexpected error occurred: ${e.toString()}'));
+      emit(OrderError(ErrorMessages.unknownError));
     }
   }
 
@@ -39,9 +40,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final orders = await orderControllerApi.getUserOrders(event.userId);
       emit(OrdersLoaded(orders ?? []));
     } on ApiException catch (e) {
-      emit(OrderError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(OrderError(ErrorMessages.orderUpdateFailed));
     } catch (e) {
-      emit(OrderError('An unexpected error occurred: ${e.toString()}'));
+      emit(OrderError(ErrorMessages.unknownError));
     }
   }
 
@@ -56,9 +57,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         emit(const OrderError('Order not found.'));
       }
     } on ApiException catch (e) {
-      emit(OrderError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(OrderError(ErrorMessages.orderUpdateFailed));
     } catch (e) {
-      emit(OrderError('An unexpected error occurred: ${e.toString()}'));
+      emit(OrderError(ErrorMessages.unknownError));
     }
   }
 
@@ -76,9 +77,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         emit(const OrderError('Order creation failed silently.'));
       }
     } on ApiException catch (e) {
-      emit(OrderError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(OrderError(ErrorMessages.orderUpdateFailed));
     } catch (e) {
-      emit(OrderError('An unexpected error occurred: ${e.toString()}'));
+      emit(OrderError(ErrorMessages.unknownError));
     }
   }
 
@@ -93,12 +94,12 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         // Optionnel: Recharger les commandes de l'utilisateur après mise à jour
         // add(LoadUserOrders(userId: event.orderData.userId!)); // Assurez-vous que userId est disponible
       } else {
-        emit(const OrderError('Order update failed silently.'));
+        emit(OrderError(ErrorMessages.orderUpdateFailed));
       }
     } on ApiException catch (e) {
-      emit(OrderError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(OrderError(ErrorMessages.orderUpdateFailed));
     } catch (e) {
-      emit(OrderError('An unexpected error occurred: ${e.toString()}'));
+      emit(OrderError(ErrorMessages.unknownError));
     }
   }
 
@@ -111,9 +112,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       // Optionnel: Recharger les commandes de l'utilisateur après suppression
       // Il faudrait récupérer le userId d'une autre manière ici (peut-être depuis l'état actuel ou un service d'authentification)
     } on ApiException catch (e) {
-      emit(OrderError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(OrderError(ErrorMessages.orderUpdateFailed));
     } catch (e) {
-      emit(OrderError('An unexpected error occurred: ${e.toString()}'));
+      emit(OrderError(ErrorMessages.unknownError));
     }
   }
 }

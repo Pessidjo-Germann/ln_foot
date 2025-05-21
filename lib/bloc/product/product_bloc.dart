@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:lnFoot_api/api.dart';
 import 'package:http/http.dart';
+import 'package:ln_foot/constants/error_messages.dart';
 
 part 'product_event.dart';
 part 'product_state.dart';
@@ -27,8 +28,10 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       final products = await _productApi.getAllProducts();
       debugPrint('Products: $products');
       emit(ProductsLoaded(products ?? []));
+    } on ApiException catch (e) {
+      emit(ProductError(ErrorMessages.productUpdateFailed));
     } catch (e) {
-      emit(ProductError('An unexpected error occurred: ${e.toString()}'));
+      emit(ProductError(ErrorMessages.unknownError));
     }
   }
 
@@ -62,10 +65,12 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       if (createdProduct != null) {
         emit(ProductCreated(createdProduct));
       } else {
-        emit(ProductError('Erreur lors de la création du produit.'));
+        emit(ProductError(ErrorMessages.productLoadFailed));
       }
+    } on ApiException catch (e) {
+      emit(ProductError(ErrorMessages.productLoadFailed));
     } catch (e) {
-      emit(ProductError('An unexpected error occurred:  ${e.toString()}'));
+      emit(ProductError(ErrorMessages.unknownError));
     }
   }
 
@@ -80,10 +85,12 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       if (updatedProduct != null) {
         emit(ProductUpdated(updatedProduct));
       } else {
-        emit(ProductError('Erreur lors de la mise à jour du produit.'));
+        emit(ProductError(ErrorMessages.productUpdateFailed));
       }
+    } on ApiException catch (e) {
+      emit(ProductError(ErrorMessages.productUpdateFailed));
     } catch (e) {
-      emit(ProductError('An unexpected error occurred:  ${e.toString()}'));
+      emit(ProductError(ErrorMessages.unknownError));
     }
   }
 
@@ -93,8 +100,10 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     try {
       await _productApi.deleteProduct(event.productId);
       emit(ProductDeleted());
+    } on ApiException catch (e) {
+      emit(ProductError(ErrorMessages.productUpdateFailed));
     } catch (e) {
-      emit(ProductError('An unexpected error occurred: ${e.toString()}'));
+      emit(ProductError(ErrorMessages.unknownError));
     }
   }
 }

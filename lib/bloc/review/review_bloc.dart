@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:lnFoot_api/api.dart';
- 
+import 'package:ln_foot/constants/error_messages.dart';
+
 part 'review_event.dart';
 part 'review_state.dart';
 
 class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
-   
   final ReviewControllerApi reviewControllerApi;
 
   ReviewBloc({required this.reviewControllerApi}) : super(ReviewInitial()) {
@@ -24,9 +24,9 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
       final reviews = await reviewControllerApi.getAllReviews();
       emit(ReviewsLoaded(reviews ?? [])); // Gérer la nullabilité potentielle
     } on ApiException catch (e) {
-      emit(ReviewError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(ReviewError(ErrorMessages.unknownError));
     } catch (e) {
-      emit(ReviewError('An unexpected error occurred: ${e.toString()}'));
+      emit(ReviewError(ErrorMessages.unknownError));
     }
   }
 
@@ -41,9 +41,9 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
         emit(const ReviewError('Review not found.'));
       }
     } on ApiException catch (e) {
-      emit(ReviewError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(ReviewError(ErrorMessages.unknownError));
     } catch (e) {
-      emit(ReviewError('An unexpected error occurred: ${e.toString()}'));
+      emit(ReviewError(ErrorMessages.unknownError));
     }
   }
 
@@ -63,9 +63,9 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
         emit(const ReviewError('Review creation failed silently.'));
       }
     } on ApiException catch (e) {
-      emit(ReviewError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(ReviewError(ErrorMessages.unknownError));
     } catch (e) {
-      emit(ReviewError('An unexpected error occurred: ${e.toString()}'));
+      emit(ReviewError(ErrorMessages.unknownError));
     }
   }
 
@@ -86,9 +86,9 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
         emit(const ReviewError('Review update failed silently.'));
       }
     } on ApiException catch (e) {
-      emit(ReviewError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(ReviewError(ErrorMessages.unknownError));
     } catch (e) {
-      emit(ReviewError('An unexpected error occurred: ${e.toString()}'));
+      emit(ReviewError(ErrorMessages.unknownError));
     }
   }
 
@@ -101,9 +101,9 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
       // Optionnel : rafraîchir la liste après suppression
       // add(LoadAllReviews());
     } on ApiException catch (e) {
-      emit(ReviewError('API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(ReviewError(ErrorMessages.unknownError));
     } catch (e) {
-      emit(ReviewError('An unexpected error occurred: ${e.toString()}'));
+      emit(ReviewError(ErrorMessages.unknownError));
     }
   }
 }

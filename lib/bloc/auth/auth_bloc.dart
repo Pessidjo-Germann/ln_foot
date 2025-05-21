@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ln_foot/service.dart';
+import 'package:ln_foot/constants/error_messages.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -18,7 +19,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user != null) {
           emit(Authenticated(user));
         } else {
-          emit(Unauthenticated());
+          emit(AuthError(ErrorMessages.userInfoLoadFailed));
         }
       } else {
         emit(Unauthenticated());
@@ -29,7 +30,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           final user = await authService.getUserInfo();
           emit(Authenticated(user!));
         } else {
-          emit(Unauthenticated());
+          emit(AuthError(ErrorMessages.userInfoLoadFailed));
         }
       }
     });
@@ -41,7 +42,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final user = await authService.getUserInfo();
         emit(Authenticated(user!));
       } else {
-        emit(AuthError('Login failed'));
+        emit(AuthError(ErrorMessages.loginFailed));
       }
     });
 
@@ -56,7 +57,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (token != null && token.isNotEmpty) {
         emit(AuthenticatedWithToken(token));
       } else {
-        emit(Unauthenticated());
+        emit(AuthError(ErrorMessages.tokenError));
       }
     });
 

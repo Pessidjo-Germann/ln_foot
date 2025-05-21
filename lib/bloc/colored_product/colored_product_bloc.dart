@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:lnFoot_api/api.dart'; // Import depuis le package API lnFoot_api
+import 'package:ln_foot/constants/error_messages.dart';
 
 part 'colored_product_event.dart';
 part 'colored_product_state.dart';
@@ -27,11 +28,9 @@ class ColoredProductBloc
           await coloredProductControllerApi.getColoredProducts();
       emit(ColoredProductsLoaded(coloredProducts ?? []));
     } on ApiException catch (e) {
-      emit(ColoredProductError(
-          'API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(ColoredProductError(ErrorMessages.productLoadFailed));
     } catch (e) {
-      emit(
-          ColoredProductError('An unexpected error occurred: ${e.toString()}'));
+      emit(ColoredProductError(ErrorMessages.unknownError));
     }
   }
 
@@ -47,11 +46,9 @@ class ColoredProductBloc
         emit(const ColoredProductError("Colored product not found."));
       }
     } on ApiException catch (e) {
-      emit(ColoredProductError(
-          'API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(ColoredProductError(ErrorMessages.productLoadFailed));
     } catch (e) {
-      emit(
-          ColoredProductError('An unexpected error occurred: ${e.toString()}'));
+      emit(ColoredProductError(ErrorMessages.unknownError));
     }
   }
 
@@ -72,11 +69,9 @@ class ColoredProductBloc
             "Colored product creation failed silently."));
       }
     } on ApiException catch (e) {
-      emit(ColoredProductError(
-          'API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(ColoredProductError(ErrorMessages.productLoadFailed));
     } catch (e) {
-      emit(
-          ColoredProductError('An unexpected error occurred: ${e.toString()}'));
+      emit(ColoredProductError(ErrorMessages.unknownError));
     }
   }
 
@@ -98,11 +93,9 @@ class ColoredProductBloc
             "Colored product update failed silently."));
       }
     } on ApiException catch (e) {
-      emit(ColoredProductError(
-          'API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(ColoredProductError(ErrorMessages.productLoadFailed));
     } catch (e) {
-      emit(
-          ColoredProductError('An unexpected error occurred: ${e.toString()}'));
+      emit(ColoredProductError(ErrorMessages.unknownError));
     }
   }
 
@@ -115,11 +108,9 @@ class ColoredProductBloc
       // Optionnel : Recharger la liste après suppression
       // add(LoadColoredProducts());
     } on ApiException catch (e) {
-      emit(ColoredProductError(
-          'API Error ${e.code}: ${e.message ?? e.toString()}'));
+      emit(ColoredProductError(ErrorMessages.productLoadFailed));
     } catch (e) {
-      emit(
-          ColoredProductError('An unexpected error occurred: ${e.toString()}'));
+      emit(ColoredProductError(ErrorMessages.unknownError));
     }
   }
 }
