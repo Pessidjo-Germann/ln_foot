@@ -146,14 +146,16 @@ class _CartScreenState extends State<CartScreen> {
 
                     final orderItems = cartState.items
                         .map((item) => OrderItemDto(
-                              id: item.product.id!,
-                              coloredProductId: item.color,
-                              quantity: item.quantity,
-                              size: item.size,
-                            ))
+                            id: item.product.id!,
+                            quantity: item.quantity,
+                            size: item.size,
+                            price: item.product.price,
+                            productVariantId: item.product.id))
                         .toList();
 
                     final orderData = OrderDto(
+                      status: 'pending',
+                      orderDate: DateTime.now(),
                       orderItems: orderItems,
                     );
                     debugPrint(orderData.toString());

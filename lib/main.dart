@@ -19,10 +19,9 @@ void main() async {
   final authService = await AuthService.create();
   final token = await authService.getAccessToken();
   final refresh = authService.getRefreshToken();
-  
+
   debugPrint('Refresh token: $refresh');
   debugPrint('Token: $token');
-  
 
   final apiClient = ApiClient();
 
@@ -33,14 +32,14 @@ void main() async {
   final productApi = ProductControllerApi(apiClient);
   final orderControllerApi = OrderControllerApi(apiClient);
   final categoryControler = CategoryControllerApi(apiClient);
-  final coloredProductControllerApi = ColoredProductControllerApi(apiClient);
+  // final coloredProductControllerApi = ColoredProductControllerApi(apiClient);
   final reviewControllerApi = ReviewControllerApi(apiClient);
   runApp(MyApp(
     authService: authService,
     orderControllerApi: orderControllerApi,
     productApi: productApi,
     categoryControllerApi: categoryControler,
-    coloredProductControllerApi: coloredProductControllerApi,
+    //  coloredProductControllerApi: coloredProductControllerApi,
     reviewControllerApi: reviewControllerApi,
     apiClient: apiClient,
   ));
@@ -51,7 +50,7 @@ class MyApp extends StatelessWidget {
   final OrderControllerApi orderControllerApi;
   final ProductControllerApi productApi;
   final CategoryControllerApi categoryControllerApi;
-  final ColoredProductControllerApi coloredProductControllerApi;
+  // final ColoredProductControllerApi coloredProductControllerApi;
   final ReviewControllerApi reviewControllerApi;
   final ApiClient apiClient;
 
@@ -61,7 +60,7 @@ class MyApp extends StatelessWidget {
     required this.orderControllerApi,
     required this.productApi,
     required this.categoryControllerApi,
-    required this.coloredProductControllerApi,
+    // required this.coloredProductControllerApi,
     required this.reviewControllerApi,
     required this.apiClient,
   });
@@ -89,10 +88,10 @@ class MyApp extends StatelessWidget {
               CategoryBloc(categoryControllerApi: categoryControllerApi)
                 ..add(LoadAllCategories()),
         ),
-        BlocProvider<ColoredProductBloc>(
-          create: (_) => ColoredProductBloc(
-              coloredProductControllerApi: coloredProductControllerApi),
-        ),
+        // BlocProvider<ColoredProductBloc>(
+        //   create: (_) => ColoredProductBloc(
+        //       coloredProductControllerApi: coloredProductControllerApi),
+        // ),
         BlocProvider<CartBloc>(
           create: (_) => CartBloc()..add(LoadCart()),
         ),

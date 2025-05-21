@@ -10,14 +10,15 @@
 
 part of openapi.api;
 
-class Promotion {
-  /// Returns a new [Promotion] instance.
-  Promotion({
+class PaymentResponseDto {
+  /// Returns a new [PaymentResponseDto] instance.
+  PaymentResponseDto({
     this.id,
-    this.product,
-    this.discountedPrice,
-    this.startDate,
-    this.endDate,
+    this.orderId,
+    this.paymentId,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
   });
 
   ///
@@ -34,7 +35,7 @@ class Promotion {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  Product? product;
+  String? orderId;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -42,7 +43,7 @@ class Promotion {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  num? discountedPrice;
+  String? paymentId;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -50,7 +51,7 @@ class Promotion {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  DateTime? startDate;
+  String? status;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -58,27 +59,37 @@ class Promotion {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  DateTime? endDate;
+  DateTime? createdAt;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  DateTime? updatedAt;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Promotion &&
+  bool operator ==(Object other) => identical(this, other) || other is PaymentResponseDto &&
     other.id == id &&
-    other.product == product &&
-    other.discountedPrice == discountedPrice &&
-    other.startDate == startDate &&
-    other.endDate == endDate;
+    other.orderId == orderId &&
+    other.paymentId == paymentId &&
+    other.status == status &&
+    other.createdAt == createdAt &&
+    other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (id == null ? 0 : id!.hashCode) +
-    (product == null ? 0 : product!.hashCode) +
-    (discountedPrice == null ? 0 : discountedPrice!.hashCode) +
-    (startDate == null ? 0 : startDate!.hashCode) +
-    (endDate == null ? 0 : endDate!.hashCode);
+    (orderId == null ? 0 : orderId!.hashCode) +
+    (paymentId == null ? 0 : paymentId!.hashCode) +
+    (status == null ? 0 : status!.hashCode) +
+    (createdAt == null ? 0 : createdAt!.hashCode) +
+    (updatedAt == null ? 0 : updatedAt!.hashCode);
 
   @override
-  String toString() => 'Promotion[id=$id, product=$product, discountedPrice=$discountedPrice, startDate=$startDate, endDate=$endDate]';
+  String toString() => 'PaymentResponseDto[id=$id, orderId=$orderId, paymentId=$paymentId, status=$status, createdAt=$createdAt, updatedAt=$updatedAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -87,33 +98,38 @@ class Promotion {
     } else {
       json[r'id'] = null;
     }
-    if (this.product != null) {
-      json[r'product'] = this.product;
+    if (this.orderId != null) {
+      json[r'orderId'] = this.orderId;
     } else {
-      json[r'product'] = null;
+      json[r'orderId'] = null;
     }
-    if (this.discountedPrice != null) {
-      json[r'discountedPrice'] = this.discountedPrice;
+    if (this.paymentId != null) {
+      json[r'paymentId'] = this.paymentId;
     } else {
-      json[r'discountedPrice'] = null;
+      json[r'paymentId'] = null;
     }
-    if (this.startDate != null) {
-      json[r'startDate'] = _dateFormatter.format(this.startDate!.toUtc());
+    if (this.status != null) {
+      json[r'status'] = this.status;
     } else {
-      json[r'startDate'] = null;
+      json[r'status'] = null;
     }
-    if (this.endDate != null) {
-      json[r'endDate'] = _dateFormatter.format(this.endDate!.toUtc());
+    if (this.createdAt != null) {
+      json[r'createdAt'] = this.createdAt!.toUtc().toIso8601String();
     } else {
-      json[r'endDate'] = null;
+      json[r'createdAt'] = null;
+    }
+    if (this.updatedAt != null) {
+      json[r'updatedAt'] = this.updatedAt!.toUtc().toIso8601String();
+    } else {
+      json[r'updatedAt'] = null;
     }
     return json;
   }
 
-  /// Returns a new [Promotion] instance and imports its values from
+  /// Returns a new [PaymentResponseDto] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static Promotion? fromJson(dynamic value) {
+  static PaymentResponseDto? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -122,28 +138,29 @@ class Promotion {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "Promotion[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "Promotion[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "PaymentResponseDto[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "PaymentResponseDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return Promotion(
+      return PaymentResponseDto(
         id: mapValueOfType<String>(json, r'id'),
-        product: Product.fromJson(json[r'product']),
-        discountedPrice: num.parse('${json[r'discountedPrice']}'),
-        startDate: mapDateTime(json, r'startDate', r''),
-        endDate: mapDateTime(json, r'endDate', r''),
+        orderId: mapValueOfType<String>(json, r'orderId'),
+        paymentId: mapValueOfType<String>(json, r'paymentId'),
+        status: mapValueOfType<String>(json, r'status'),
+        createdAt: mapDateTime(json, r'createdAt', r''),
+        updatedAt: mapDateTime(json, r'updatedAt', r''),
       );
     }
     return null;
   }
 
-  static List<Promotion> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <Promotion>[];
+  static List<PaymentResponseDto> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <PaymentResponseDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = Promotion.fromJson(row);
+        final value = PaymentResponseDto.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -152,12 +169,12 @@ class Promotion {
     return result.toList(growable: growable);
   }
 
-  static Map<String, Promotion> mapFromJson(dynamic json) {
-    final map = <String, Promotion>{};
+  static Map<String, PaymentResponseDto> mapFromJson(dynamic json) {
+    final map = <String, PaymentResponseDto>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = Promotion.fromJson(entry.value);
+        final value = PaymentResponseDto.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -166,14 +183,14 @@ class Promotion {
     return map;
   }
 
-  // maps a json object with a list of Promotion-objects as value to a dart map
-  static Map<String, List<Promotion>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<Promotion>>{};
+  // maps a json object with a list of PaymentResponseDto-objects as value to a dart map
+  static Map<String, List<PaymentResponseDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<PaymentResponseDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = Promotion.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = PaymentResponseDto.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;

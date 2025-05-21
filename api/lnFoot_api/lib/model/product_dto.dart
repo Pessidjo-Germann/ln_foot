@@ -64,7 +64,7 @@ class ProductDto {
   ///
   String? description;
 
-  num price;
+  double price;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -168,7 +168,7 @@ class ProductDto {
         file: null, // No support for decoding binary content from JSON
         name: mapValueOfType<String>(json, r'name'),
         description: mapValueOfType<String>(json, r'description'),
-        price: num.parse('${json[r'price']}'),
+        price: mapValueOfType<double>(json, r'price')!,
         stockQuantity: mapValueOfType<int>(json, r'stockQuantity'),
         categoryNames: json[r'categoryNames'] is Iterable
             ? (json[r'categoryNames'] as Iterable).cast<String>().toList(growable: false)
@@ -224,7 +224,6 @@ class ProductDto {
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
     'price',
-    'categoryNames',
   };
 }
 

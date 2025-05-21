@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 import 'package:test/test.dart';
 
 
@@ -17,7 +17,7 @@ void main() {
   // final instance = ReviewControllerApi();
 
   group('tests for ReviewControllerApi', () {
-    //Future<ReviewDto> createReview(String userId, ReviewDto reviewDto) async
+    //Future<ReviewDto> createReview(ReviewDto reviewDto) async
     test('test createReview', () async {
       // TODO
     });
@@ -37,7 +37,7 @@ void main() {
       // TODO
     });
 
-    //Future<ReviewDto> updateReview(String id, String userId, ReviewDto reviewDto) async
+    //Future<ReviewDto> updateReview(String id, ReviewDto reviewDto) async
     test('test updateReview', () async {
       // TODO
     });

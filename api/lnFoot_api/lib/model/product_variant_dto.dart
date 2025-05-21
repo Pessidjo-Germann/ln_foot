@@ -10,16 +10,16 @@
 
 part of openapi.api;
 
-class Product {
-  /// Returns a new [Product] instance.
-  Product({
+class ProductVariantDto {
+  /// Returns a new [ProductVariantDto] instance.
+  ProductVariantDto({
     this.id,
-    this.name,
-    this.description,
+    this.imageUrl,
+    this.file,
+    this.colorCode,
+    this.productId,
     this.price,
     this.stockQuantity,
-    this.imageUrl,
-    this.categories = const [],
     this.sizes = const [],
   });
 
@@ -37,7 +37,7 @@ class Product {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  String? name;
+  String? imageUrl;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -45,7 +45,7 @@ class Product {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  String? description;
+  MultipartFile? file;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -53,7 +53,23 @@ class Product {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  num? price;
+  String? colorCode;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? productId;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  double? price;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -63,43 +79,33 @@ class Product {
   ///
   int? stockQuantity;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? imageUrl;
-
-  List<Category> categories;
-
-  List<Size> sizes;
+  List<String> sizes;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Product &&
+  bool operator ==(Object other) => identical(this, other) || other is ProductVariantDto &&
     other.id == id &&
-    other.name == name &&
-    other.description == description &&
+    other.imageUrl == imageUrl &&
+    other.file == file &&
+    other.colorCode == colorCode &&
+    other.productId == productId &&
     other.price == price &&
     other.stockQuantity == stockQuantity &&
-    other.imageUrl == imageUrl &&
-    _deepEquality.equals(other.categories, categories) &&
     _deepEquality.equals(other.sizes, sizes);
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (id == null ? 0 : id!.hashCode) +
-    (name == null ? 0 : name!.hashCode) +
-    (description == null ? 0 : description!.hashCode) +
+    (imageUrl == null ? 0 : imageUrl!.hashCode) +
+    (file == null ? 0 : file!.hashCode) +
+    (colorCode == null ? 0 : colorCode!.hashCode) +
+    (productId == null ? 0 : productId!.hashCode) +
     (price == null ? 0 : price!.hashCode) +
     (stockQuantity == null ? 0 : stockQuantity!.hashCode) +
-    (imageUrl == null ? 0 : imageUrl!.hashCode) +
-    (categories.hashCode) +
     (sizes.hashCode);
 
   @override
-  String toString() => 'Product[id=$id, name=$name, description=$description, price=$price, stockQuantity=$stockQuantity, imageUrl=$imageUrl, categories=$categories, sizes=$sizes]';
+  String toString() => 'ProductVariantDto[id=$id, imageUrl=$imageUrl, file=$file, colorCode=$colorCode, productId=$productId, price=$price, stockQuantity=$stockQuantity, sizes=$sizes]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -108,15 +114,25 @@ class Product {
     } else {
       json[r'id'] = null;
     }
-    if (this.name != null) {
-      json[r'name'] = this.name;
+    if (this.imageUrl != null) {
+      json[r'imageUrl'] = this.imageUrl;
     } else {
-      json[r'name'] = null;
+      json[r'imageUrl'] = null;
     }
-    if (this.description != null) {
-      json[r'description'] = this.description;
+    if (this.file != null) {
+      json[r'file'] = this.file;
     } else {
-      json[r'description'] = null;
+      json[r'file'] = null;
+    }
+    if (this.colorCode != null) {
+      json[r'colorCode'] = this.colorCode;
+    } else {
+      json[r'colorCode'] = null;
+    }
+    if (this.productId != null) {
+      json[r'productId'] = this.productId;
+    } else {
+      json[r'productId'] = null;
     }
     if (this.price != null) {
       json[r'price'] = this.price;
@@ -128,20 +144,14 @@ class Product {
     } else {
       json[r'stockQuantity'] = null;
     }
-    if (this.imageUrl != null) {
-      json[r'imageUrl'] = this.imageUrl;
-    } else {
-      json[r'imageUrl'] = null;
-    }
-      json[r'categories'] = this.categories;
       json[r'sizes'] = this.sizes;
     return json;
   }
 
-  /// Returns a new [Product] instance and imports its values from
+  /// Returns a new [ProductVariantDto] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static Product? fromJson(dynamic value) {
+  static ProductVariantDto? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -150,31 +160,33 @@ class Product {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "Product[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "Product[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "ProductVariantDto[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "ProductVariantDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return Product(
+      return ProductVariantDto(
         id: mapValueOfType<String>(json, r'id'),
-        name: mapValueOfType<String>(json, r'name'),
-        description: mapValueOfType<String>(json, r'description'),
-        price: num.parse('${json[r'price']}'),
-        stockQuantity: mapValueOfType<int>(json, r'stockQuantity'),
         imageUrl: mapValueOfType<String>(json, r'imageUrl'),
-        categories: Category.listFromJson(json[r'categories']),
-        sizes: Size.listFromJson(json[r'sizes']),
+        file: null, // No support for decoding binary content from JSON
+        colorCode: mapValueOfType<String>(json, r'colorCode'),
+        productId: mapValueOfType<String>(json, r'productId'),
+        price: mapValueOfType<double>(json, r'price'),
+        stockQuantity: mapValueOfType<int>(json, r'stockQuantity'),
+        sizes: json[r'sizes'] is Iterable
+            ? (json[r'sizes'] as Iterable).cast<String>().toList(growable: false)
+            : const [],
       );
     }
     return null;
   }
 
-  static List<Product> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <Product>[];
+  static List<ProductVariantDto> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <ProductVariantDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = Product.fromJson(row);
+        final value = ProductVariantDto.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -183,12 +195,12 @@ class Product {
     return result.toList(growable: growable);
   }
 
-  static Map<String, Product> mapFromJson(dynamic json) {
-    final map = <String, Product>{};
+  static Map<String, ProductVariantDto> mapFromJson(dynamic json) {
+    final map = <String, ProductVariantDto>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = Product.fromJson(entry.value);
+        final value = ProductVariantDto.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -197,14 +209,14 @@ class Product {
     return map;
   }
 
-  // maps a json object with a list of Product-objects as value to a dart map
-  static Map<String, List<Product>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<Product>>{};
+  // maps a json object with a list of ProductVariantDto-objects as value to a dart map
+  static Map<String, List<ProductVariantDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<ProductVariantDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = Product.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = ProductVariantDto.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;

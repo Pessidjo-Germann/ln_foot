@@ -1,18 +1,18 @@
-# openapi.model.Promotion
+# lnfoot_api.model.PromotionProductDto
 
 ## Load the model package
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 ```
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | [optional] 
-**product** | [**Product**](Product.md) |  | [optional] 
-**discountedPrice** | **num** |  | [optional] 
-**startDate** | [**DateTime**](DateTime.md) |  | [optional] 
-**endDate** | [**DateTime**](DateTime.md) |  | [optional] 
+**productVariantId** | **String** |  | 
+**discountedPrice** | **double** |  | 
+**startDate** | [**DateTime**](DateTime.md) |  | 
+**endDate** | [**DateTime**](DateTime.md) |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

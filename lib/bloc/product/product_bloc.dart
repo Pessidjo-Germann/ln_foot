@@ -16,7 +16,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         super(ProductInitial()) {
     on<LoadAllProducts>(_onLoadAllProducts);
     on<LoadProductById>(_onLoadProductById);
-    on<CreateProduct>(_onCreateProduct);
+   // on<CreateProduct>(_onCreateProduct);
     on<UpdateProduct>(_onUpdateProduct);
     on<DeleteProduct>(_onDeleteProduct);
   }
@@ -50,29 +50,28 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     }
   }
 
-  Future<void> _onCreateProduct(
-      CreateProduct event, Emitter<ProductState> emit) async {
-    emit(ProductLoading());
-    try {
-      final createdProduct = await _productApi.createProduct(
-        event.price,
-        event.categoryNames,
-        name: event.name,
-        description: event.description,
-        stockQuantity: event.stockQuantity,
-        sizes: event.sizes,
-      );
-      if (createdProduct != null) {
-        emit(ProductCreated(createdProduct));
-      } else {
-        emit(ProductError(ErrorMessages.productLoadFailed));
-      }
-    } on ApiException catch (e) {
-      emit(ProductError(ErrorMessages.productLoadFailed));
-    } catch (e) {
-      emit(ProductError(ErrorMessages.unknownError));
-    }
-  }
+  // Future<void> _onCreateProduct(
+  //     CreateProduct event, Emitter<ProductState> emit) async {
+  //   emit(ProductLoading());
+  //   try {
+  //     final createdProduct = await _productApi.createProduct(
+      
+  //       name: event.name,
+  //       description: event.description,
+  //       stockQuantity: event.stockQuantity,
+  //       sizes: event.sizes,
+  //     );
+  //     if (createdProduct != null) {
+  //       emit(ProductCreated(createdProduct));
+  //     } else {
+  //       emit(ProductError(ErrorMessages.productLoadFailed));
+  //     }
+  //   } on ApiException catch (e) {
+  //     emit(ProductError(ErrorMessages.productLoadFailed));
+  //   } catch (e) {
+  //     emit(ProductError(ErrorMessages.unknownError));
+  //   }
+  // }
 
   Future<void> _onUpdateProduct(
       UpdateProduct event, Emitter<ProductState> emit) async {

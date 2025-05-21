@@ -20,6 +20,8 @@ class ProductsLoaded extends ProductState {
   List<Object?> get props => [products];
 }
 
+
+
 class ProductLoaded extends ProductState {
   final ProductDto product;
 

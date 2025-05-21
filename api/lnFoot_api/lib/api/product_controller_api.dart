@@ -19,9 +19,7 @@ class ProductControllerApi {
   /// Performs an HTTP 'POST /api/products' operation and returns the [Response].
   /// Parameters:
   ///
-  /// * [num] price (required):
-  ///
-  /// * [List<String>] categoryNames (required):
+  /// * [double] price (required):
   ///
   /// * [String] id:
   ///
@@ -35,8 +33,10 @@ class ProductControllerApi {
   ///
   /// * [int] stockQuantity:
   ///
+  /// * [List<String>] categoryNames:
+  ///
   /// * [List<String>] sizes:
-  Future<Response> createProductWithHttpInfo(num price, List<String> categoryNames, { String? id, String? imageUrl, MultipartFile? file, String? name, String? description, int? stockQuantity, List<String>? sizes, }) async {
+  Future<Response> createProductWithHttpInfo(double price, { String? id, String? imageUrl, MultipartFile? file, String? name, String? description, int? stockQuantity, List<String>? categoryNames, List<String>? sizes, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/products';
 
@@ -105,9 +105,7 @@ class ProductControllerApi {
 
   /// Parameters:
   ///
-  /// * [num] price (required):
-  ///
-  /// * [List<String>] categoryNames (required):
+  /// * [double] price (required):
   ///
   /// * [String] id:
   ///
@@ -121,9 +119,11 @@ class ProductControllerApi {
   ///
   /// * [int] stockQuantity:
   ///
+  /// * [List<String>] categoryNames:
+  ///
   /// * [List<String>] sizes:
-  Future<ProductDto?> createProduct(num price, List<String> categoryNames, { String? id, String? imageUrl, MultipartFile? file, String? name, String? description, int? stockQuantity, List<String>? sizes, }) async {
-    final response = await createProductWithHttpInfo(price, categoryNames,  id: id, imageUrl: imageUrl, file: file, name: name, description: description, stockQuantity: stockQuantity, sizes: sizes, );
+  Future<ProductDto?> createProduct(double price, { String? id, String? imageUrl, MultipartFile? file, String? name, String? description, int? stockQuantity, List<String>? categoryNames, List<String>? sizes, }) async {
+    final response = await createProductWithHttpInfo(price,  id: id, imageUrl: imageUrl, file: file, name: name, description: description, stockQuantity: stockQuantity, categoryNames: categoryNames, sizes: sizes, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

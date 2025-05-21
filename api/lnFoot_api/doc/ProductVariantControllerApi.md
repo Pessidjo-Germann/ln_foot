@@ -1,4 +1,4 @@
-# lnfoot_api.api.ProductControllerApi
+# lnfoot_api.api.ProductVariantControllerApi
 
 ## Load the API package
 ```dart
@@ -9,15 +9,16 @@ All URIs are relative to *https://lnfoot-api.hublots.co*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**createProduct**](ProductControllerApi.md#createproduct) | **POST** /api/products | 
-[**deleteProduct**](ProductControllerApi.md#deleteproduct) | **DELETE** /api/products/{id} | 
-[**getAllProducts**](ProductControllerApi.md#getallproducts) | **GET** /api/products | 
-[**getProductById**](ProductControllerApi.md#getproductbyid) | **GET** /api/products/{id} | 
-[**updateProduct**](ProductControllerApi.md#updateproduct) | **PUT** /api/products/{id} | 
+[**createProductVariant**](ProductVariantControllerApi.md#createproductvariant) | **POST** /api/product-variants | 
+[**createProductVariants**](ProductVariantControllerApi.md#createproductvariants) | **POST** /api/product-variants/bulk | 
+[**deleteProductVariant**](ProductVariantControllerApi.md#deleteproductvariant) | **DELETE** /api/product-variants/{id} | 
+[**getProductVariant**](ProductVariantControllerApi.md#getproductvariant) | **GET** /api/product-variants/{id} | 
+[**getProductVariants**](ProductVariantControllerApi.md#getproductvariants) | **GET** /api/product-variants | 
+[**updateProductVariant**](ProductVariantControllerApi.md#updateproductvariant) | **PUT** /api/product-variants/{id} | 
 
 
-# **createProduct**
-> ProductDto createProduct(price, id, imageUrl, file, name, description, stockQuantity, categoryNames, sizes)
+# **createProductVariant**
+> ProductVariantDto createProductVariant(id, imageUrl, file, colorCode, productId, price, stockQuantity, sizes)
 
 
 
@@ -27,22 +28,21 @@ import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
-final api_instance = ProductControllerApi();
-final price = 1.2; // double | 
+final api_instance = ProductVariantControllerApi();
 final id = id_example; // String | 
 final imageUrl = imageUrl_example; // String | 
 final file = BINARY_DATA_HERE; // MultipartFile | 
-final name = name_example; // String | 
-final description = description_example; // String | 
+final colorCode = colorCode_example; // String | 
+final productId = productId_example; // String | 
+final price = 1.2; // double | 
 final stockQuantity = 56; // int | 
-final categoryNames = []; // List<String> | 
 final sizes = []; // List<String> | 
 
 try {
-    final result = api_instance.createProduct(price, id, imageUrl, file, name, description, stockQuantity, categoryNames, sizes);
+    final result = api_instance.createProductVariant(id, imageUrl, file, colorCode, productId, price, stockQuantity, sizes);
     print(result);
 } catch (e) {
-    print('Exception when calling ProductControllerApi->createProduct: $e\n');
+    print('Exception when calling ProductVariantControllerApi->createProductVariant: $e\n');
 }
 ```
 
@@ -50,19 +50,18 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **price** | **double**|  | 
  **id** | **String**|  | [optional] 
  **imageUrl** | **String**|  | [optional] 
  **file** | **MultipartFile**|  | [optional] 
- **name** | **String**|  | [optional] 
- **description** | **String**|  | [optional] 
+ **colorCode** | **String**|  | [optional] 
+ **productId** | **String**|  | [optional] 
+ **price** | **double**|  | [optional] 
  **stockQuantity** | **int**|  | [optional] 
- **categoryNames** | [**List<String>**](String.md)|  | [optional] 
  **sizes** | [**List<String>**](String.md)|  | [optional] 
 
 ### Return type
 
-[**ProductDto**](ProductDto.md)
+[**ProductVariantDto**](ProductVariantDto.md)
 
 ### Authorization
 
@@ -75,8 +74,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **deleteProduct**
-> deleteProduct(id)
+# **createProductVariants**
+> List<ProductVariantDto> createProductVariants()
 
 
 
@@ -86,13 +85,52 @@ import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
-final api_instance = ProductControllerApi();
+final api_instance = ProductVariantControllerApi();
+
+try {
+    final result = api_instance.createProductVariants();
+    print(result);
+} catch (e) {
+    print('Exception when calling ProductVariantControllerApi->createProductVariants: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**List<ProductVariantDto>**](ProductVariantDto.md)
+
+### Authorization
+
+[keycloak](../README.md#keycloak)
+
+### HTTP request headers
+
+ - **Content-Type**: multipart/form-data
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **deleteProductVariant**
+> deleteProductVariant(id)
+
+
+
+### Example
+```dart
+import 'package:lnfoot_api/api.dart';
+// TODO Configure OAuth2 access token for authorization: keycloak
+//defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
+
+final api_instance = ProductVariantControllerApi();
 final id = id_example; // String | 
 
 try {
-    api_instance.deleteProduct(id);
+    api_instance.deleteProductVariant(id);
 } catch (e) {
-    print('Exception when calling ProductControllerApi->deleteProduct: $e\n');
+    print('Exception when calling ProductVariantControllerApi->deleteProductVariant: $e\n');
 }
 ```
 
@@ -117,8 +155,8 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getAllProducts**
-> List<ProductDto> getAllProducts()
+# **getProductVariant**
+> ProductVariantDto getProductVariant(id)
 
 
 
@@ -128,13 +166,56 @@ import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
-final api_instance = ProductControllerApi();
+final api_instance = ProductVariantControllerApi();
+final id = id_example; // String | 
 
 try {
-    final result = api_instance.getAllProducts();
+    final result = api_instance.getProductVariant(id);
     print(result);
 } catch (e) {
-    print('Exception when calling ProductControllerApi->getAllProducts: $e\n');
+    print('Exception when calling ProductVariantControllerApi->getProductVariant: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**ProductVariantDto**](ProductVariantDto.md)
+
+### Authorization
+
+[keycloak](../README.md#keycloak)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getProductVariants**
+> List<ProductVariantDto> getProductVariants()
+
+
+
+### Example
+```dart
+import 'package:lnfoot_api/api.dart';
+// TODO Configure OAuth2 access token for authorization: keycloak
+//defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
+
+final api_instance = ProductVariantControllerApi();
+
+try {
+    final result = api_instance.getProductVariants();
+    print(result);
+} catch (e) {
+    print('Exception when calling ProductVariantControllerApi->getProductVariants: $e\n');
 }
 ```
 
@@ -143,7 +224,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**List<ProductDto>**](ProductDto.md)
+[**List<ProductVariantDto>**](ProductVariantDto.md)
 
 ### Authorization
 
@@ -156,8 +237,8 @@ This endpoint does not need any parameter.
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getProductById**
-> ProductDto getProductById(id)
+# **updateProductVariant**
+> ProductVariantDto updateProductVariant(id, productVariantDto)
 
 
 
@@ -167,14 +248,15 @@ import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
-final api_instance = ProductControllerApi();
+final api_instance = ProductVariantControllerApi();
 final id = id_example; // String | 
+final productVariantDto = ProductVariantDto(); // ProductVariantDto | 
 
 try {
-    final result = api_instance.getProductById(id);
+    final result = api_instance.updateProductVariant(id, productVariantDto);
     print(result);
 } catch (e) {
-    print('Exception when calling ProductControllerApi->getProductById: $e\n');
+    print('Exception when calling ProductVariantControllerApi->updateProductVariant: $e\n');
 }
 ```
 
@@ -183,55 +265,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
+ **productVariantDto** | [**ProductVariantDto**](ProductVariantDto.md)|  | [optional] 
 
 ### Return type
 
-[**ProductDto**](ProductDto.md)
-
-### Authorization
-
-[keycloak](../README.md#keycloak)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: */*
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **updateProduct**
-> ProductDto updateProduct(id, productDto)
-
-
-
-### Example
-```dart
-import 'package:lnfoot_api/api.dart';
-// TODO Configure OAuth2 access token for authorization: keycloak
-//defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
-
-final api_instance = ProductControllerApi();
-final id = id_example; // String | 
-final productDto = ProductDto(); // ProductDto | 
-
-try {
-    final result = api_instance.updateProduct(id, productDto);
-    print(result);
-} catch (e) {
-    print('Exception when calling ProductControllerApi->updateProduct: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **String**|  | 
- **productDto** | [**ProductDto**](ProductDto.md)|  | [optional] 
-
-### Return type
-
-[**ProductDto**](ProductDto.md)
+[**ProductVariantDto**](ProductVariantDto.md)
 
 ### Authorization
 

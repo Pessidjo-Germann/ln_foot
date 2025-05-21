@@ -52,8 +52,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     emit(ReviewLoading());
     try {
       final createdReview = await reviewControllerApi.createReview(
-        event.userId,
-        event.reviewData,
+     event.reviewData
       );
       if (createdReview != null) {
         emit(ReviewCreated(createdReview));
@@ -75,7 +74,6 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     try {
       final updatedReview = await reviewControllerApi.updateReview(
         event.reviewId,
-        event.userId,
         event.reviewData,
       );
       if (updatedReview != null) {

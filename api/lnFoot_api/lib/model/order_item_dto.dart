@@ -14,9 +14,11 @@ class OrderItemDto {
   /// Returns a new [OrderItemDto] instance.
   OrderItemDto({
     this.id,
-    this.coloredProductId,
+    this.productVariantId,
     this.quantity,
     this.size,
+    this.orderId,
+    this.price,
   });
 
   ///
@@ -33,7 +35,7 @@ class OrderItemDto {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  String? coloredProductId;
+  String? productVariantId;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -51,23 +53,43 @@ class OrderItemDto {
   ///
   String? size;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? orderId;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  double? price;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is OrderItemDto &&
     other.id == id &&
-    other.coloredProductId == coloredProductId &&
+    other.productVariantId == productVariantId &&
     other.quantity == quantity &&
-    other.size == size;
+    other.size == size &&
+    other.orderId == orderId &&
+    other.price == price;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (id == null ? 0 : id!.hashCode) +
-    (coloredProductId == null ? 0 : coloredProductId!.hashCode) +
+    (productVariantId == null ? 0 : productVariantId!.hashCode) +
     (quantity == null ? 0 : quantity!.hashCode) +
-    (size == null ? 0 : size!.hashCode);
+    (size == null ? 0 : size!.hashCode) +
+    (orderId == null ? 0 : orderId!.hashCode) +
+    (price == null ? 0 : price!.hashCode);
 
   @override
-  String toString() => 'OrderItemDto[id=$id, coloredProductId=$coloredProductId, quantity=$quantity, size=$size]';
+  String toString() => 'OrderItemDto[id=$id, productVariantId=$productVariantId, quantity=$quantity, size=$size, orderId=$orderId, price=$price]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -76,10 +98,10 @@ class OrderItemDto {
     } else {
       json[r'id'] = null;
     }
-    if (this.coloredProductId != null) {
-      json[r'coloredProductId'] = this.coloredProductId;
+    if (this.productVariantId != null) {
+      json[r'productVariantId'] = this.productVariantId;
     } else {
-      json[r'coloredProductId'] = null;
+      json[r'productVariantId'] = null;
     }
     if (this.quantity != null) {
       json[r'quantity'] = this.quantity;
@@ -90,6 +112,16 @@ class OrderItemDto {
       json[r'size'] = this.size;
     } else {
       json[r'size'] = null;
+    }
+    if (this.orderId != null) {
+      json[r'orderId'] = this.orderId;
+    } else {
+      json[r'orderId'] = null;
+    }
+    if (this.price != null) {
+      json[r'price'] = this.price;
+    } else {
+      json[r'price'] = null;
     }
     return json;
   }
@@ -114,9 +146,11 @@ class OrderItemDto {
 
       return OrderItemDto(
         id: mapValueOfType<String>(json, r'id'),
-        coloredProductId: mapValueOfType<String>(json, r'coloredProductId'),
+        productVariantId: mapValueOfType<String>(json, r'productVariantId'),
         quantity: mapValueOfType<int>(json, r'quantity'),
         size: mapValueOfType<String>(json, r'size'),
+        orderId: mapValueOfType<String>(json, r'orderId'),
+        price: mapValueOfType<double>(json, r'price'),
       );
     }
     return null;

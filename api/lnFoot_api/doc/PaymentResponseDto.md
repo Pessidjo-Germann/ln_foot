@@ -1,18 +1,19 @@
-# openapi.model.PromotionDto
+# lnfoot_api.model.PaymentResponseDto
 
 ## Load the model package
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 ```
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | [optional] 
-**productId** | **String** |  | 
-**discountedPrice** | **num** |  | 
-**startDate** | [**DateTime**](DateTime.md) |  | 
-**endDate** | [**DateTime**](DateTime.md) |  | 
+**orderId** | **String** |  | [optional] 
+**paymentId** | **String** |  | [optional] 
+**status** | **String** |  | [optional] 
+**createdAt** | [**DateTime**](DateTime.md) |  | [optional] 
+**updatedAt** | [**DateTime**](DateTime.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

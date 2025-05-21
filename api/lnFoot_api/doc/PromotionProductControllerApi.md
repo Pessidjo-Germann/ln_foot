@@ -1,41 +1,41 @@
-# openapi.api.PromotionControllerApi
+# lnfoot_api.api.PromotionProductControllerApi
 
 ## Load the API package
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 ```
 
-All URIs are relative to *http://lnfoot-api.hublots.co*
+All URIs are relative to *https://lnfoot-api.hublots.co*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**createPromotion**](PromotionControllerApi.md#createpromotion) | **POST** /api/promotions | 
-[**createPromotions**](PromotionControllerApi.md#createpromotions) | **POST** /api/promotions/batch | 
-[**deletePromotion**](PromotionControllerApi.md#deletepromotion) | **DELETE** /api/promotions/{id} | 
-[**getAllPromotions**](PromotionControllerApi.md#getallpromotions) | **GET** /api/promotions | 
-[**getPromotionById**](PromotionControllerApi.md#getpromotionbyid) | **GET** /api/promotions/{id} | 
-[**updatePromotion**](PromotionControllerApi.md#updatepromotion) | **PUT** /api/promotions/{id} | 
+[**createPromotionProduct**](PromotionProductControllerApi.md#createpromotionproduct) | **POST** /api/promotion-products | 
+[**createPromotionProducts**](PromotionProductControllerApi.md#createpromotionproducts) | **POST** /api/promotion-products/batch | 
+[**deletePromotionProduct**](PromotionProductControllerApi.md#deletepromotionproduct) | **DELETE** /api/promotion-products/{id} | 
+[**getAllPromotionProducts**](PromotionProductControllerApi.md#getallpromotionproducts) | **GET** /api/promotion-products | 
+[**getPromotionProductById**](PromotionProductControllerApi.md#getpromotionproductbyid) | **GET** /api/promotion-products/{id} | 
+[**updatePromotionProduct**](PromotionProductControllerApi.md#updatepromotionproduct) | **PUT** /api/promotion-products/{id} | 
 
 
-# **createPromotion**
-> Promotion createPromotion(promotionDto)
+# **createPromotionProduct**
+> PromotionProductDto createPromotionProduct(promotionProductDto)
 
 
 
 ### Example
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
-final api_instance = PromotionControllerApi();
-final promotionDto = PromotionDto(); // PromotionDto | 
+final api_instance = PromotionProductControllerApi();
+final promotionProductDto = PromotionProductDto(); // PromotionProductDto | 
 
 try {
-    final result = api_instance.createPromotion(promotionDto);
+    final result = api_instance.createPromotionProduct(promotionProductDto);
     print(result);
 } catch (e) {
-    print('Exception when calling PromotionControllerApi->createPromotion: $e\n');
+    print('Exception when calling PromotionProductControllerApi->createPromotionProduct: $e\n');
 }
 ```
 
@@ -43,11 +43,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **promotionDto** | [**PromotionDto**](PromotionDto.md)|  | 
+ **promotionProductDto** | [**PromotionProductDto**](PromotionProductDto.md)|  | 
 
 ### Return type
 
-[**Promotion**](Promotion.md)
+[**PromotionProductDto**](PromotionProductDto.md)
 
 ### Authorization
 
@@ -60,25 +60,25 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **createPromotions**
-> List<Promotion> createPromotions(promotionDto)
+# **createPromotionProducts**
+> List<PromotionProductDto> createPromotionProducts(promotionProductDto)
 
 
 
 ### Example
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
-final api_instance = PromotionControllerApi();
-final promotionDto = [List<PromotionDto>()]; // List<PromotionDto> | 
+final api_instance = PromotionProductControllerApi();
+final promotionProductDto = [List<PromotionProductDto>()]; // List<PromotionProductDto> | 
 
 try {
-    final result = api_instance.createPromotions(promotionDto);
+    final result = api_instance.createPromotionProducts(promotionProductDto);
     print(result);
 } catch (e) {
-    print('Exception when calling PromotionControllerApi->createPromotions: $e\n');
+    print('Exception when calling PromotionProductControllerApi->createPromotionProducts: $e\n');
 }
 ```
 
@@ -86,11 +86,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **promotionDto** | [**List<PromotionDto>**](PromotionDto.md)|  | 
+ **promotionProductDto** | [**List<PromotionProductDto>**](PromotionProductDto.md)|  | 
 
 ### Return type
 
-[**List<Promotion>**](Promotion.md)
+[**List<PromotionProductDto>**](PromotionProductDto.md)
 
 ### Authorization
 
@@ -103,24 +103,24 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **deletePromotion**
-> deletePromotion(id)
+# **deletePromotionProduct**
+> deletePromotionProduct(id)
 
 
 
 ### Example
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
-final api_instance = PromotionControllerApi();
+final api_instance = PromotionProductControllerApi();
 final id = id_example; // String | 
 
 try {
-    api_instance.deletePromotion(id);
+    api_instance.deletePromotionProduct(id);
 } catch (e) {
-    print('Exception when calling PromotionControllerApi->deletePromotion: $e\n');
+    print('Exception when calling PromotionProductControllerApi->deletePromotionProduct: $e\n');
 }
 ```
 
@@ -145,24 +145,24 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getAllPromotions**
-> List<Promotion> getAllPromotions()
+# **getAllPromotionProducts**
+> List<PromotionProductDto> getAllPromotionProducts()
 
 
 
 ### Example
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
-final api_instance = PromotionControllerApi();
+final api_instance = PromotionProductControllerApi();
 
 try {
-    final result = api_instance.getAllPromotions();
+    final result = api_instance.getAllPromotionProducts();
     print(result);
 } catch (e) {
-    print('Exception when calling PromotionControllerApi->getAllPromotions: $e\n');
+    print('Exception when calling PromotionProductControllerApi->getAllPromotionProducts: $e\n');
 }
 ```
 
@@ -171,7 +171,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**List<Promotion>**](Promotion.md)
+[**List<PromotionProductDto>**](PromotionProductDto.md)
 
 ### Authorization
 
@@ -184,25 +184,25 @@ This endpoint does not need any parameter.
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getPromotionById**
-> Promotion getPromotionById(id)
+# **getPromotionProductById**
+> PromotionProductDto getPromotionProductById(id)
 
 
 
 ### Example
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
-final api_instance = PromotionControllerApi();
+final api_instance = PromotionProductControllerApi();
 final id = id_example; // String | 
 
 try {
-    final result = api_instance.getPromotionById(id);
+    final result = api_instance.getPromotionProductById(id);
     print(result);
 } catch (e) {
-    print('Exception when calling PromotionControllerApi->getPromotionById: $e\n');
+    print('Exception when calling PromotionProductControllerApi->getPromotionProductById: $e\n');
 }
 ```
 
@@ -214,7 +214,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**Promotion**](Promotion.md)
+[**PromotionProductDto**](PromotionProductDto.md)
 
 ### Authorization
 
@@ -227,26 +227,26 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **updatePromotion**
-> Promotion updatePromotion(id, promotionDto)
+# **updatePromotionProduct**
+> PromotionProductDto updatePromotionProduct(id, promotionProductDto)
 
 
 
 ### Example
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
-final api_instance = PromotionControllerApi();
+final api_instance = PromotionProductControllerApi();
 final id = id_example; // String | 
-final promotionDto = PromotionDto(); // PromotionDto | 
+final promotionProductDto = PromotionProductDto(); // PromotionProductDto | 
 
 try {
-    final result = api_instance.updatePromotion(id, promotionDto);
+    final result = api_instance.updatePromotionProduct(id, promotionProductDto);
     print(result);
 } catch (e) {
-    print('Exception when calling PromotionControllerApi->updatePromotion: $e\n');
+    print('Exception when calling PromotionProductControllerApi->updatePromotionProduct: $e\n');
 }
 ```
 
@@ -255,11 +255,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **promotionDto** | [**PromotionDto**](PromotionDto.md)|  | 
+ **promotionProductDto** | [**PromotionProductDto**](PromotionProductDto.md)|  | 
 
 ### Return type
 
-[**Promotion**](Promotion.md)
+[**PromotionProductDto**](PromotionProductDto.md)
 
 ### Authorization
 

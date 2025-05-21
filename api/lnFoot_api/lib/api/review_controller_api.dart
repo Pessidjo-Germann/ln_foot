@@ -19,10 +19,8 @@ class ReviewControllerApi {
   /// Performs an HTTP 'POST /api/reviews' operation and returns the [Response].
   /// Parameters:
   ///
-  /// * [String] userId (required):
-  ///
   /// * [ReviewDto] reviewDto (required):
-  Future<Response> createReviewWithHttpInfo(String userId, ReviewDto reviewDto,) async {
+  Future<Response> createReviewWithHttpInfo(ReviewDto reviewDto,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/reviews';
 
@@ -32,8 +30,6 @@ class ReviewControllerApi {
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
-
-      queryParams.addAll(_queryParams('', 'userId', userId));
 
     const contentTypes = <String>['application/json'];
 
@@ -51,11 +47,9 @@ class ReviewControllerApi {
 
   /// Parameters:
   ///
-  /// * [String] userId (required):
-  ///
   /// * [ReviewDto] reviewDto (required):
-  Future<ReviewDto?> createReview(String userId, ReviewDto reviewDto,) async {
-    final response = await createReviewWithHttpInfo(userId, reviewDto,);
+  Future<ReviewDto?> createReview(ReviewDto reviewDto,) async {
+    final response = await createReviewWithHttpInfo(reviewDto,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -206,10 +200,8 @@ class ReviewControllerApi {
   ///
   /// * [String] id (required):
   ///
-  /// * [String] userId (required):
-  ///
   /// * [ReviewDto] reviewDto (required):
-  Future<Response> updateReviewWithHttpInfo(String id, String userId, ReviewDto reviewDto,) async {
+  Future<Response> updateReviewWithHttpInfo(String id, ReviewDto reviewDto,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/reviews/{id}'
       .replaceAll('{id}', id);
@@ -220,8 +212,6 @@ class ReviewControllerApi {
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
-
-      queryParams.addAll(_queryParams('', 'userId', userId));
 
     const contentTypes = <String>['application/json'];
 
@@ -241,11 +231,9 @@ class ReviewControllerApi {
   ///
   /// * [String] id (required):
   ///
-  /// * [String] userId (required):
-  ///
   /// * [ReviewDto] reviewDto (required):
-  Future<ReviewDto?> updateReview(String id, String userId, ReviewDto reviewDto,) async {
-    final response = await updateReviewWithHttpInfo(id, userId, reviewDto,);
+  Future<ReviewDto?> updateReview(String id, ReviewDto reviewDto,) async {
+    final response = await updateReviewWithHttpInfo(id, reviewDto,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

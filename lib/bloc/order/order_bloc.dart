@@ -24,7 +24,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     emit(OrderLoading());
     try {
       // Note: L'API getAllOrders prend un userId. Assurez-vous que c'est le comportement attendu.
-      final orders = await orderControllerApi.getAllOrders(event.userId);
+      final orders = await orderControllerApi.getAllOrders();
       emit(OrdersLoaded(orders ?? []));
     } on ApiException catch (e) {
       emit(OrderError(ErrorMessages.orderUpdateFailed));
@@ -37,7 +37,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       LoadUserOrders event, Emitter<OrderState> emit) async {
     emit(OrderLoading());
     try {
-      final orders = await orderControllerApi.getUserOrders(event.userId);
+      final orders = await orderControllerApi.getUserOrders();
       emit(OrdersLoaded(orders ?? []));
     } on ApiException catch (e) {
       emit(OrderError(ErrorMessages.orderUpdateFailed));

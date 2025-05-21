@@ -29,24 +29,22 @@ part 'auth/http_basic_auth.dart';
 part 'auth/http_bearer_auth.dart';
 
 part 'api/category_controller_api.dart';
-part 'api/colored_product_controller_api.dart';
 part 'api/order_controller_api.dart';
 part 'api/product_controller_api.dart';
-part 'api/promotion_controller_api.dart';
+part 'api/product_variant_controller_api.dart';
+part 'api/promotion_product_controller_api.dart';
 part 'api/review_controller_api.dart';
 part 'api/size_controller_api.dart';
 
-part 'model/category.dart';
 part 'model/category_dto.dart';
-part 'model/colored_product_dto.dart';
+part 'model/customer.dart';
 part 'model/order_dto.dart';
 part 'model/order_item_dto.dart';
-part 'model/product.dart';
+part 'model/payment_response_dto.dart';
 part 'model/product_dto.dart';
-part 'model/promotion.dart';
-part 'model/promotion_dto.dart';
+part 'model/product_variant_dto.dart';
+part 'model/promotion_product_dto.dart';
 part 'model/review_dto.dart';
-part 'model/size.dart';
 part 'model/size_dto.dart';
 
 

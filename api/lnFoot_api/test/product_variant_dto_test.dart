@@ -8,14 +8,14 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for ColoredProductDto
+// tests for ProductVariantDto
 void main() {
-  // final instance = ColoredProductDto();
+  // final instance = ProductVariantDto();
 
-  group('test ColoredProductDto', () {
+  group('test ProductVariantDto', () {
     // String id
     test('to test the property `id`', () async {
       // TODO
@@ -31,8 +31,8 @@ void main() {
       // TODO
     });
 
-    // String name
-    test('to test the property `name`', () async {
+    // String colorCode
+    test('to test the property `colorCode`', () async {
       // TODO
     });
 
@@ -43,6 +43,16 @@ void main() {
 
     // double price
     test('to test the property `price`', () async {
+      // TODO
+    });
+
+    // int stockQuantity
+    test('to test the property `stockQuantity`', () async {
+      // TODO
+    });
+
+    // List<String> sizes (default value: const [])
+    test('to test the property `sizes`', () async {
       // TODO
     });
 

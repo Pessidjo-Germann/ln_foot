@@ -11,28 +11,13 @@
 import 'package:lnfoot_api/api.dart';
 import 'package:test/test.dart';
 
-// tests for OrderItemDto
+// tests for PaymentResponseDto
 void main() {
-  // final instance = OrderItemDto();
+  // final instance = PaymentResponseDto();
 
-  group('test OrderItemDto', () {
+  group('test PaymentResponseDto', () {
     // String id
     test('to test the property `id`', () async {
-      // TODO
-    });
-
-    // String productVariantId
-    test('to test the property `productVariantId`', () async {
-      // TODO
-    });
-
-    // int quantity
-    test('to test the property `quantity`', () async {
-      // TODO
-    });
-
-    // String size
-    test('to test the property `size`', () async {
       // TODO
     });
 
@@ -41,8 +26,23 @@ void main() {
       // TODO
     });
 
-    // double price
-    test('to test the property `price`', () async {
+    // String paymentId
+    test('to test the property `paymentId`', () async {
+      // TODO
+    });
+
+    // String status
+    test('to test the property `status`', () async {
+      // TODO
+    });
+
+    // DateTime createdAt
+    test('to test the property `createdAt`', () async {
+      // TODO
+    });
+
+    // DateTime updatedAt
+    test('to test the property `updatedAt`', () async {
       // TODO
     });
 

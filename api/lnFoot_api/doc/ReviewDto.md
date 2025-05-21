@@ -1,8 +1,8 @@
-# openapi.model.ReviewDto
+# lnfoot_api.model.ReviewDto
 
 ## Load the model package
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 ```
 
 ## Properties

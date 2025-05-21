@@ -1,11 +1,11 @@
-# openapi.api.ReviewControllerApi
+# lnfoot_api.api.ReviewControllerApi
 
 ## Load the API package
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 ```
 
-All URIs are relative to *http://lnfoot-api.hublots.co*
+All URIs are relative to *https://lnfoot-api.hublots.co*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -17,22 +17,21 @@ Method | HTTP request | Description
 
 
 # **createReview**
-> ReviewDto createReview(userId, reviewDto)
+> ReviewDto createReview(reviewDto)
 
 
 
 ### Example
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
 final api_instance = ReviewControllerApi();
-final userId = userId_example; // String | 
 final reviewDto = ReviewDto(); // ReviewDto | 
 
 try {
-    final result = api_instance.createReview(userId, reviewDto);
+    final result = api_instance.createReview(reviewDto);
     print(result);
 } catch (e) {
     print('Exception when calling ReviewControllerApi->createReview: $e\n');
@@ -43,7 +42,6 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **userId** | **String**|  | 
  **reviewDto** | [**ReviewDto**](ReviewDto.md)|  | 
 
 ### Return type
@@ -68,7 +66,7 @@ Name | Type | Description  | Notes
 
 ### Example
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -110,7 +108,7 @@ void (empty response body)
 
 ### Example
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -149,7 +147,7 @@ This endpoint does not need any parameter.
 
 ### Example
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -186,23 +184,22 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateReview**
-> ReviewDto updateReview(id, userId, reviewDto)
+> ReviewDto updateReview(id, reviewDto)
 
 
 
 ### Example
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
 final api_instance = ReviewControllerApi();
 final id = id_example; // String | 
-final userId = userId_example; // String | 
 final reviewDto = ReviewDto(); // ReviewDto | 
 
 try {
-    final result = api_instance.updateReview(id, userId, reviewDto);
+    final result = api_instance.updateReview(id, reviewDto);
     print(result);
 } catch (e) {
     print('Exception when calling ReviewControllerApi->updateReview: $e\n');
@@ -214,7 +211,6 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **userId** | **String**|  | 
  **reviewDto** | [**ReviewDto**](ReviewDto.md)|  | 
 
 ### Return type

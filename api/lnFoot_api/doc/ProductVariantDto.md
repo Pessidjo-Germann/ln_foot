@@ -1,21 +1,21 @@
-# openapi.model.Product
+# lnfoot_api.model.ProductVariantDto
 
 ## Load the model package
 ```dart
-import 'package:openapi/api.dart';
+import 'package:lnfoot_api/api.dart';
 ```
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | [optional] 
-**name** | **String** |  | [optional] 
-**description** | **String** |  | [optional] 
-**price** | **num** |  | [optional] 
-**stockQuantity** | **int** |  | [optional] 
 **imageUrl** | **String** |  | [optional] 
-**categories** | [**List<Category>**](Category.md) |  | [optional] [default to const []]
-**sizes** | [**List<Size>**](Size.md) |  | [optional] [default to const []]
+**file** | [**MultipartFile**](MultipartFile.md) |  | [optional] 
+**colorCode** | **String** |  | [optional] 
+**productId** | **String** |  | [optional] 
+**price** | **double** |  | [optional] 
+**stockQuantity** | **int** |  | [optional] 
+**sizes** | **List<String>** |  | [optional] [default to const []]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

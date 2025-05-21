@@ -74,7 +74,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
             ? 'images/product1.png'
             : null, // À adapter si tu as l'URL dans OrderItemDto
         'name':
-            item?.coloredProductId ?? 'Produit', // À adapter selon ton modèle
+            'Produit', // À adapter selon ton modèle
         'size': item?.size != null ? 'Taille: ${item!.size}' : '',
         'price': 'Prix inconnu', // À adapter si tu as le prix
         'status': status.name,

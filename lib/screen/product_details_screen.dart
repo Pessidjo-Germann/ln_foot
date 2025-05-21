@@ -30,7 +30,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   bool _isFavorite = false;
 
   // Replace static color map and color logic with dynamic colors from ColoredProductBloc
-  late List<ColoredProductDto> _coloredProducts = [];
+ // late List<ColoredProductDto> _coloredProducts = [];
   late Map<Color, String> _availableColorsMap = {};
   List<ReviewDto> reviews = [];
   Color? _colorFromNameOrCode(String? name) {
@@ -62,7 +62,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     _isFavorite = false;
     context.read<ProductBloc>().add(LoadProductById(widget.product.id!));
     // Charger dynamiquement les couleurs pour ce produit
-    context.read<ColoredProductBloc>().add(LoadColoredProducts());
+   // context.read<ColoredProductBloc>().add(LoadColoredProducts());
   }
 
   void _handleSizeSelected(String? size) {
@@ -142,22 +142,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               }
             },
           ),
-          BlocListener<ColoredProductBloc, ColoredProductState>(
-            listener: (context, state) {
-              if (state is ColoredProductsLoaded) {
-                setState(() {
-                  _coloredProducts = state.coloredProducts
-                      .where((c) => c.productId == widget.product.id)
-                      .toList();
-                  _availableColorsMap = {
-                    for (var c in _coloredProducts)
-                      if (_colorFromNameOrCode(c.name) != null)
-                        _colorFromNameOrCode(c.name)!: c.name ?? ''
-                  };
-                });
-              }
-            },
-          ),
+          // BlocListener<ColoredProductBloc, ColoredProductState>(
+          //   listener: (context, state) {
+          //     if (state is ColoredProductsLoaded) {
+          //       setState(() {
+          //         _coloredProducts = state.coloredProducts
+          //             .where((c) => c.productId == widget.product.id)
+          //             .toList();
+          //         _availableColorsMap = {
+          //           for (var c in _coloredProducts)
+          //             if (_colorFromNameOrCode(c.name) != null)
+          //               _colorFromNameOrCode(c.name)!: c.name ?? ''
+          //         };
+          //       });
+          //     }
+          //   },
+          // ),
           BlocListener<ReviewBloc, ReviewState>(
             listener: (context, state) {
               if (state is ReviewsLoaded) {

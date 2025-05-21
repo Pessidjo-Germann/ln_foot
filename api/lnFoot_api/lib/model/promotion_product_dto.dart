@@ -10,11 +10,11 @@
 
 part of openapi.api;
 
-class PromotionDto {
-  /// Returns a new [PromotionDto] instance.
-  PromotionDto({
+class PromotionProductDto {
+  /// Returns a new [PromotionProductDto] instance.
+  PromotionProductDto({
     this.id,
-    required this.productId,
+    required this.productVariantId,
     required this.discountedPrice,
     required this.startDate,
     required this.endDate,
@@ -28,18 +28,18 @@ class PromotionDto {
   ///
   String? id;
 
-  String productId;
+  String productVariantId;
 
-  num discountedPrice;
+  double discountedPrice;
 
   DateTime startDate;
 
   DateTime endDate;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is PromotionDto &&
+  bool operator ==(Object other) => identical(this, other) || other is PromotionProductDto &&
     other.id == id &&
-    other.productId == productId &&
+    other.productVariantId == productVariantId &&
     other.discountedPrice == discountedPrice &&
     other.startDate == startDate &&
     other.endDate == endDate;
@@ -48,13 +48,13 @@ class PromotionDto {
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (id == null ? 0 : id!.hashCode) +
-    (productId.hashCode) +
+    (productVariantId.hashCode) +
     (discountedPrice.hashCode) +
     (startDate.hashCode) +
     (endDate.hashCode);
 
   @override
-  String toString() => 'PromotionDto[id=$id, productId=$productId, discountedPrice=$discountedPrice, startDate=$startDate, endDate=$endDate]';
+  String toString() => 'PromotionProductDto[id=$id, productVariantId=$productVariantId, discountedPrice=$discountedPrice, startDate=$startDate, endDate=$endDate]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -63,17 +63,17 @@ class PromotionDto {
     } else {
       json[r'id'] = null;
     }
-      json[r'productId'] = this.productId;
+      json[r'productVariantId'] = this.productVariantId;
       json[r'discountedPrice'] = this.discountedPrice;
       json[r'startDate'] = _dateFormatter.format(this.startDate.toUtc());
       json[r'endDate'] = _dateFormatter.format(this.endDate.toUtc());
     return json;
   }
 
-  /// Returns a new [PromotionDto] instance and imports its values from
+  /// Returns a new [PromotionProductDto] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static PromotionDto? fromJson(dynamic value) {
+  static PromotionProductDto? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -82,16 +82,16 @@ class PromotionDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "PromotionDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "PromotionDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "PromotionProductDto[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "PromotionProductDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return PromotionDto(
+      return PromotionProductDto(
         id: mapValueOfType<String>(json, r'id'),
-        productId: mapValueOfType<String>(json, r'productId')!,
-        discountedPrice: num.parse('${json[r'discountedPrice']}'),
+        productVariantId: mapValueOfType<String>(json, r'productVariantId')!,
+        discountedPrice: mapValueOfType<double>(json, r'discountedPrice')!,
         startDate: mapDateTime(json, r'startDate', r'')!,
         endDate: mapDateTime(json, r'endDate', r'')!,
       );
@@ -99,11 +99,11 @@ class PromotionDto {
     return null;
   }
 
-  static List<PromotionDto> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <PromotionDto>[];
+  static List<PromotionProductDto> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <PromotionProductDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = PromotionDto.fromJson(row);
+        final value = PromotionProductDto.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -112,12 +112,12 @@ class PromotionDto {
     return result.toList(growable: growable);
   }
 
-  static Map<String, PromotionDto> mapFromJson(dynamic json) {
-    final map = <String, PromotionDto>{};
+  static Map<String, PromotionProductDto> mapFromJson(dynamic json) {
+    final map = <String, PromotionProductDto>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = PromotionDto.fromJson(entry.value);
+        final value = PromotionProductDto.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -126,14 +126,14 @@ class PromotionDto {
     return map;
   }
 
-  // maps a json object with a list of PromotionDto-objects as value to a dart map
-  static Map<String, List<PromotionDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<PromotionDto>>{};
+  // maps a json object with a list of PromotionProductDto-objects as value to a dart map
+  static Map<String, List<PromotionProductDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<PromotionProductDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = PromotionDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = PromotionProductDto.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;
@@ -141,7 +141,7 @@ class PromotionDto {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
-    'productId',
+    'productVariantId',
     'discountedPrice',
     'startDate',
     'endDate',

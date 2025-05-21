@@ -10,20 +10,13 @@
 
 part of openapi.api;
 
-class Category {
-  /// Returns a new [Category] instance.
-  Category({
-    this.id,
+class Customer {
+  /// Returns a new [Customer] instance.
+  Customer({
     this.name,
+    this.email,
+    this.phone,
   });
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? id;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -33,39 +26,62 @@ class Category {
   ///
   String? name;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? email;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? phone;
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Category &&
-    other.id == id &&
-    other.name == name;
+  bool operator ==(Object other) => identical(this, other) || other is Customer &&
+    other.name == name &&
+    other.email == email &&
+    other.phone == phone;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (id == null ? 0 : id!.hashCode) +
-    (name == null ? 0 : name!.hashCode);
+    (name == null ? 0 : name!.hashCode) +
+    (email == null ? 0 : email!.hashCode) +
+    (phone == null ? 0 : phone!.hashCode);
 
   @override
-  String toString() => 'Category[id=$id, name=$name]';
+  String toString() => 'Customer[name=$name, email=$email, phone=$phone]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.id != null) {
-      json[r'id'] = this.id;
-    } else {
-      json[r'id'] = null;
-    }
     if (this.name != null) {
       json[r'name'] = this.name;
     } else {
       json[r'name'] = null;
     }
+    if (this.email != null) {
+      json[r'email'] = this.email;
+    } else {
+      json[r'email'] = null;
+    }
+    if (this.phone != null) {
+      json[r'phone'] = this.phone;
+    } else {
+      json[r'phone'] = null;
+    }
     return json;
   }
 
-  /// Returns a new [Category] instance and imports its values from
+  /// Returns a new [Customer] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static Category? fromJson(dynamic value) {
+  static Customer? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -74,25 +90,26 @@ class Category {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "Category[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "Category[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "Customer[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "Customer[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return Category(
-        id: mapValueOfType<String>(json, r'id'),
+      return Customer(
         name: mapValueOfType<String>(json, r'name'),
+        email: mapValueOfType<String>(json, r'email'),
+        phone: mapValueOfType<String>(json, r'phone'),
       );
     }
     return null;
   }
 
-  static List<Category> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <Category>[];
+  static List<Customer> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <Customer>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = Category.fromJson(row);
+        final value = Customer.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -101,12 +118,12 @@ class Category {
     return result.toList(growable: growable);
   }
 
-  static Map<String, Category> mapFromJson(dynamic json) {
-    final map = <String, Category>{};
+  static Map<String, Customer> mapFromJson(dynamic json) {
+    final map = <String, Customer>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = Category.fromJson(entry.value);
+        final value = Customer.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -115,14 +132,14 @@ class Category {
     return map;
   }
 
-  // maps a json object with a list of Category-objects as value to a dart map
-  static Map<String, List<Category>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<Category>>{};
+  // maps a json object with a list of Customer-objects as value to a dart map
+  static Map<String, List<Customer>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<Customer>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = Category.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = Customer.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;
