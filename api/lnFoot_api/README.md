@@ -66,6 +66,10 @@ Class | Method | HTTP request | Description
 *CategoryControllerApi* | [**getAllCategories**](doc//CategoryControllerApi.md#getallcategories) | **GET** /api/categories | 
 *CategoryControllerApi* | [**getCategoryById**](doc//CategoryControllerApi.md#getcategorybyid) | **GET** /api/categories/{id} | 
 *CategoryControllerApi* | [**updateCategory**](doc//CategoryControllerApi.md#updatecategory) | **PUT** /api/categories/{id} | 
+*HeadingControllerApi* | [**createHeading**](doc//HeadingControllerApi.md#createheading) | **POST** /api/headings | 
+*HeadingControllerApi* | [**deleteProduct1**](doc//HeadingControllerApi.md#deleteproduct1) | **DELETE** /api/headings/{id} | 
+*HeadingControllerApi* | [**getHeadings**](doc//HeadingControllerApi.md#getheadings) | **GET** /api/headings | 
+*HeadingControllerApi* | [**getOrderById1**](doc//HeadingControllerApi.md#getorderbyid1) | **GET** /api/headings/{id} | 
 *OrderControllerApi* | [**comfirmOrder**](doc//OrderControllerApi.md#comfirmorder) | **PUT** /api/orders/{id}/confirm | 
 *OrderControllerApi* | [**createOrder**](doc//OrderControllerApi.md#createorder) | **POST** /api/orders | 
 *OrderControllerApi* | [**deleteOrder**](doc//OrderControllerApi.md#deleteorder) | **DELETE** /api/orders/{id} | 
@@ -106,6 +110,7 @@ Class | Method | HTTP request | Description
 
  - [CategoryDto](doc//CategoryDto.md)
  - [Customer](doc//Customer.md)
+ - [HeadingDto](doc//HeadingDto.md)
  - [OrderDto](doc//OrderDto.md)
  - [OrderItemDto](doc//OrderItemDto.md)
  - [PaymentResponseDto](doc//PaymentResponseDto.md)

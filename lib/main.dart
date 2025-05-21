@@ -34,11 +34,13 @@ void main() async {
   final categoryControler = CategoryControllerApi(apiClient);
   // final coloredProductControllerApi = ColoredProductControllerApi(apiClient);
   final reviewControllerApi = ReviewControllerApi(apiClient);
+  final productVariantControllerApi= ProductVariantControllerApi(apiClient);
   runApp(MyApp(
     authService: authService,
     orderControllerApi: orderControllerApi,
     productApi: productApi,
     categoryControllerApi: categoryControler,
+    productVariantControllerApi: productVariantControllerApi,
     //  coloredProductControllerApi: coloredProductControllerApi,
     reviewControllerApi: reviewControllerApi,
     apiClient: apiClient,
@@ -52,6 +54,7 @@ class MyApp extends StatelessWidget {
   final CategoryControllerApi categoryControllerApi;
   // final ColoredProductControllerApi coloredProductControllerApi;
   final ReviewControllerApi reviewControllerApi;
+  final ProductVariantControllerApi productVariantControllerApi;
   final ApiClient apiClient;
 
   const MyApp({
@@ -60,6 +63,7 @@ class MyApp extends StatelessWidget {
     required this.orderControllerApi,
     required this.productApi,
     required this.categoryControllerApi,
+    required this.productVariantControllerApi,
     // required this.coloredProductControllerApi,
     required this.reviewControllerApi,
     required this.apiClient,
@@ -75,7 +79,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ProductBloc>(
           create: (_) =>
-              ProductBloc(productApi: productApi)..add(LoadAllProducts()),
+              ProductBloc(productApi: productApi,productVariantApi: productVariantControllerApi)..add(LoadAllProducts()),
         ),
         BlocProvider<SavedItemsBloc>(
           create: (_) => SavedItemsBloc()..add(LoadSavedItems()),

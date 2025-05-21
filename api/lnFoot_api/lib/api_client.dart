@@ -50,8 +50,7 @@ class ApiClient {
     String? contentType,
   ) async {
     await authentication?.applyToParams(queryParams, headerParams);
-
-        
+    
     headerParams.addAll(_defaultHeaderMap);
     if (contentType != null) {
       headerParams['Content-Type'] = contentType;
@@ -190,6 +189,8 @@ class ApiClient {
           return CategoryDto.fromJson(value);
         case 'Customer':
           return Customer.fromJson(value);
+        case 'HeadingDto':
+          return HeadingDto.fromJson(value);
         case 'OrderDto':
           return OrderDto.fromJson(value);
         case 'OrderItemDto':

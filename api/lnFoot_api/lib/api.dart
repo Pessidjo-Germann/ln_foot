@@ -29,6 +29,7 @@ part 'auth/http_basic_auth.dart';
 part 'auth/http_bearer_auth.dart';
 
 part 'api/category_controller_api.dart';
+part 'api/heading_controller_api.dart';
 part 'api/order_controller_api.dart';
 part 'api/product_controller_api.dart';
 part 'api/product_variant_controller_api.dart';
@@ -38,6 +39,7 @@ part 'api/size_controller_api.dart';
 
 part 'model/category_dto.dart';
 part 'model/customer.dart';
+part 'model/heading_dto.dart';
 part 'model/order_dto.dart';
 part 'model/order_item_dto.dart';
 part 'model/payment_response_dto.dart';

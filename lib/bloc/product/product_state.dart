@@ -20,7 +20,13 @@ class ProductsLoaded extends ProductState {
   List<Object?> get props => [products];
 }
 
+class ProductVariantsLoaded extends ProductState {
+  final List<ProductVariantDto> variants;
 
+  const ProductVariantsLoaded(this.variants);
+}
+
+class ProductVariantLoading extends ProductState {}
 
 class ProductLoaded extends ProductState {
   final ProductDto product;

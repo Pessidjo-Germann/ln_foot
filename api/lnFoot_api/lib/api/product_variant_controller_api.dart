@@ -267,7 +267,10 @@ class ProductVariantControllerApi {
   }
 
   /// Performs an HTTP 'GET /api/product-variants' operation and returns the [Response].
-  Future<Response> getProductVariantsWithHttpInfo() async {
+  /// Parameters:
+  ///
+  /// * [String] productId (required):
+  Future<Response> getProductVariantsWithHttpInfo(String productId,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/product-variants';
 
@@ -277,6 +280,8 @@ class ProductVariantControllerApi {
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'productId', productId));
 
     const contentTypes = <String>[];
 
@@ -292,8 +297,11 @@ class ProductVariantControllerApi {
     );
   }
 
-  Future<List<ProductVariantDto>?> getProductVariants() async {
-    final response = await getProductVariantsWithHttpInfo();
+  /// Parameters:
+  ///
+  /// * [String] productId (required):
+  Future<List<ProductVariantDto>?> getProductVariants(String productId,) async {
+    final response = await getProductVariantsWithHttpInfo(productId,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

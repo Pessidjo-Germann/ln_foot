@@ -199,7 +199,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getProductVariants**
-> List<ProductVariantDto> getProductVariants()
+> List<ProductVariantDto> getProductVariants(productId)
 
 
 
@@ -210,9 +210,10 @@ import 'package:lnfoot_api/api.dart';
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
 final api_instance = ProductVariantControllerApi();
+final productId = productId_example; // String | 
 
 try {
-    final result = api_instance.getProductVariants();
+    final result = api_instance.getProductVariants(productId);
     print(result);
 } catch (e) {
     print('Exception when calling ProductVariantControllerApi->getProductVariants: $e\n');
@@ -220,7 +221,10 @@ try {
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **productId** | **String**|  | 
 
 ### Return type
 

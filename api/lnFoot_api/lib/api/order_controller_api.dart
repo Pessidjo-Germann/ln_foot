@@ -102,12 +102,6 @@ class OrderControllerApi {
   /// * [OrderDto] orderDto (required):
   Future<OrderDto?> createOrder(OrderDto orderDto,) async {
     final response = await createOrderWithHttpInfo(orderDto,);
-
-    print(response.body);
-    print(response.statusCode);
-    print(response.reasonPhrase);
-    print(response.headers);
-    print(response.request);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -189,11 +183,6 @@ class OrderControllerApi {
 
   Future<List<OrderDto>?> getAllOrders() async {
     final response = await getAllOrdersWithHttpInfo();
-    print(response.body);
-    print(response.statusCode);
-    print(response.reasonPhrase);
-    print(response.headers);
-    print(response.request);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -286,11 +275,6 @@ class OrderControllerApi {
 
   Future<List<OrderDto>?> getUserOrders() async {
     final response = await getUserOrdersWithHttpInfo();
-    print(response.body);
-    print(response.statusCode);
-    print(response.reasonPhrase);
-     print(response.headers);
-    print(response.request);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

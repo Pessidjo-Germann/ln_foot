@@ -30,7 +30,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   bool _isFavorite = false;
 
   // Replace static color map and color logic with dynamic colors from ColoredProductBloc
- // late List<ColoredProductDto> _coloredProducts = [];
+  // late List<ColoredProductDto> _coloredProducts = [];
   late Map<Color, String> _availableColorsMap = {};
   List<ReviewDto> reviews = [];
   Color? _colorFromNameOrCode(String? name) {
@@ -60,9 +60,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   void initState() {
     super.initState();
     _isFavorite = false;
-    context.read<ProductBloc>().add(LoadProductById(widget.product.id!));
+    context.read<ProductBloc>().add(LoadProductVariantById(widget.product.id!));
     // Charger dynamiquement les couleurs pour ce produit
-   // context.read<ColoredProductBloc>().add(LoadColoredProducts());
+    // context.read<ColoredProductBloc>().add(LoadColoredProducts());
   }
 
   void _handleSizeSelected(String? size) {
@@ -94,7 +94,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     //   return;
     // }
 
-   debugPrint(product.toString());
+    debugPrint(product.toString());
     final colorName = _availableColorsMap[_selectedColor] ?? '';
     context.read<CartBloc>().add(
           AddToCart(
@@ -173,8 +173,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           builder: (context, state) {
             if (state is ProductLoading) {
               return const ProductDetailsLoadingView();
-            } else if (state is ProductLoaded) {
-              final product = widget.product;
+            } else if (state is ProductVariantsLoaded) {
+              final product = state.variants.first;
 
               return SingleChildScrollView(
                 child: Column(
@@ -183,7 +183,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     const SizedBox(height: 16),
                     ProductImageSection(
                       imageUrl: product.imageUrl!,
-                      product: product,
+                      product: ProductDto(
+                          price: product.price!,
+                          name: widget.product.name,
+                          id: product.id),
                       initialIsFavorite: _isFavorite,
                       onFavoriteToggle: _handleFavoriteToggle,
                     ),
@@ -194,8 +197,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ProductInfoSection(
-                            name: product.name ?? '',
-                            price: product.price.toDouble(),
+                            name: widget.product.name ?? '',
+                            price: product.price!,
                             rating: 0,
                             reviewCount: 0,
                             productId: product.id!,
@@ -204,7 +207,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           // const Divider(thickness: 0.4),
                           const SizedBox(height: 16),
                           ProductDescriptionSection(
-                              description: product.description ?? ''),
+                              description: widget.product.description ?? ''),
                           const SizedBox(height: 16),
                           const Divider(thickness: 0.15),
                           const SizedBox(height: 16),
@@ -244,9 +247,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         builder: (context, state) {
           if (state is ProductLoading) {
             return const LoadingBottomSheet();
-          } else if (state is ProductLoaded) {
+          } else if (state is ProductVariantsLoaded) {
             return AddToCartSection(
-              onAddToCart: () => _handleAddToCart(state.product),
+              onAddToCart: () => _handleAddToCart(ProductDto(
+                  price: state.variants.first.price!,
+                  name: widget.product.name,
+                  id: state.variants.first.id)),
               canAddToCart: canAddToCart,
             );
           }

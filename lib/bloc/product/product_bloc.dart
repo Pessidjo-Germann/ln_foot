@@ -10,15 +10,17 @@ part 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final ProductControllerApi _productApi;
+  final ProductVariantControllerApi _productVariantApi;
 
-  ProductBloc({required ProductControllerApi productApi})
-      : _productApi = productApi,
+  ProductBloc({required ProductControllerApi productApi, required ProductVariantControllerApi productVariantApi})
+      : _productApi = productApi, _productVariantApi = productVariantApi,
         super(ProductInitial()) {
     on<LoadAllProducts>(_onLoadAllProducts);
     on<LoadProductById>(_onLoadProductById);
    // on<CreateProduct>(_onCreateProduct);
     on<UpdateProduct>(_onUpdateProduct);
     on<DeleteProduct>(_onDeleteProduct);
+    on<LoadProductVariantById>(_onLoadProductVariantsByProductId);
   }
 
   Future<void> _onLoadAllProducts(
@@ -34,6 +36,20 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       emit(ProductError(ErrorMessages.unknownError));
     }
   }
+
+  Future<void> _onLoadProductVariantsByProductId(
+      LoadProductVariantById event, Emitter<ProductState> emit) async {
+        emit(ProductLoading());
+        try {
+          final productVariants = await _productVariantApi.getProductVariants(event.productId);
+          debugPrint('Product Variants: $productVariants');
+          emit(ProductVariantsLoaded(productVariants!));
+        } on ApiException catch (e) {
+          emit(ProductError(ErrorMessages.productUpdateFailed));
+        } catch (e) {
+          emit(ProductError(ErrorMessages.productUpdateFailed));
+        }
+      }
 
   Future<void> _onLoadProductById(
       LoadProductById event, Emitter<ProductState> emit) async {

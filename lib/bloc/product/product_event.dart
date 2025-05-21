@@ -18,6 +18,13 @@ class LoadProductById extends ProductEvent {
   List<Object?> get props => [productId];
 }
 
+class LoadProductVariantById extends ProductEvent {
+  final String productId;
+
+  const LoadProductVariantById(this.productId);
+}
+
+
 // Note: createProduct in API uses named parameters and multipart form data.
 // We might need a more complex DTO or pass individual parameters here.
 // For simplicity, let's pass required fields and the optional file.

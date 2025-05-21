@@ -924,6 +924,16 @@
           "product-variant-controller"
         ],
         "operationId": "getProductVariants",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -1054,6 +1064,57 @@
         }
       }
     },
+    "/api/headings": {
+      "get": {
+        "tags": [
+          "heading-controller"
+        ],
+        "operationId": "getHeadings",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HeadingDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "heading-controller"
+        ],
+        "operationId": "createHeading",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HeadingDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeadingDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/categories": {
       "get": {
         "tags": [
@@ -1124,6 +1185,57 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/headings/{id}": {
+      "get": {
+        "tags": [
+          "heading-controller"
+        ],
+        "operationId": "getOrderById_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeadingDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "heading-controller"
+        ],
+        "operationId": "deleteProduct_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -1379,6 +1491,25 @@
           "name": {
             "type": "string",
             "minLength": 1
+          }
+        }
+      },
+      "HeadingDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string",
+            "format": "binary"
           }
         }
       }
