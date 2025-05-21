@@ -252,6 +252,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               onAddToCart: () => _handleAddToCart(ProductDto(
                   price: state.variants.first.price!,
                   name: widget.product.name,
+                  stockQuantity: state.variants.first.stockQuantity,
+                  description: widget.product.description,
+                  categoryNames: widget.product.categoryNames,
+                  sizes: widget.product.sizes,
+                  file: state.variants.first.file,
+                  imageUrl: state.variants.first.imageUrl,
                   id: state.variants.first.id)),
               canAddToCart: canAddToCart,
             );
