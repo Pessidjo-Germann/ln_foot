@@ -77,8 +77,8 @@ class _CartScreenState extends State<CartScreen> {
         }
 
         if (cartState is CartLoaded) {
-          const double shipping = 20.00;
-          const double discount = 10.00;
+          const double shipping = 00;
+          const double discount = 00;
           final double total = cartState.total + shipping - discount;
 
           return BlocListener<OrderBloc, OrderState>(
