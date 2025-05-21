@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_foot/bloc/product/product_bloc.dart';
 import 'package:ln_foot/bloc/colored_product/colored_product_bloc.dart';
 import 'package:ln_foot/bloc/review/review_bloc.dart';
-
+import 'package:ln_foot/bloc/cart/cart_bloc.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/product_details/loading_bottom_sheet.dart';
 import 'package:ln_foot/widgets/product_details/product_details_loading.dart';
@@ -94,14 +94,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       return;
     }
 
-    print(
-        'Added to cart: [200m${product.name}, Size: $_selectedSize, Color: ${_availableColorsMap[_selectedColor] ?? _selectedColor}[0m');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${product.name} ajouté au panier !'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    final colorName = _availableColorsMap[_selectedColor] ?? '';
+    context.read<CartBloc>().add(
+          AddToCart(
+            product: product,
+            size: _selectedSize!,
+            color: colorName,
+            quantity: 1,
+          ),
+        );
   }
 
   @override
@@ -120,6 +121,26 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           onBackButtonPressed: () => Navigator.pop(context)),
       body: MultiBlocListener(
         listeners: [
+          BlocListener<CartBloc, CartState>(
+            listener: (context, state) {
+              if (state is CartLoaded) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${widget.product.name} ajouté au panier !'),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              } else if (state is CartError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Erreur: ${state.message}'),
+                    duration: const Duration(seconds: 2),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+          ),
           BlocListener<ColoredProductBloc, ColoredProductState>(
             listener: (context, state) {
               if (state is ColoredProductsLoaded) {

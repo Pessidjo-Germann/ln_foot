@@ -61,27 +61,24 @@ class Promotion {
   DateTime? endDate;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Promotion &&
-          other.id == id &&
-          other.product == product &&
-          other.discountedPrice == discountedPrice &&
-          other.startDate == startDate &&
-          other.endDate == endDate;
+  bool operator ==(Object other) => identical(this, other) || other is Promotion &&
+    other.id == id &&
+    other.product == product &&
+    other.discountedPrice == discountedPrice &&
+    other.startDate == startDate &&
+    other.endDate == endDate;
 
   @override
   int get hashCode =>
-      // ignore: unnecessary_parenthesis
-      (id == null ? 0 : id!.hashCode) +
-      (product == null ? 0 : product!.hashCode) +
-      (discountedPrice == null ? 0 : discountedPrice!.hashCode) +
-      (startDate == null ? 0 : startDate!.hashCode) +
-      (endDate == null ? 0 : endDate!.hashCode);
+    // ignore: unnecessary_parenthesis
+    (id == null ? 0 : id!.hashCode) +
+    (product == null ? 0 : product!.hashCode) +
+    (discountedPrice == null ? 0 : discountedPrice!.hashCode) +
+    (startDate == null ? 0 : startDate!.hashCode) +
+    (endDate == null ? 0 : endDate!.hashCode);
 
   @override
-  String toString() =>
-      'Promotion[id=$id, product=$product, discountedPrice=$discountedPrice, startDate=$startDate, endDate=$endDate]';
+  String toString() => 'Promotion[id=$id, product=$product, discountedPrice=$discountedPrice, startDate=$startDate, endDate=$endDate]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -125,10 +122,8 @@ class Promotion {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key),
-              'Required key "Promotion[$key]" is missing from JSON.');
-          assert(json[key] != null,
-              'Required key "Promotion[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "Promotion[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "Promotion[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -144,10 +139,7 @@ class Promotion {
     return null;
   }
 
-  static List<Promotion> listFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static List<Promotion> listFromJson(dynamic json, {bool growable = false,}) {
     final result = <Promotion>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -175,24 +167,20 @@ class Promotion {
   }
 
   // maps a json object with a list of Promotion-objects as value to a dart map
-  static Map<String, List<Promotion>> mapListFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static Map<String, List<Promotion>> mapListFromJson(dynamic json, {bool growable = false,}) {
     final map = <String, List<Promotion>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = Promotion.listFromJson(
-          entry.value,
-          growable: growable,
-        );
+        map[entry.key] = Promotion.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;
   }
 
   /// The list of required keys that must be present in a JSON.
-  static const requiredKeys = <String>{};
+  static const requiredKeys = <String>{
+  };
 }
+

@@ -52,25 +52,22 @@ class OrderItemDto {
   String? size;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderItemDto &&
-          other.id == id &&
-          other.coloredProductId == coloredProductId &&
-          other.quantity == quantity &&
-          other.size == size;
+  bool operator ==(Object other) => identical(this, other) || other is OrderItemDto &&
+    other.id == id &&
+    other.coloredProductId == coloredProductId &&
+    other.quantity == quantity &&
+    other.size == size;
 
   @override
   int get hashCode =>
-      // ignore: unnecessary_parenthesis
-      (id == null ? 0 : id!.hashCode) +
-      (coloredProductId == null ? 0 : coloredProductId!.hashCode) +
-      (quantity == null ? 0 : quantity!.hashCode) +
-      (size == null ? 0 : size!.hashCode);
+    // ignore: unnecessary_parenthesis
+    (id == null ? 0 : id!.hashCode) +
+    (coloredProductId == null ? 0 : coloredProductId!.hashCode) +
+    (quantity == null ? 0 : quantity!.hashCode) +
+    (size == null ? 0 : size!.hashCode);
 
   @override
-  String toString() =>
-      'OrderItemDto[id=$id, coloredProductId=$coloredProductId, quantity=$quantity, size=$size]';
+  String toString() => 'OrderItemDto[id=$id, coloredProductId=$coloredProductId, quantity=$quantity, size=$size]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -109,10 +106,8 @@ class OrderItemDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key),
-              'Required key "OrderItemDto[$key]" is missing from JSON.');
-          assert(json[key] != null,
-              'Required key "OrderItemDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "OrderItemDto[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "OrderItemDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -127,10 +122,7 @@ class OrderItemDto {
     return null;
   }
 
-  static List<OrderItemDto> listFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static List<OrderItemDto> listFromJson(dynamic json, {bool growable = false,}) {
     final result = <OrderItemDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -158,24 +150,20 @@ class OrderItemDto {
   }
 
   // maps a json object with a list of OrderItemDto-objects as value to a dart map
-  static Map<String, List<OrderItemDto>> mapListFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static Map<String, List<OrderItemDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
     final map = <String, List<OrderItemDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = OrderItemDto.listFromJson(
-          entry.value,
-          growable: growable,
-        );
+        map[entry.key] = OrderItemDto.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;
   }
 
   /// The list of required keys that must be present in a JSON.
-  static const requiredKeys = <String>{};
+  static const requiredKeys = <String>{
+  };
 }
+

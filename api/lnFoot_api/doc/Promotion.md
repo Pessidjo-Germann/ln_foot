@@ -1,8 +1,8 @@
-# lnFoot_api.model.Promotion
+# openapi.model.Promotion
 
 ## Load the model package
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties

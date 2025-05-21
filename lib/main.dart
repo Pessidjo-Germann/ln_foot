@@ -19,13 +19,17 @@ void main() async {
   final authService = await AuthService.create();
   final token = await authService.getAccessToken();
   final refresh = authService.getRefreshToken();
+  
   debugPrint('Refresh token: $refresh');
   debugPrint('Token: $token');
+  
 
   final apiClient = ApiClient();
-  if (token != null && token.isNotEmpty) {
-    apiClient.setAuthToken(token);
-  }
+
+  //if (token != null && token.isNotEmpty) {
+  //apiClient.addDefaultHeader('Bearer', token);
+  apiClient.setAuthToken(token ?? '');
+  debugPrint('Token set in ApiClient: $token');
   final productApi = ProductControllerApi(apiClient);
   final orderControllerApi = OrderControllerApi(apiClient);
   final categoryControler = CategoryControllerApi(apiClient);
@@ -38,6 +42,7 @@ void main() async {
     categoryControllerApi: categoryControler,
     coloredProductControllerApi: coloredProductControllerApi,
     reviewControllerApi: reviewControllerApi,
+    apiClient: apiClient,
   ));
 }
 
@@ -48,6 +53,7 @@ class MyApp extends StatelessWidget {
   final CategoryControllerApi categoryControllerApi;
   final ColoredProductControllerApi coloredProductControllerApi;
   final ReviewControllerApi reviewControllerApi;
+  final ApiClient apiClient;
 
   const MyApp({
     super.key,
@@ -57,6 +63,7 @@ class MyApp extends StatelessWidget {
     required this.categoryControllerApi,
     required this.coloredProductControllerApi,
     required this.reviewControllerApi,
+    required this.apiClient,
   });
 
   @override
@@ -96,7 +103,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'LN Foot',
         theme: appThemeData,
-        home: const SplashScreen(),
+        home: SplashScreen(apiClient: apiClient),
         debugShowCheckedModeBanner: false,
       ),
     );

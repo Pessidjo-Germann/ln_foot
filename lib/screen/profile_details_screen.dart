@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_foot/bloc/auth/auth_bloc.dart';
+import 'package:ln_foot/user_session_manager.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
 
@@ -17,8 +18,23 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   final _emailController = TextEditingController();
   final _dobController = TextEditingController();
   final _phoneController = TextEditingController();
+  Map<String, dynamic>? _userInfo;
   String? _selectedGender;
   bool _initialized = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadUserInfo();
+  }
+
+  Future<void> _loadUserInfo() async {
+    final data = await UserSessionManager.getUserInfo();
+    setState(() {
+      _userInfo = data;
+    });
+  }
 
   @override
   void dispose() {
@@ -39,10 +55,11 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     _initialized = true;
   }
 
- 
-
   @override
   Widget build(BuildContext context) {
+    if (_userInfo != null) {
+      _initUserData(_userInfo!); // Initialise les champs à remplir
+    }
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Mon profile',
@@ -59,62 +76,31 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
           const SizedBox(width: 16),
         ],
       ),
-      body: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) {
-          if (state is AuthLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is Authenticated) {
-            _initUserData(state.user);
-            debugPrint('User data initialized: ${state.user}');
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildTextField(
-                      label: 'Nom et prénom',
-                      controller: _nameController,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextField(
-                      label: 'Adresse email',
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    const SizedBox(height: 16),
-                    // _buildDateField(
-                    //   label: 'Date de naissance',
-                    //   controller: _dobController,
-                    //   onTap: () => _selectDate(context),
-                    // ),
-                    // const SizedBox(height: 16),
-                    // _buildGenderDropdown(
-                    //   label: 'Genre',
-                    //   value: _selectedGender,
-                    //   onChanged: (newValue) {
-                    //     setState(() {
-                    //       _selectedGender = newValue;
-                    //     });
-                    //   },
-                    // ),
-                    // const SizedBox(height: 16),
-                    // _buildPhoneField(
-                    //   label: 'Numéro de téléphone',
-                    //   controller: _phoneController,
-                    // ),
-                    const SizedBox(height: 32),
-                  ],
-                ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTextField(
+                label: 'Nom et prénom',
+                controller: _nameController,
               ),
-            );
-          } else if (state is AuthError) {
-            return Center(child: Text('Erreur: ${state.message}'));
-          } else {
-            return const Center(child: Text('Aucune information utilisateur.'));
-          }
-        },
+              const SizedBox(height: 16),
+              _buildTextField(
+                label: 'Adresse email',
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 16),
+
+              // Ajoute d’autres champs si besoin
+
+              const SizedBox(height: 32),
+            ],
+          ),
+        ),
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -181,77 +167,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  // Helper for Date Field (read-only text field with calendar icon)
-  Widget _buildDateField({
-    required String label,
-    required TextEditingController controller,
-    required VoidCallback onTap,
-  }) {
-    return _buildTextField(
-      label: label,
-      controller: controller,
-      readOnly: true,
-      onTap: onTap,
-      suffixIcon: const Icon(Icons.calendar_today_outlined, size: 20),
-    );
-  }
-
-  // Helper for Gender Dropdown
-  Widget _buildGenderDropdown({
-    required String label,
-    required String? value,
-    required ValueChanged<String?> onChanged,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
-        const SizedBox(height: 8),
-        DropdownButtonFormField<String>(
-          value: value,
-          items: ['Male', 'Female', 'Other'] // Example options
-              .map((label) => DropdownMenuItem(
-                    value: label,
-                    child: Text(label),
-                  ))
-              .toList(),
-          onChanged: onChanged,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(color: Theme.of(context).primaryColor),
-            ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-          ),
-          // validator: (value) => value == null ? 'Please select gender' : null, // Optional validation
-        ),
-      ],
-    );
-  }
-
-  // Helper for Phone Field (basic implementation)
-  Widget _buildPhoneField({
-    required String label,
-    required TextEditingController controller,
-  }) {
-    // TODO: Integrate a country code picker package (e.g., intl_phone_field) for better UX
-    return _buildTextField(
-      label: label,
-      controller: controller,
-      keyboardType: TextInputType.phone,
-      // validator: ..., // Add phone validation
     );
   }
 }

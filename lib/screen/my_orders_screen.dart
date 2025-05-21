@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_foot/user_session_manager.dart';
 import '../bloc/order/order_bloc.dart';
 import 'package:ln_foot/bloc/auth/auth_bloc.dart';
 import 'package:lnFoot_api/api.dart';
@@ -21,26 +22,45 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   String? _userId;
+  Map<String, dynamic>? _userInfo;
 
   @override
   void initState() {
     super.initState();
+    _loadUserInfoAndDispatchOrders();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
       setState(() {});
     });
-    // Charger les commandes de l'utilisateur connecté au démarrage
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final authState = context.read<AuthBloc>().state;
-      if (authState is Authenticated) {
-        _userId = authState.user['sub'] ?? authState.user['id'];
-        debugPrint('User ID 1: $_userId');
-        if (_userId != null) {
-          debugPrint('User ID 3: $_userId');
-          context.read<OrderBloc>().add(LoadUserOrders(userId: _userId!));
-        }
+  }
+
+  Future<void> _loadUserInfoAndDispatchOrders() async {
+    final data = await UserSessionManager.getUserInfo();
+    debugPrint('Données utilisateur récupérées : $data');
+    if (!mounted) return;
+    
+
+    if (data != null && data.containsKey('sub')) {
+      final userId = data['sub'] as String?;
+      debugPrint('User ID récupéré : $userId');
+
+      if (userId != null && userId.isNotEmpty) {
+        setState(() {
+          _userInfo = data;
+          _userId = userId;
+        });
+
+        // Ajouter à la frame suivante
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          context.read<OrderBloc>().add(LoadUserOrders(userId: userId));
+        });
+      } else {
+        debugPrint('userId est null ou vide');
       }
-    });
+    } else {
+      debugPrint('Aucune donnée utilisateur ou clé sub manquante');
+    }
   }
 
   // Helper pour convertir OrderDto en Map<String, dynamic> pour OrderList

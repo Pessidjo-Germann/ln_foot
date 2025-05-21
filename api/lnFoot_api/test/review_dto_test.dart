@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 import 'package:test/test.dart';
 
 // tests for ReviewDto
@@ -16,6 +16,11 @@ void main() {
   // final instance = ReviewDto();
 
   group('test ReviewDto', () {
+    // String id
+    test('to test the property `id`', () async {
+      // TODO
+    });
+
     // String productId
     test('to test the property `productId`', () async {
       // TODO
@@ -31,9 +36,7 @@ void main() {
       // TODO
     });
 
-    // String id
-    test('to test the property `id`', () async {
-      // TODO
-    });
+
   });
+
 }

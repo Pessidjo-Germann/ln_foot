@@ -12,3 +12,12 @@ class CheckTokenStored extends AuthEvent {}
 class LoginRequested extends AuthEvent {}
 
 class LogoutRequested extends AuthEvent {}
+
+class CheckToken extends AuthEvent {
+ 
+
+  CheckToken();
+
+  @override
+  List<Object?> get props => [];
+}

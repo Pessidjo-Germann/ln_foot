@@ -70,29 +70,26 @@ class ColoredProductDto {
   double? price;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ColoredProductDto &&
-          other.id == id &&
-          other.imageUrl == imageUrl &&
-          other.file == file &&
-          other.name == name &&
-          other.productId == productId &&
-          other.price == price;
+  bool operator ==(Object other) => identical(this, other) || other is ColoredProductDto &&
+    other.id == id &&
+    other.imageUrl == imageUrl &&
+    other.file == file &&
+    other.name == name &&
+    other.productId == productId &&
+    other.price == price;
 
   @override
   int get hashCode =>
-      // ignore: unnecessary_parenthesis
-      (id == null ? 0 : id!.hashCode) +
-      (imageUrl == null ? 0 : imageUrl!.hashCode) +
-      (file == null ? 0 : file!.hashCode) +
-      (name == null ? 0 : name!.hashCode) +
-      (productId == null ? 0 : productId!.hashCode) +
-      (price == null ? 0 : price!.hashCode);
+    // ignore: unnecessary_parenthesis
+    (id == null ? 0 : id!.hashCode) +
+    (imageUrl == null ? 0 : imageUrl!.hashCode) +
+    (file == null ? 0 : file!.hashCode) +
+    (name == null ? 0 : name!.hashCode) +
+    (productId == null ? 0 : productId!.hashCode) +
+    (price == null ? 0 : price!.hashCode);
 
   @override
-  String toString() =>
-      'ColoredProductDto[id=$id, imageUrl=$imageUrl, file=$file, name=$name, productId=$productId, price=$price]';
+  String toString() => 'ColoredProductDto[id=$id, imageUrl=$imageUrl, file=$file, name=$name, productId=$productId, price=$price]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -141,10 +138,8 @@ class ColoredProductDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key),
-              'Required key "ColoredProductDto[$key]" is missing from JSON.');
-          assert(json[key] != null,
-              'Required key "ColoredProductDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "ColoredProductDto[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "ColoredProductDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -161,10 +156,7 @@ class ColoredProductDto {
     return null;
   }
 
-  static List<ColoredProductDto> listFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static List<ColoredProductDto> listFromJson(dynamic json, {bool growable = false,}) {
     final result = <ColoredProductDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -192,24 +184,20 @@ class ColoredProductDto {
   }
 
   // maps a json object with a list of ColoredProductDto-objects as value to a dart map
-  static Map<String, List<ColoredProductDto>> mapListFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static Map<String, List<ColoredProductDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
     final map = <String, List<ColoredProductDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = ColoredProductDto.listFromJson(
-          entry.value,
-          growable: growable,
-        );
+        map[entry.key] = ColoredProductDto.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;
   }
 
   /// The list of required keys that must be present in a JSON.
-  static const requiredKeys = <String>{};
+  static const requiredKeys = <String>{
+  };
 }
+

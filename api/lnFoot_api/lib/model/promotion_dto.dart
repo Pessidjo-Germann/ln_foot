@@ -13,20 +13,12 @@ part of openapi.api;
 class PromotionDto {
   /// Returns a new [PromotionDto] instance.
   PromotionDto({
+    this.id,
     required this.productId,
     required this.discountedPrice,
     required this.startDate,
     required this.endDate,
-    this.id,
   });
-
-  String productId;
-
-  num discountedPrice;
-
-  DateTime startDate;
-
-  DateTime endDate;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -36,40 +28,45 @@ class PromotionDto {
   ///
   String? id;
 
+  String productId;
+
+  num discountedPrice;
+
+  DateTime startDate;
+
+  DateTime endDate;
+
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PromotionDto &&
-          other.productId == productId &&
-          other.discountedPrice == discountedPrice &&
-          other.startDate == startDate &&
-          other.endDate == endDate &&
-          other.id == id;
+  bool operator ==(Object other) => identical(this, other) || other is PromotionDto &&
+    other.id == id &&
+    other.productId == productId &&
+    other.discountedPrice == discountedPrice &&
+    other.startDate == startDate &&
+    other.endDate == endDate;
 
   @override
   int get hashCode =>
-      // ignore: unnecessary_parenthesis
-      (productId.hashCode) +
-      (discountedPrice.hashCode) +
-      (startDate.hashCode) +
-      (endDate.hashCode) +
-      (id == null ? 0 : id!.hashCode);
+    // ignore: unnecessary_parenthesis
+    (id == null ? 0 : id!.hashCode) +
+    (productId.hashCode) +
+    (discountedPrice.hashCode) +
+    (startDate.hashCode) +
+    (endDate.hashCode);
 
   @override
-  String toString() =>
-      'PromotionDto[productId=$productId, discountedPrice=$discountedPrice, startDate=$startDate, endDate=$endDate, id=$id]';
+  String toString() => 'PromotionDto[id=$id, productId=$productId, discountedPrice=$discountedPrice, startDate=$startDate, endDate=$endDate]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    json[r'productId'] = this.productId;
-    json[r'discountedPrice'] = this.discountedPrice;
-    json[r'startDate'] = _dateFormatter.format(this.startDate.toUtc());
-    json[r'endDate'] = _dateFormatter.format(this.endDate.toUtc());
     if (this.id != null) {
       json[r'id'] = this.id;
     } else {
       json[r'id'] = null;
     }
+      json[r'productId'] = this.productId;
+      json[r'discountedPrice'] = this.discountedPrice;
+      json[r'startDate'] = _dateFormatter.format(this.startDate.toUtc());
+      json[r'endDate'] = _dateFormatter.format(this.endDate.toUtc());
     return json;
   }
 
@@ -85,29 +82,24 @@ class PromotionDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key),
-              'Required key "PromotionDto[$key]" is missing from JSON.');
-          assert(json[key] != null,
-              'Required key "PromotionDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "PromotionDto[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "PromotionDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
       return PromotionDto(
+        id: mapValueOfType<String>(json, r'id'),
         productId: mapValueOfType<String>(json, r'productId')!,
         discountedPrice: num.parse('${json[r'discountedPrice']}'),
         startDate: mapDateTime(json, r'startDate', r'')!,
         endDate: mapDateTime(json, r'endDate', r'')!,
-        id: mapValueOfType<String>(json, r'id'),
       );
     }
     return null;
   }
 
-  static List<PromotionDto> listFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static List<PromotionDto> listFromJson(dynamic json, {bool growable = false,}) {
     final result = <PromotionDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -135,19 +127,13 @@ class PromotionDto {
   }
 
   // maps a json object with a list of PromotionDto-objects as value to a dart map
-  static Map<String, List<PromotionDto>> mapListFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static Map<String, List<PromotionDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
     final map = <String, List<PromotionDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = PromotionDto.listFromJson(
-          entry.value,
-          growable: growable,
-        );
+        map[entry.key] = PromotionDto.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;
@@ -161,3 +147,4 @@ class PromotionDto {
     'endDate',
   };
 }
+

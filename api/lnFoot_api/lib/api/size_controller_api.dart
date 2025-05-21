@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
+
 class SizeControllerApi {
-  SizeControllerApi([ApiClient? apiClient])
-      : apiClient = apiClient ?? defaultApiClient;
+  SizeControllerApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -20,9 +20,7 @@ class SizeControllerApi {
   /// Parameters:
   ///
   /// * [SizeDto] sizeDto (required):
-  Future<Response> createSizeWithHttpInfo(
-    SizeDto sizeDto,
-  ) async {
+  Future<Response> createSizeWithHttpInfo(SizeDto sizeDto,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/sizes';
 
@@ -34,6 +32,7 @@ class SizeControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -49,24 +48,17 @@ class SizeControllerApi {
   /// Parameters:
   ///
   /// * [SizeDto] sizeDto (required):
-  Future<SizeDto?> createSize(
-    SizeDto sizeDto,
-  ) async {
-    final response = await createSizeWithHttpInfo(
-      sizeDto,
-    );
+  Future<SizeDto?> createSize(SizeDto sizeDto,) async {
+    final response = await createSizeWithHttpInfo(sizeDto,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'SizeDto',
-      ) as SizeDto;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'SizeDto',) as SizeDto;
+    
     }
     return null;
   }
@@ -75,11 +67,10 @@ class SizeControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> deleteSizeWithHttpInfo(
-    String id,
-  ) async {
+  Future<Response> deleteSizeWithHttpInfo(String id,) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/sizes/{id}'.replaceAll('{id}', id);
+    final path = r'/api/sizes/{id}'
+      .replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -89,6 +80,7 @@ class SizeControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
+
 
     return apiClient.invokeAPI(
       path,
@@ -104,12 +96,8 @@ class SizeControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<void> deleteSize(
-    String id,
-  ) async {
-    final response = await deleteSizeWithHttpInfo(
-      id,
-    );
+  Future<void> deleteSize(String id,) async {
+    final response = await deleteSizeWithHttpInfo(id,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -128,6 +116,7 @@ class SizeControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
+
 
     return apiClient.invokeAPI(
       path,
@@ -148,13 +137,12 @@ class SizeControllerApi {
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<SizeDto>')
-              as List)
-          .cast<SizeDto>()
-          .toList(growable: false);
+      return (await apiClient.deserializeAsync(responseBody, 'List<SizeDto>') as List)
+        .cast<SizeDto>()
+        .toList(growable: false);
+
     }
     return null;
   }
@@ -163,11 +151,10 @@ class SizeControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> getSizeByIdWithHttpInfo(
-    String id,
-  ) async {
+  Future<Response> getSizeByIdWithHttpInfo(String id,) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/sizes/{id}'.replaceAll('{id}', id);
+    final path = r'/api/sizes/{id}'
+      .replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -177,6 +164,7 @@ class SizeControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
+
 
     return apiClient.invokeAPI(
       path,
@@ -192,24 +180,17 @@ class SizeControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<SizeDto?> getSizeById(
-    String id,
-  ) async {
-    final response = await getSizeByIdWithHttpInfo(
-      id,
-    );
+  Future<SizeDto?> getSizeById(String id,) async {
+    final response = await getSizeByIdWithHttpInfo(id,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'SizeDto',
-      ) as SizeDto;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'SizeDto',) as SizeDto;
+    
     }
     return null;
   }
@@ -220,12 +201,10 @@ class SizeControllerApi {
   /// * [String] id (required):
   ///
   /// * [SizeDto] sizeDto (required):
-  Future<Response> updateSizeWithHttpInfo(
-    String id,
-    SizeDto sizeDto,
-  ) async {
+  Future<Response> updateSizeWithHttpInfo(String id, SizeDto sizeDto,) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/sizes/{id}'.replaceAll('{id}', id);
+    final path = r'/api/sizes/{id}'
+      .replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody = sizeDto;
@@ -235,6 +214,7 @@ class SizeControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -252,26 +232,17 @@ class SizeControllerApi {
   /// * [String] id (required):
   ///
   /// * [SizeDto] sizeDto (required):
-  Future<SizeDto?> updateSize(
-    String id,
-    SizeDto sizeDto,
-  ) async {
-    final response = await updateSizeWithHttpInfo(
-      id,
-      sizeDto,
-    );
+  Future<SizeDto?> updateSize(String id, SizeDto sizeDto,) async {
+    final response = await updateSizeWithHttpInfo(id, sizeDto,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'SizeDto',
-      ) as SizeDto;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'SizeDto',) as SizeDto;
+    
     }
     return null;
   }

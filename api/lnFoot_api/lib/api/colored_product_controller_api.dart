@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
+
 class ColoredProductControllerApi {
-  ColoredProductControllerApi([ApiClient? apiClient])
-      : apiClient = apiClient ?? defaultApiClient;
+  ColoredProductControllerApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -20,9 +20,7 @@ class ColoredProductControllerApi {
   /// Parameters:
   ///
   /// * [ColoredProductDto] coloredProductDto:
-  Future<Response> createColoredProductWithHttpInfo({
-    ColoredProductDto? coloredProductDto,
-  }) async {
+  Future<Response> createColoredProductWithHttpInfo({ ColoredProductDto? coloredProductDto, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/colored-products';
 
@@ -34,6 +32,7 @@ class ColoredProductControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -49,24 +48,17 @@ class ColoredProductControllerApi {
   /// Parameters:
   ///
   /// * [ColoredProductDto] coloredProductDto:
-  Future<ColoredProductDto?> createColoredProduct({
-    ColoredProductDto? coloredProductDto,
-  }) async {
-    final response = await createColoredProductWithHttpInfo(
-      coloredProductDto: coloredProductDto,
-    );
+  Future<ColoredProductDto?> createColoredProduct({ ColoredProductDto? coloredProductDto, }) async {
+    final response = await createColoredProductWithHttpInfo( coloredProductDto: coloredProductDto, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'ColoredProductDto',
-      ) as ColoredProductDto;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ColoredProductDto',) as ColoredProductDto;
+    
     }
     return null;
   }
@@ -75,11 +67,10 @@ class ColoredProductControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> deleteColoredProductWithHttpInfo(
-    String id,
-  ) async {
+  Future<Response> deleteColoredProductWithHttpInfo(String id,) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/colored-products/{id}'.replaceAll('{id}', id);
+    final path = r'/api/colored-products/{id}'
+      .replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -89,6 +80,7 @@ class ColoredProductControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
+
 
     return apiClient.invokeAPI(
       path,
@@ -104,12 +96,8 @@ class ColoredProductControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<void> deleteColoredProduct(
-    String id,
-  ) async {
-    final response = await deleteColoredProductWithHttpInfo(
-      id,
-    );
+  Future<void> deleteColoredProduct(String id,) async {
+    final response = await deleteColoredProductWithHttpInfo(id,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -119,11 +107,10 @@ class ColoredProductControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> getColoredProductWithHttpInfo(
-    String id,
-  ) async {
+  Future<Response> getColoredProductWithHttpInfo(String id,) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/colored-products/{id}'.replaceAll('{id}', id);
+    final path = r'/api/colored-products/{id}'
+      .replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -133,6 +120,7 @@ class ColoredProductControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
+
 
     return apiClient.invokeAPI(
       path,
@@ -148,24 +136,17 @@ class ColoredProductControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<ColoredProductDto?> getColoredProduct(
-    String id,
-  ) async {
-    final response = await getColoredProductWithHttpInfo(
-      id,
-    );
+  Future<ColoredProductDto?> getColoredProduct(String id,) async {
+    final response = await getColoredProductWithHttpInfo(id,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'ColoredProductDto',
-      ) as ColoredProductDto;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ColoredProductDto',) as ColoredProductDto;
+    
     }
     return null;
   }
@@ -183,6 +164,7 @@ class ColoredProductControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
+
 
     return apiClient.invokeAPI(
       path,
@@ -203,13 +185,12 @@ class ColoredProductControllerApi {
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(
-              responseBody, 'List<ColoredProductDto>') as List)
-          .cast<ColoredProductDto>()
-          .toList(growable: false);
+      return (await apiClient.deserializeAsync(responseBody, 'List<ColoredProductDto>') as List)
+        .cast<ColoredProductDto>()
+        .toList(growable: false);
+
     }
     return null;
   }
@@ -220,12 +201,10 @@ class ColoredProductControllerApi {
   /// * [String] id (required):
   ///
   /// * [ColoredProductDto] coloredProductDto:
-  Future<Response> updateColoredProductWithHttpInfo(
-    String id, {
-    ColoredProductDto? coloredProductDto,
-  }) async {
+  Future<Response> updateColoredProductWithHttpInfo(String id, { ColoredProductDto? coloredProductDto, }) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/colored-products/{id}'.replaceAll('{id}', id);
+    final path = r'/api/colored-products/{id}'
+      .replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody = coloredProductDto;
@@ -235,6 +214,7 @@ class ColoredProductControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -252,26 +232,17 @@ class ColoredProductControllerApi {
   /// * [String] id (required):
   ///
   /// * [ColoredProductDto] coloredProductDto:
-  Future<ColoredProductDto?> updateColoredProduct(
-    String id, {
-    ColoredProductDto? coloredProductDto,
-  }) async {
-    final response = await updateColoredProductWithHttpInfo(
-      id,
-      coloredProductDto: coloredProductDto,
-    );
+  Future<ColoredProductDto?> updateColoredProduct(String id, { ColoredProductDto? coloredProductDto, }) async {
+    final response = await updateColoredProductWithHttpInfo(id,  coloredProductDto: coloredProductDto, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'ColoredProductDto',
-      ) as ColoredProductDto;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ColoredProductDto',) as ColoredProductDto;
+    
     }
     return null;
   }

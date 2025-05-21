@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lnFoot_api/api.dart';
 import 'package:ln_foot/bloc/auth/auth_bloc.dart';
 import 'package:ln_foot/screen/home_screen.dart';
 import 'package:ln_foot/screen/onboarding_screen.dart';
+import 'package:ln_foot/service.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  final ApiClient apiClient;
+  const SplashScreen({super.key, required this.apiClient});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -37,11 +40,29 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
+        listener: (context, state) async{
           if (state is Authenticated) {
+            context.read<AuthBloc>().add(CheckToken());
+          }else if(state is AuthenticatedWithToken ){
+            // Set the token in the ApiClient
+            widget.apiClient.setAuthToken(state.token);
+            // Navigate to HomeScreen
             _navigateOnce(const HomeScreen());
-          } else if (state is Unauthenticated) {
-            _navigateOnce(const OnboardingScreen());
+          }
+          else if (state is AuthError) {
+            // Show error message
+            debugPrint('AuthError: ${state.message}');
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(content: Text('Erreur de connexion: ${state.message}')),
+              );
+          }
+          
+           else if (state is Unauthenticated) {
+            _navigateOnce(OnboardingScreen(
+              apiClient: widget.apiClient,
+            ));
           }
         },
         child: Center(

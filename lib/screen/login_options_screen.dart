@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'; // Import flutter_bloc
+import 'package:lnFoot_api/api.dart';
 import 'package:ln_foot/bloc/auth/auth_bloc.dart'; // Import AuthBloc
 import 'package:ln_foot/screen/email_login_screen.dart';
 import 'package:ln_foot/screen/home_screen.dart'; // Import HomeScreen for navigation
@@ -11,7 +12,8 @@ import 'package:ln_foot/widgets/custom_button.dart';
 import 'package:ln_foot/widgets/social_button.dart';
 
 class LoginOptionsScreen extends StatelessWidget {
-  const LoginOptionsScreen({super.key});
+  final ApiClient apiClient;
+  const LoginOptionsScreen({super.key, required this.apiClient});
 
   // Removed local buttonOrange definition
 
@@ -29,14 +31,21 @@ class LoginOptionsScreen extends StatelessWidget {
               );
           } else if (state is Authenticated) {
             // Navigate to home screen on successful authentication
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            context.read<AuthBloc>().add(CheckToken());
+           
+          }else if(state is AuthenticatedWithToken ){
+            // Set the token in the ApiClient
+            apiClient.setAuthToken(state.token);
+            // Navigate to HomeScreen
+             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                   builder: (context) =>
                       const HomeScreen()), // Navigate to HomeScreen
               (Route<dynamic> route) => false, // Remove all previous routes
             );
-          } else if (state is AuthError) {
+          }
+           else if (state is AuthError) {
             // Show error message
             debugPrint('AuthError: ${state.message}');
             ScaffoldMessenger.of(context)
@@ -107,10 +116,10 @@ class LoginOptionsScreen extends StatelessWidget {
                   CustomButton(
                     text: 'Connexion par mail',
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => const EmailLoginScreen()),
-                      );
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //       builder: (context) => const EmailLoginScreen()),
+                      // );
                     },
                   ),
                   const Spacer(),
@@ -132,11 +141,11 @@ class LoginOptionsScreen extends StatelessWidget {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SignupOptionsScreen()),
-                                );
+                                // Navigator.of(context).push(
+                                //   MaterialPageRoute(
+                                //       builder: (context) =>
+                                //           const SignupOptionsScreen()),
+                                // );
                               },
                           ),
                         ],

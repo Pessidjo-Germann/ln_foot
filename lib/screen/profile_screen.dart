@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_foot/screen/home_screen.dart';
 import 'package:ln_foot/screen/my_orders_screen.dart';
 import 'package:ln_foot/screen/notification_screen.dart'; // Added import
 import 'package:ln_foot/screen/payment_method_screen.dart'; // Added import
@@ -18,7 +19,11 @@ class ProfileScreen extends StatelessWidget {
       appBar: CustomAppBar(
         title: 'Compte',
         showBackButton: true,
-        onBackButtonPressed: () => Navigator.pop(context),
+        onBackButtonPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            )),
         actions: [
           IconButton(
             icon: const Icon(Icons

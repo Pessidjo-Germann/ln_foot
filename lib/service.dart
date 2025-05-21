@@ -1,10 +1,14 @@
-import 'package:openid_client/openid_client_io.dart';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/foundation.dart'; // pour debugPrint
-import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 // service.dart
 import 'package:keycloak_wrapper/keycloak_wrapper.dart';
+import 'package:ln_foot/user_session_manager.dart';
 
 class AuthService {
   final KeycloakWrapper _keycloak;
@@ -31,8 +35,19 @@ class AuthService {
     final result = await _keycloak.login();
     if (result) {
       final token = _keycloak.accessToken;
-      debugPrint("les tokens sont : $token");
+      // Enregistrement du token dans le stockage sécurisé
+      final userInfo = await _keycloak.getUserInfo();
+      debugPrint("les INDOE D SSD  sont : $userInfo");
+      if (userInfo != null) {
+        await UserSessionManager.saveAuthenticatedUserData(
+          accessToken: token!,
+          refreshToken: _keycloak.refreshToken ?? '',
+          userInfo: userInfo,
+        );
+      }
+
       if (token != null) {
+        await _secureStorage.delete(key: 'access_token');
         await _secureStorage.write(key: 'access_token', value: token);
       }
     }
@@ -40,15 +55,17 @@ class AuthService {
   }
 
   Future<bool> logout() async {
-    final result = await _keycloak.logout();
+    // final result = await _keycloak.logout();
     await _secureStorage.delete(key: 'access_token');
-    return result;
+    await UserSessionManager.clearUserSession();
+    return true;
   }
 
   Future<String?> getAccessToken() async {
+    final token = _keycloak.accessToken;
     final storedToken = await _secureStorage.read(key: 'access_token');
 
-    return storedToken;
+    return token;
   }
 
   String? getRefreshToken() => _keycloak.refreshToken;
@@ -57,87 +74,34 @@ class AuthService {
     final token = await _secureStorage.read(key: 'access_token');
     return token != null && token.isNotEmpty;
   }
+
+  Future<bool> refreshToken() async {
+    final refreshToken = getRefreshToken();
+    if (refreshToken == null) return false;
+
+    final response = await http.post(
+      Uri.parse(
+          'https://lnfoot-auth.hublots.co/realms/lnfoot/protocol/openid-connect/token'),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: {
+        'grant_type': 'refresh_token',
+        'client_id': 'ln-foot-01',
+        'refresh_token': refreshToken,
+        // 'client_secret': 'votre-secret-si-necessaire', // à ajouter si besoin
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final nouveauxTokens = json.decode(response.body);
+      final accessToken = nouveauxTokens['access_token'];
+      final newRefreshToken = nouveauxTokens['refresh_token'];
+      if (accessToken != null) {
+        await _secureStorage.write(key: 'access_token', value: accessToken);
+        // Si tu veux stocker le refresh token aussi :
+        // await _secureStorage.write(key: 'refresh_token', value: newRefreshToken);
+        return true;
+      }
+    }
+    return false;
+  }
 }
-
-
-// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-// import 'package:flutter_appauth/flutter_appauth.dart';
-
-// class AuthService {
-//   final FlutterAppAuth _appAuth = FlutterAppAuth();
-//   final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
-
-//   final String clientId = 'ln-foot-01';
-//   final String redirectUrl = 'com.lnfoot://callback';
-//   final List<String> scopes = ['openid', 'profile', 'email'];
-
-//   final AuthorizationServiceConfiguration _serviceConfiguration =
-//       AuthorizationServiceConfiguration(
-//     authorizationEndpoint:
-//         'https://lnfoot-auth.hublots.co/realms/lnfoot/protocol/openid-connect/auth',
-//     tokenEndpoint:
-//         'https://lnfoot-auth.hublots.co/realms/lnfoot/protocol/openid-connect/token',
-//   );
-
-//   Future<String> loginWithKeycloak() async {
-//     final result = await _appAuth.authorizeAndExchangeCode(
-//       AuthorizationTokenRequest(
-//         clientId,
-//         redirectUrl,
-//         serviceConfiguration: _serviceConfiguration,
-//         scopes: scopes,
-//         promptValues: ['login'],
-//       ),
-//     );
-
-//     if (result == null || result.accessToken == null) {
-//       throw Exception("Échec de l'authentification");
-//     }
-
-//     await _secureStorage.write(key: 'access_token', value: result.accessToken);
-//     await _secureStorage.write(
-//         key: 'refresh_token', value: result.refreshToken);
-
-//     return result.accessToken!;
-//   }
-
-//   Future<void> logout() async {
-//     await _secureStorage.deleteAll();
-//   }
-
-//   Future<bool> isLoggedIn() async {
-//     final token = await _secureStorage.read(key: 'access_token');
-//     return token != null;
-//   }
-// }
-/**
- * 
- * import 'package:openid_client/openid_client_io.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-final storage = FlutterSecureStorage();
-
-Future<void> login() async {
-  var issuer = await Issuer.discover(Uri.parse('http://localhost:8080/realms/myrealm'));
-  var client = Client(issuer, 'myapp-client');
-
-  var authenticator = Authenticator(
-    client,
-    scopes: ['openid', 'profile', 'email', 'offline_access'],
-    port: 4000,
-    redirectUri: Uri.parse('com.example.myapp:/callback'),
-  );
-
-  var c = await authenticator.authorize();
-
-  var tokenResponse = await c.getTokenResponse();
-
-  await storage.write(key: 'access_token', value: tokenResponse.accessToken);
-  await storage.write(key: 'refresh_token', value: tokenResponse.refreshToken);
-
-  // Fermer la session d'authentification
-  closeWebView();
-}
-
- */

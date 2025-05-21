@@ -50,6 +50,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(Unauthenticated());
     });
 
+    on<CheckToken>((event, emit) async {
+      emit(AuthLoading());
+      final token = await authService.getAccessToken();
+      if (token != null && token.isNotEmpty) {
+        emit(AuthenticatedWithToken(token));
+      } else {
+        emit(Unauthenticated());
+      }
+    });
+
     on<CheckTokenStored>((event, emit) async {
       emit(AuthLoading());
       final isLoggedIn = await authService.isLoggedIn();

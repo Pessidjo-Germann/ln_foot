@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import '../custom_button.dart'; // Assuming CustomButton is here based on info.txt
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lnFoot_api/api.dart';
+import 'package:ln_foot/bloc/auth/auth_bloc.dart';
+import 'package:ln_foot/screen/login_options_screen.dart';
+import '../custom_button.dart';
 
 class LogoutConfirmationDialog extends StatelessWidget {
   final VoidCallback onConfirm;
@@ -16,7 +20,7 @@ class LogoutConfirmationDialog extends StatelessWidget {
     // Using MediaQuery for responsive padding and potential theme access
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-   // final colorScheme = theme.colorScheme;
+    // final colorScheme = theme.colorScheme;
 
     return Container(
       padding: const EdgeInsets.all(24.0),
@@ -29,7 +33,8 @@ class LogoutConfirmationDialog extends StatelessWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min, // Make column height fit content
-        crossAxisAlignment: CrossAxisAlignment.stretch, // Stretch items horizontally
+        crossAxisAlignment:
+            CrossAxisAlignment.stretch, // Stretch items horizontally
         children: [
           // Optional: Add a drag handle indicator
           Center(
@@ -48,7 +53,8 @@ class LogoutConfirmationDialog extends StatelessWidget {
           Text(
             'Déconnexion',
             textAlign: TextAlign.center,
-            style: textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold), // Adjust style as needed
+            style: textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold), // Adjust style as needed
           ),
           const SizedBox(height: 16.0),
 
@@ -79,7 +85,7 @@ class LogoutConfirmationDialog extends StatelessWidget {
                   // Adapt based on actual CustomButton implementation
                   // For now, let's assume default or provide basic styling
                   buttonColor: Colors.grey[200], // Use buttonColor parameter
-                  textColor: Colors.black87,         // Example color
+                  textColor: Colors.black87, // Example color
                 ),
               ),
               const SizedBox(width: 16.0), // Spacing between buttons
@@ -91,7 +97,7 @@ class LogoutConfirmationDialog extends StatelessWidget {
                   onPressed: onConfirm,
                   // Use primary/red style for confirm
                   buttonColor: Colors.red, // Use buttonColor parameter
-                  textColor: Colors.white,     // Example color
+                  textColor: Colors.white, // Example color
                 ),
               ),
             ],
@@ -111,18 +117,25 @@ void showLogoutDialog(BuildContext context) {
     isScrollControlled: true, // Important for content-sized bottom sheets
     backgroundColor: Colors.transparent, // Make sheet background transparent
     builder: (BuildContext bc) {
-      return LogoutConfirmationDialog(
-        onConfirm: () {
-          // Handle logout logic
-          Navigator.of(context).pop(); // Close bottom sheet
-          print("Logout confirmed");
+      return BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is Unauthenticated) {
+            Navigator.of(context)
+                .pushReplacement(MaterialPageRoute(builder: (context) {
+              return LoginOptionsScreen(apiClient: ApiClient());
+            }));
+          }
         },
-        onCancel: () {
-          Navigator.of(context).pop(); // Close bottom sheet
-          print("Logout cancelled");
-        },
+        child: LogoutConfirmationDialog(
+          onConfirm: () {
+            context.read<AuthBloc>().add(LogoutRequested());
+            Navigator.of(context).pop(); // Close bottom sheet
+          },
+          onCancel: () {
+            Navigator.of(context).pop(); // Close bottom sheet
+          },
+        ),
       );
     },
   );
 }
-

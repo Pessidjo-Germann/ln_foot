@@ -1,8 +1,8 @@
-# lnFoot_api.model.ColoredProductDto
+# openapi.model.ColoredProductDto
 
 ## Load the model package
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties

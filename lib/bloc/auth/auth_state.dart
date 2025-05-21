@@ -20,6 +20,15 @@ class Authenticated extends AuthState {
 
 class Unauthenticated extends AuthState {}
 
+class AuthenticatedWithToken extends AuthState {
+  final String token;
+
+  AuthenticatedWithToken(this.token);
+
+  @override
+  List<Object?> get props => [token];
+}
+
 class AuthError extends AuthState {
   final String message;
 

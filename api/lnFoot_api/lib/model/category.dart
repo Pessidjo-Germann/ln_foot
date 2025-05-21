@@ -34,14 +34,15 @@ class Category {
   String? name;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Category && other.id == id && other.name == name;
+  bool operator ==(Object other) => identical(this, other) || other is Category &&
+    other.id == id &&
+    other.name == name;
 
   @override
   int get hashCode =>
-      // ignore: unnecessary_parenthesis
-      (id == null ? 0 : id!.hashCode) + (name == null ? 0 : name!.hashCode);
+    // ignore: unnecessary_parenthesis
+    (id == null ? 0 : id!.hashCode) +
+    (name == null ? 0 : name!.hashCode);
 
   @override
   String toString() => 'Category[id=$id, name=$name]';
@@ -73,10 +74,8 @@ class Category {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key),
-              'Required key "Category[$key]" is missing from JSON.');
-          assert(json[key] != null,
-              'Required key "Category[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "Category[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "Category[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -89,10 +88,7 @@ class Category {
     return null;
   }
 
-  static List<Category> listFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static List<Category> listFromJson(dynamic json, {bool growable = false,}) {
     final result = <Category>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -120,24 +116,20 @@ class Category {
   }
 
   // maps a json object with a list of Category-objects as value to a dart map
-  static Map<String, List<Category>> mapListFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static Map<String, List<Category>> mapListFromJson(dynamic json, {bool growable = false,}) {
     final map = <String, List<Category>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = Category.listFromJson(
-          entry.value,
-          growable: growable,
-        );
+        map[entry.key] = Category.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;
   }
 
   /// The list of required keys that must be present in a JSON.
-  static const requiredKeys = <String>{};
+  static const requiredKeys = <String>{
+  };
 }
+

@@ -21,9 +21,7 @@ class ApiClient {
 
   var _client = Client();
   final _defaultHeaderMap = <String, String>{};
-   void setAuthToken(String token) {
-    defaultHeaderMap['Authorization'] = 'Bearer $token';
-  }
+
   /// Returns the current HTTP [Client] instance to use in this class.
   ///
   /// The return value is guaranteed to never be null.
@@ -38,6 +36,10 @@ class ApiClient {
 
   void addDefaultHeader(String key, String value) {
     _defaultHeaderMap[key] = value;
+  }
+
+  void setAuthToken(String token) {
+    addDefaultHeader('Authorization', 'Bearer $token');
   }
 
   // We don't use a Map<String, String> for queryParams.
@@ -57,6 +59,7 @@ class ApiClient {
     if (contentType != null) {
       headerParams['Content-Type'] = contentType;
     }
+    print('HEADERS ENVOYÉS: $headerParams');
 
     final urlEncodedQueryParams = queryParams.map((param) => '$param');
     final queryString = urlEncodedQueryParams.isNotEmpty
