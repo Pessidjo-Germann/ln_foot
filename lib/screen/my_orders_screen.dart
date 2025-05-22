@@ -4,6 +4,7 @@ import 'package:ln_foot/user_session_manager.dart';
 import '../bloc/order/order_bloc.dart';
 import 'package:ln_foot/bloc/auth/auth_bloc.dart';
 import 'package:lnFoot_api/api.dart';
+import '../model/order_status.dart'; // Added import
 import '../widgets/custom_app_bar.dart';
 // Import the newly created widgets
 import '../widgets/my_orders/order_status_tabs.dart';
@@ -64,8 +65,11 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
 
   // Helper pour convertir OrderDto en Map<String, dynamic> pour OrderList
   List<Map<String, dynamic>> _mapOrders(
-      List<OrderDto> orders, OrderStatus status) {
-    return orders.map((order) {
+      List<OrderDto> orders, OrderStatus status) { // Parameter type changed
+    return orders
+        .where((order) =>
+            order.status != null && order.status == status.displayName) // Added filter
+        .map((order) {
       debugPrint('Order ID: ${order..orderItems.first.toJson()}');
       final item = order.orderItems.isNotEmpty ? order.orderItems.first : null;
       return {
@@ -108,6 +112,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
             // Ici, tu dois filtrer selon l'onglet sélectionné
             debugPrint('Nombre de commandes: ${state.orders.length}');
             debugPrint('Commande');
+            // Use the imported OrderStatus for filtering
             final ongoing = _mapOrders(state.orders, OrderStatus.ongoing);
             final completed = _mapOrders(state.orders, OrderStatus.completed);
             final review = _mapOrders(state.orders, OrderStatus.review);
@@ -140,9 +145,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
   }
 
   // Helper to build the content for each tab (corrigé pour List<Map<String, dynamic>>)
-  Widget _buildTabView(List<Map<String, dynamic>> orders, OrderStatus status) {
+  Widget _buildTabView(List<Map<String, dynamic>> orders, OrderStatus status) { // Parameter type changed
     if (orders.isEmpty) {
-      return EmptyOrdersView(status: status);
+      return EmptyOrdersView(status: status); // Assuming EmptyOrdersView is compatible or will be updated
     } else {
       return OrderList(
         orders: orders,
