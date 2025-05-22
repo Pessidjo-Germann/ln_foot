@@ -103,7 +103,7 @@ class AuthService {
   }
 
  Future<bool> logout() async {
-    // await _keycloak.logout(); // Décommenter si tu veux déconnecter de Keycloak aussi
+    await _keycloak.logout(); // Décommenter si tu veux déconnecter de Keycloak aussi
     await _secureStorage.delete(key: 'access_token');
     await UserSessionManager.clearUserSession();
     _isRefreshing = false; // Réinitialiser le flag de rafraîchissement
@@ -141,7 +141,7 @@ class AuthService {
 
     try {
       debugPrint('Tentative de rafraîchissement du token via keycloak_wrapper.updateToken()...');
-      await _keycloak.updateToken(const Duration(minutes: 50)); 
+      await _keycloak.updateToken(  Duration(seconds: 3000)); 
        
       debugPrint('Rafraîchissement du token via updateToken terminé. Accès: ${_keycloak.accessToken?.substring(0,10)}... Rafraîchissement: ${_keycloak.refreshToken?.substring(0,10)}...');
       

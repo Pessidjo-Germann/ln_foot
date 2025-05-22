@@ -1,140 +1,86 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart'; // Import flutter_bloc
-import 'package:lnFoot_api/api.dart';
-import 'package:ln_foot/bloc/auth/auth_bloc.dart'; // Import AuthBloc
-import 'package:ln_foot/screen/email_login_screen.dart';
-import 'package:ln_foot/screen/home_screen.dart'; // Import HomeScreen for navigation
-import 'package:ln_foot/screen/signup_options_screen.dart';
-import 'package:ln_foot/theme/app_theme.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:ln_foot/bloc/auth/auth_bloc.dart';
+
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
-import 'package:ln_foot/widgets/social_button.dart';
 
 class LoginOptionsScreen extends StatelessWidget {
-  final ApiClient apiClient;
-  const LoginOptionsScreen({super.key, required this.apiClient});
-
-  // Removed local buttonOrange definition
+  // Retire la propriété apiClient car elle n'est plus nécessaire ici
+  // final ApiClient apiClient;
+  // const LoginOptionsScreen({super.key, required this.apiClient}); // Retire apiClient du constructeur aussi
+  const LoginOptionsScreen({super.key}); // Nouveau constructeur sans apiClient
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is AuthLoading) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                const SnackBar(content: Text('Connexion en cours...')),
-              );
-          } else if (state is Authenticated) {
-            // Navigate to home screen on successful authentication
-            context.read<AuthBloc>().add(CheckToken());
-          } else if (state is AuthenticatedWithToken) {
-            // Set the token in the ApiClient
-            apiClient.setAuthToken(state.token);
-            // Navigate to HomeScreen
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                  builder: (context) =>
-                      const HomeScreen()), // Navigate to HomeScreen
-              (Route<dynamic> route) => false, // Remove all previous routes
+      listener: (context, state) {
+        if (state is AuthLoading) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              const SnackBar(content: Text('Connexion en cours...')),
             );
-          } else if (state is AuthError) {
-            // Show error message
-            debugPrint('AuthError: ${state.message}');
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                    content: Text('Erreur de connexion: ${state.message}')),
-              );
-          }
-        },
-        child: Scaffold(
-          // Original Scaffold is now a child of BlocListener
-          backgroundColor: Colors.white,
-          appBar: const CustomAppBar(
-            title: 'Connexion sur LNSHOP',
-            showBackButton: false,
-          ),
-          body: SafeArea(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Divider with "Ou"
-                  // Row(
-                  //   children: [
-                  //     Expanded(
-                  //         child: Divider(
-                  //             color: Colors.grey.shade300, thickness: 0.4)),
-                  //     Padding(
-                  //       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  //       child: Text(
-                  //         'Ou',
-                  //         style: textTheme.bodyMedium
-                  //             ?.copyWith(color: Colors.grey.shade600),
-                  //       ),
-                  //     ),
-                  //     Expanded(
-                  //         child: Divider(
-                  //             color: Colors.grey.shade300, thickness: 0.4)),
-                  //   ],
-                  // ),
-                   const Spacer(),
-                  Image.asset(
-                    'images/Add to Cart-cuate 1.png',
-                  ),
-                  const SizedBox(height: 32),
+        } else if (state is Authenticated) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-                  CustomButton(
-                    text: 'Connexion par mail',
-                    onPressed: () {
-                      context.read<AuthBloc>().add(LoginRequested());
-                    },
-                  ),
-                  const Spacer(),
-
-                  // // Sign Up Text
-                  // Center(
-                  //   child: RichText(
-                  //     text: TextSpan(
-                  //       text: 'Vous n\'avez pas de compte? ',
-                  //       style: textTheme.bodyMedium
-                  //           ?.copyWith(color: Colors.grey.shade600),
-                  //       children: <TextSpan>[
-                  //         TextSpan(
-                  //           text: 'Inscrivez-vous',
-                  //           style: const TextStyle(
-                  //             color: kAppOrangeColor, // Use theme color
-                  //             fontWeight: FontWeight.bold,
-                  //             decoration: TextDecoration.underline,
-                  //           ),
-                  //           recognizer: TapGestureRecognizer()
-                  //             ..onTap = () {
-                  //               // Navigator.of(context).push(
-                  //               //   MaterialPageRoute(
-                  //               //       builder: (context) =>
-                  //               //           const SignupOptionsScreen()),
-                  //               // );
-                  //             },
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  //const SizedBox(height: 16),
-                ],
-              ),
+          // NE PAS NAVIGUER ICI. Le AuthWrapper s'en charge.
+          // context.read<AuthBloc>().add(CheckToken()); // Cette ligne est inutile et doit être retirée
+        } else if (state is AuthenticatedWithToken) {
+          // Similaire à Authenticated. Le AuthWrapper gère la navigation.
+          // Cette condition est moins probable si Authenticated est toujours émis en premier.
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          // NE PAS NAVIGUER ICI.
+          // apiClient.setAuthToken(state.token); // Cette ligne est redondante, la supprimer
+          // Navigator.of(context).pushAndRemoveUntil(...) // La navigation est gérée par AuthWrapper
+        } else if (state is AuthError) {
+          // Afficher le message d'erreur
+          debugPrint('AuthError: ${state.message}');
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(content: Text('Erreur de connexion: ${state.message}')),
+            );
+          // Si l'erreur est critique (par exemple, refresh token expiré),
+          // AuthBloc aura déjà émis Unauthenticated et AuthWrapper aura redirigé vers cette page.
+        } else if (state is Unauthenticated) {
+          // Si on est déjà sur l'écran de login et on reçoit Unauthenticated,
+          // cela confirme qu'on doit rester ici. On peut cacher un éventuel snackbar de chargement.
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: const CustomAppBar(
+          title: 'Connexion sur LNSHOP',
+          showBackButton: false,
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Spacer(),
+                Image.asset(
+                  'images/Add to Cart-cuate 1.png',
+                ),
+                const SizedBox(height: 32),
+                CustomButton(
+                  text: 'Connexion par mail',
+                  onPressed: () {
+                    context.read<AuthBloc>().add(LoginRequested());
+                  },
+                ),
+                const Spacer(),
+              ],
             ),
           ),
-        )); // End of Scaffold
-  } // Add missing closing parenthesis for BlocListener
+        ),
+      ),
+    );
+  }
 }
