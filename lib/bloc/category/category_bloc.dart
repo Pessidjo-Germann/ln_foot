@@ -7,6 +7,7 @@ part 'category_state.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   final CategoryControllerApi categoryControllerApi;
+  List<CategoryDto> _cachedCategories = []; // Added cache field
 
   CategoryBloc({required this.categoryControllerApi})
       : super(CategoryInitial()) {
@@ -19,10 +20,18 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
   Future<void> _onLoadAllCategories(
       LoadAllCategories event, Emitter<CategoryState> emit) async {
+    // Check for cache usage
+    if (!event.forceRefresh && _cachedCategories.isNotEmpty) {
+      emit(CategoriesLoaded(_cachedCategories));
+      return;
+    }
+
+    // Proceed with fetching if not using cache or if forcing refresh
     emit(CategoryLoading());
     try {
       final categories = await categoryControllerApi.getAllCategories();
-      emit(CategoriesLoaded(categories ?? []));
+      _cachedCategories = categories ?? []; // Update cache
+      emit(CategoriesLoaded(_cachedCategories));
     } on ApiException catch (e) {
       emit(CategoryError('API Error ${e.code}: ${e.message ?? e.toString()}'));
     } catch (e) {

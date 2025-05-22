@@ -13,12 +13,13 @@ class ProductLoading extends ProductState {}
 
 class ProductsLoaded extends ProductState {
   final List<ProductDto> products;
-  final String? selectedCategoryName; // New field
+  final String? selectedCategoryName;
+  final String? searchQuery; // New field
 
-  const ProductsLoaded(this.products, {this.selectedCategoryName}); // Update constructor
+  const ProductsLoaded(this.products, {this.selectedCategoryName, this.searchQuery}); // Update constructor
 
   @override
-  List<Object?> get props => [products, selectedCategoryName]; // Add to props
+  List<Object?> get props => [products, selectedCategoryName, searchQuery]; // Add to props
 }
 
 class ProductVariantsLoaded extends ProductState {
