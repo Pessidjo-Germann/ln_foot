@@ -108,13 +108,15 @@ class OrderConfirmationScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: isAmount ? FontWeight.bold : FontWeight.normal,
-                  color: isAmount ? kAppOrangeColor : null, // Highlight amount
-                ),
+          Expanded(child: Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500))),
+          Expanded(
+            child: Text(
+              value,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: isAmount ? FontWeight.bold : FontWeight.normal,
+                    color: isAmount ? kAppOrangeColor : null, // Highlight amount
+                  ),
+            ),
           ),
         ],
       ),

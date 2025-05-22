@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:io';
-
+ 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/foundation.dart'; // pour debugPrint
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
+ 
 // service.dart
 import 'package:keycloak_wrapper/keycloak_wrapper.dart';
 import 'package:ln_foot/user_session_manager.dart';
@@ -14,7 +11,11 @@ import 'package:ln_foot/user_session_manager.dart';
 class AuthService {
   final KeycloakWrapper _keycloak;
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
-
+  bool _isRefreshing = false;
+  // Un Completer qui sera utilisé pour permettre aux appels concurrents d'attendre
+  // que le rafraîchissement en cours se termine et obtenir son résultat.
+  // Il est initialisé à null ou à un Completer déjà complété pour ne pas bloquer au démarrage.
+  Completer<bool>? _refreshCompleter; 
   AuthService._(this._keycloak);
 
   static Future<AuthService> create() async {
@@ -36,10 +37,23 @@ class AuthService {
     final result = await _keycloak.login();
     if (result) {
       final token = _keycloak.accessToken;
-      // Enregistrement du token dans le stockage sécurisé
       final userInfo = await _keycloak.getUserInfo();
-      debugPrint("les INDOE D SSD  sont : ${_keycloak.tokenResponse!.accessTokenExpirationDateTime?.millisecond}");
-       scheduleTokenRefresh(_keycloak.tokenResponse!.accessTokenExpirationDateTime?.millisecond ?? 1200 , _keycloak.refreshToken!);
+      
+      final expirationTime = _keycloak.tokenResponse!.accessTokenExpirationDateTime;
+      if (expirationTime != null) {
+        // Convertir le DateTime en secondes restantes
+        final expiresInSeconds = expirationTime.difference(DateTime.now()).inSeconds;
+        debugPrint("Expiration dans : $expiresInSeconds secondes");
+        // S'assurer que le refresh token est disponible avant de planifier
+        if (_keycloak.refreshToken != null) {
+          scheduleTokenRefresh(expiresInSeconds, _keycloak.refreshToken!);
+        } else {
+          debugPrint("Erreur: Refresh token non disponible après login.");
+        }
+      } else {
+        debugPrint("Erreur: Date d'expiration du token non disponible.");
+      }
+
       if (userInfo != null) {
         await UserSessionManager.saveAuthenticatedUserData(
           accessToken: token!,
@@ -49,48 +63,58 @@ class AuthService {
       }
 
       if (token != null) {
+        // Supprimer et réécrire le token pour s'assurer qu'il est à jour
         await _secureStorage.delete(key: 'access_token');
         await _secureStorage.write(key: 'access_token', value: token);
       }
     }
     return result;
   }
-  void scheduleTokenRefresh(int expiresInSeconds, String refreshToken) {
-  final refreshDuration = Duration(seconds: expiresInSeconds - 60); // refresh 1 min before expiry
+   void scheduleTokenRefresh(int expiresInSeconds, String refreshTokenValue) {
+    // Rafraîchir 30 secondes avant l'expiration pour laisser une marge.
+    // S'assurer que la durée est positive.
+    final refreshDuration = Duration(seconds: (expiresInSeconds - 30).clamp(1, expiresInSeconds)); 
 
-  Timer(refreshDuration, () async {
-    try {
-        await _keycloak.updateToken(refreshDuration);
+    debugPrint('Planification du rafraîchissement du token dans $refreshDuration.');
 
-      final newAccessToken = _keycloak.refreshToken;
-      final newRefreshToken = _keycloak.refreshToken; // This might be updated by the wrapper
-      print('Token refreshed successfully $newAccessToken $newRefreshToken');
-      
-    //  if (newAccessToken != null && newAccessToken.isNotEmpty) 
-        await UserSessionManager.updateTokens(
-          newAccessToken: newAccessToken??'',
-          newRefreshToken: newRefreshToken, // Pass along the new refresh token, if any
-        );
+    Timer(refreshDuration, () async {
+      debugPrint('Tentative de rafraîchissement du token via la tâche planifiée...');
+      try {
+        // Appelle la méthode refreshToken qui gère la concurrence
+        final success = await refreshToken(); 
+        if (success) {
+          // Re-planifier si le refresh a réussi
+          final newExpirationTime = _keycloak.tokenResponse!.accessTokenExpirationDateTime;
+          if (newExpirationTime != null) {
+            final newExpiresInSeconds = newExpirationTime.difference(DateTime.now()).inSeconds;
+            if (newExpiresInSeconds > 0 && _keycloak.refreshToken != null) {
+               scheduleTokenRefresh(newExpiresInSeconds, _keycloak.refreshToken!);
+            }
+          }
+        } else {
+          debugPrint('Le rafraîchissement du token planifié a échoué. Ne re-planifie pas.');
+          // Gérer le cas où le rafraîchissement échoue (e.g., demander à l'utilisateur de se reconnecter)
+        }
+      } catch (e) {
+        debugPrint('Erreur lors du rafraîchissement du token planifié: $e');
+        // Gérer l'erreur (e.g., demander à l'utilisateur de se reconnecter)
+      }
+    });
+  }
 
-      // Schedule the next refresh
-       scheduleTokenRefresh(_keycloak.tokenResponse!.accessTokenExpirationDateTime?.millisecond ?? 1200 , _keycloak.refreshToken!);
-    } catch (e) {
-      print('Failed to refresh token: $e');
-      // Possibly re-login or redirect to login page
-    }
-  });
-}
-
-
-  Future<bool> logout() async {
-    // final result = await _keycloak.logout();
+ Future<bool> logout() async {
+    // await _keycloak.logout(); // Décommenter si tu veux déconnecter de Keycloak aussi
     await _secureStorage.delete(key: 'access_token');
     await UserSessionManager.clearUserSession();
+    _isRefreshing = false; // Réinitialiser le flag de rafraîchissement
+    _refreshCompleter = null; // Réinitialiser le completer
     return true;
   }
 
   Future<String?> getAccessToken() async {
     final storedToken = await _secureStorage.read(key: 'access_token');
+    // Prioriser le token stocké si disponible et valide, sinon celui de KeycloakWrapper.
+    // Une vérification de validité pourrait être ajoutée ici si le token de KeycloakWrapper est déjà expiré.
     if (storedToken != null && storedToken.isNotEmpty) {
       return storedToken;
     }
@@ -104,42 +128,54 @@ class AuthService {
     return token != null && token.isNotEmpty;
   }
 
+
   Future<bool> refreshToken() async {
+    if (_isRefreshing) {
+      debugPrint('AuthService: Une opération de rafraîchissement est déjà en cours. Attente du résultat...');
+      // Attendre le résultat de l'opération en cours
+      return _refreshCompleter!.future;
+    }
+
+    _isRefreshing = true;
+    _refreshCompleter = Completer<bool>(); // Créer un nouveau completer pour cette opération
+
     try {
-      debugPrint('Attempting to refresh token using keycloak_wrapper.updateToken()...');
-      // Attempt to update the token. The KeycloakWrapper should handle the refresh token internally.
-      // The duration is how long the new token should be valid for, if the server supports it.
-      // Keycloak's default is often shorter, but the wrapper might use this for its own expiry checks.
+      debugPrint('Tentative de rafraîchissement du token via keycloak_wrapper.updateToken()...');
       await _keycloak.updateToken(const Duration(minutes: 50)); 
        
-      debugPrint('Token refresh via updateToken completed ${_keycloak.accessToken} ${_keycloak.refreshToken}.');
-      final newAccessToken = _keycloak.refreshToken;
-      final newRefreshToken = _keycloak.refreshToken; // This might be updated by the wrapper
+      debugPrint('Rafraîchissement du token via updateToken terminé. Accès: ${_keycloak.accessToken?.substring(0,10)}... Rafraîchissement: ${_keycloak.refreshToken?.substring(0,10)}...');
+      
+      final newAccessToken = _keycloak.accessToken;
+      final newRefreshToken = _keycloak.refreshToken;
 
       if (newAccessToken != null && newAccessToken.isNotEmpty) {
         await UserSessionManager.updateTokens(
           newAccessToken: newAccessToken,
-          newRefreshToken: newRefreshToken, // Pass along the new refresh token, if any
+          newRefreshToken: newRefreshToken,
         );
-        debugPrint('Token refreshed and updated in UserSessionManager successfully.');
+        // Mettre à jour le token dans FlutterSecureStorage également
+        await _secureStorage.delete(key: 'access_token');
+        await _secureStorage.write(key: 'access_token', value: newAccessToken);
+
+        debugPrint('Token rafraîchi et mis à jour avec succès.');
+        _refreshCompleter!.complete(true); // Signaler que l'opération a réussi
         return true;
       } else {
-        debugPrint('Token refresh via updateToken seemed to succeed, but new access token is null or empty.');
-        // This case might indicate an issue with the wrapper or Keycloak's response after updateToken.
-        // Forcing a logout as it's an unexpected state post-refresh.
+        debugPrint('Rafraîchissement du token a réussi, mais le nouveau token d\'accès est nul ou vide. Déconnexion forcée.');
         await logout();
+        _refreshCompleter!.complete(false); // Signaler l'échec
         return false;
       }
     } catch (e, s) { 
-      debugPrint('Error during keycloak_wrapper.updateToken(): $e');
-      debugPrint('Stack trace: $s');
+      debugPrint('Erreur lors du rafraîchissement du token via keycloak_wrapper.updateToken(): $e');
+      debugPrint('Trace de la pile: $s');
       
-      // Per the subtask's refined strategy: any failure in updateToken is treated as critical,
-      // indicating the session may no longer be valid (e.g., refresh token expired or revoked).
-      // Thus, proactively log out the user.
-      debugPrint('Keycloak updateToken failed. Assuming critical session issue, logging out...');
+      debugPrint('Échec du rafraîchissement de Keycloak. Problème critique de session, déconnexion...');
       await logout();
+      _refreshCompleter!.complete(false); // Signaler l'échec
       return false;
+    } finally {
+      _isRefreshing = false; // Réinitialiser le flag une fois l'opération terminée (réussie ou échouée)
     }
   }
 }
