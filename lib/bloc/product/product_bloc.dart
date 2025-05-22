@@ -11,6 +11,7 @@ part 'product_state.dart';
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final ProductControllerApi _productApi;
   final ProductVariantControllerApi _productVariantApi;
+  List<ProductDto> _allProducts = [];
 
   ProductBloc({required ProductControllerApi productApi, required ProductVariantControllerApi productVariantApi})
       : _productApi = productApi, _productVariantApi = productVariantApi,
@@ -21,6 +22,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<UpdateProduct>(_onUpdateProduct);
     on<DeleteProduct>(_onDeleteProduct);
     on<LoadProductVariantById>(_onLoadProductVariantsByProductId);
+    on<FilterProductsByCategory>(_onFilterProductsByCategory);
+    on<ClearProductFilter>(_onClearProductFilter);
   }
 
   Future<void> _onLoadAllProducts(
@@ -28,8 +31,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     emit(ProductLoading());
     try {
       final products = await _productApi.getAllProducts();
+      _allProducts = products ?? [];
       debugPrint('Products: $products');
-      emit(ProductsLoaded(products ?? []));
+      emit(ProductsLoaded(_allProducts, selectedCategoryName: null));
     } on ApiException catch (e) {
       emit(ProductError(ErrorMessages.productUpdateFailed));
     } catch (e) {
@@ -120,5 +124,20 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     } catch (e) {
       emit(ProductError(ErrorMessages.unknownError));
     }
+  }
+
+  Future<void> _onFilterProductsByCategory(
+      FilterProductsByCategory event, Emitter<ProductState> emit) async {
+    emit(ProductLoading()); // Optional: show loading state while filtering
+    final filteredProducts = _allProducts
+        .where((product) => product.categoryNames.contains(event.categoryName))
+        .toList();
+    emit(ProductsLoaded(filteredProducts, selectedCategoryName: event.categoryName));
+  }
+
+  Future<void> _onClearProductFilter(
+      ClearProductFilter event, Emitter<ProductState> emit) async {
+    emit(ProductLoading()); // Optional: show loading state
+    emit(ProductsLoaded(_allProducts, selectedCategoryName: null));
   }
 }

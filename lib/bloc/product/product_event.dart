@@ -18,6 +18,17 @@ class LoadProductById extends ProductEvent {
   List<Object?> get props => [productId];
 }
 
+class FilterProductsByCategory extends ProductEvent {
+  final String categoryName;
+
+  const FilterProductsByCategory(this.categoryName);
+
+  @override
+  List<Object?> get props => [categoryName];
+}
+
+class ClearProductFilter extends ProductEvent {}
+
 class LoadProductVariantById extends ProductEvent {
   final String productId;
 
