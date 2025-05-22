@@ -7,14 +7,7 @@ abstract class ProductEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoadAllProducts extends ProductEvent {
-  final bool forceRefresh;
-
-  const LoadAllProducts({this.forceRefresh = false});
-
-  @override
-  List<Object?> get props => [forceRefresh];
-}
+class LoadAllProducts extends ProductEvent {}
 
 class LoadProductById extends ProductEvent {
   final String productId;
@@ -23,15 +16,6 @@ class LoadProductById extends ProductEvent {
 
   @override
   List<Object?> get props => [productId];
-}
-
-class SearchProducts extends ProductEvent {
-  final String query;
-
-  const SearchProducts(this.query);
-
-  @override
-  List<Object?> get props => [query];
 }
 
 class FilterProductsByCategory extends ProductEvent {

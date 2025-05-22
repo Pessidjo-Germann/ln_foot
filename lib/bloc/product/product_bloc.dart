@@ -12,13 +12,10 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final ProductControllerApi _productApi;
   final ProductVariantControllerApi _productVariantApi;
   List<ProductDto> _allProducts = [];
-  String _searchQuery = "";
-  String? _currentSelectedCategoryName;
 
   ProductBloc({required ProductControllerApi productApi, required ProductVariantControllerApi productVariantApi})
       : _productApi = productApi, _productVariantApi = productVariantApi,
         super(ProductInitial()) {
-    _currentSelectedCategoryName = null; // Initialize here
     on<LoadAllProducts>(_onLoadAllProducts);
     on<LoadProductById>(_onLoadProductById);
    // on<CreateProduct>(_onCreateProduct);
@@ -27,51 +24,20 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<LoadProductVariantById>(_onLoadProductVariantsByProductId);
     on<FilterProductsByCategory>(_onFilterProductsByCategory);
     on<ClearProductFilter>(_onClearProductFilter);
-    on<SearchProducts>(_onSearchProducts); // Register SearchProducts
-  }
-
-  void _applyFiltersAndEmit(Emitter<ProductState> emit, {List<ProductDto>? baseProductList}) {
-    List<ProductDto> productsToFilter = List.from(baseProductList ?? _allProducts);
-
-    if (_currentSelectedCategoryName != null && _currentSelectedCategoryName!.isNotEmpty) {
-      productsToFilter = productsToFilter
-          .where((product) => product.categoryNames.contains(_currentSelectedCategoryName))
-          .toList();
-    }
-
-    if (_searchQuery.isNotEmpty) {
-      productsToFilter = productsToFilter
-          .where((product) =>
-              (product.name?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false) ||
-              (product.description?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false))
-          .toList();
-    }
-    
-    emit(ProductLoading()); 
-    emit(ProductsLoaded(productsToFilter, selectedCategoryName: _currentSelectedCategoryName, searchQuery: _searchQuery));
   }
 
   Future<void> _onLoadAllProducts(
       LoadAllProducts event, Emitter<ProductState> emit) async {
-    // Check for cache usage
-    if (!event.forceRefresh && _allProducts.isNotEmpty) {
-      _applyFiltersAndEmit(emit); // Re-apply current filters to cached data
-      return; 
-    }
-
-    // Proceed with fetching if not using cache or if forcing refresh
     emit(ProductLoading());
     try {
       final products = await _productApi.getAllProducts();
       _allProducts = products ?? [];
-      // Reset filters only when fetching fresh data
-      _currentSelectedCategoryName = null; 
-      _searchQuery = ""; 
-      _applyFiltersAndEmit(emit);
-    } on ApiException catch (e) { // Be specific with error types if possible
-      emit(ProductError(e.message ?? ErrorMessages.productLoadFailed)); // Use error message from ApiException
-    } catch (e) { // Catch-all for other errors
-      emit(ProductError(e.toString())); // Or a generic message like ErrorMessages.unknownError
+      debugPrint('Products: $products');
+      emit(ProductsLoaded(_allProducts, selectedCategoryName: null));
+    } on ApiException catch (e) {
+      emit(ProductError(ErrorMessages.productUpdateFailed));
+    } catch (e) {
+      emit(ProductError(ErrorMessages.unknownError));
     }
   }
 
@@ -162,18 +128,16 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   Future<void> _onFilterProductsByCategory(
       FilterProductsByCategory event, Emitter<ProductState> emit) async {
-    _currentSelectedCategoryName = event.categoryName;
-    _applyFiltersAndEmit(emit);
+    emit(ProductLoading()); // Optional: show loading state while filtering
+    final filteredProducts = _allProducts
+        .where((product) => product.categoryNames.contains(event.categoryName))
+        .toList();
+    emit(ProductsLoaded(filteredProducts, selectedCategoryName: event.categoryName));
   }
 
   Future<void> _onClearProductFilter(
       ClearProductFilter event, Emitter<ProductState> emit) async {
-    _currentSelectedCategoryName = null;
-    _applyFiltersAndEmit(emit);
-  }
-
-  Future<void> _onSearchProducts(SearchProducts event, Emitter<ProductState> emit) async {
-    _searchQuery = event.query;
-    _applyFiltersAndEmit(emit);
+    emit(ProductLoading()); // Optional: show loading state
+    emit(ProductsLoaded(_allProducts, selectedCategoryName: null));
   }
 }
