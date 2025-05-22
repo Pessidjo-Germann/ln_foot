@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lnFoot_api/api.dart';
 import 'package:ln_foot/bloc/order/order_bloc.dart';
-import 'package:ln_foot/screen/home_screen.dart';
 
 import 'package:ln_foot/user_session_manager.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
@@ -11,7 +10,8 @@ import 'package:ln_foot/widgets/custom_button.dart';
 import 'package:ln_foot/widgets/checkout/address_section.dart';
 import 'package:ln_foot/widgets/checkout/payment_method_section.dart';
 import 'package:ln_foot/widgets/checkout/order_summary_section.dart';
-import 'package:ln_foot/widgets/checkout/payment_success_dialog.dart';
+// import 'package:ln_foot/widgets/checkout/payment_success_dialog.dart'; // No longer needed
+import 'package:ln_foot/screen/order_confirmation_screen.dart'; // Import OrderConfirmationScreen
 
 class CheckoutScreen extends StatefulWidget {
   final OrderDto orderDto;
@@ -55,19 +55,29 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     _initialized = true;
   }
 
-  void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // Prevent closing by tapping outside
-      builder: (BuildContext context) {
-        // Use the dedicated PaymentSuccessDialog widget
-        return PaymentSuccessDialog(
-          onTrackOrderPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
-          },
-        );
-      },
-    );
+  // void _showSuccessDialog() { // Removed
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false, // Prevent closing by tapping outside
+  //     builder: (BuildContext context) {
+  //       // Use the dedicated PaymentSuccessDialog widget
+  //       return PaymentSuccessDialog(
+  //         onTrackOrderPressed: () {
+  //           // TODO: Implement actual navigation to order tracking screen
+  //           print("Navigate to track order screen");
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
+
+  double _calculateTotalAmount() {
+    if (widget.orderDto.orderItems.isEmpty) {
+      return 0.0;
+    }
+    return widget.orderDto.orderItems.fold(0.0, (sum, item) {
+      return sum + ((item.price ?? 0.0) * (item.quantity ?? 0));
+    });
   }
 
   @override
@@ -120,7 +130,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
             // Use OrderSummarySection Widget
             OrderSummarySection(
-              orderItems: widget.orderDto.orderItems, // Example data
+             orderItems: widget.orderDto.orderItems,// Example data
             ),
             const SizedBox(height: 30), // Space before bottom button
           ],
@@ -132,7 +142,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             setState(() {
               isLoading = false;
             });
-            _showSuccessDialog();
+
+            // Calculate total amount
+            final double totalAmount = _calculateTotalAmount();
+            // final String customerName = nom; // 'nom' is already available
+
+            // Navigate to OrderConfirmationScreen
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OrderConfirmationScreen(
+                  paymentResponse: state.paymentResponse,
+                  customerName: nom, // 'nom' from _CheckoutScreenState
+                  totalAmount: totalAmount,
+                ),
+              ),
+              (Route<dynamic> route) => false, // Clear all routes before pushing confirmation
+            );
+
           } else if (state is OrderError) {
             setState(() {
               isLoading = false;
