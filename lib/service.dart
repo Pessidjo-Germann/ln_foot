@@ -38,7 +38,7 @@ class AuthService {
       final token = _keycloak.accessToken;
       // Enregistrement du token dans le stockage sécurisé
       final userInfo = await _keycloak.getUserInfo();
-      debugPrint("les INDOE D SSD  sont : $userInfo");
+      debugPrint("les INDOE D SSD  sont : ${_keycloak.tokenResponse!.accessTokenExpirationDateTime?.millisecond}");
        scheduleTokenRefresh(_keycloak.tokenResponse!.accessTokenExpirationDateTime?.millisecond ?? 1200 , _keycloak.refreshToken!);
       if (userInfo != null) {
         await UserSessionManager.saveAuthenticatedUserData(
@@ -61,10 +61,10 @@ class AuthService {
   Timer(refreshDuration, () async {
     try {
         await _keycloak.updateToken(refreshDuration);
-      print('Token refreshed successfully');
 
       final newAccessToken = _keycloak.refreshToken;
       final newRefreshToken = _keycloak.refreshToken; // This might be updated by the wrapper
+      print('Token refreshed successfully $newAccessToken $newRefreshToken');
       
     //  if (newAccessToken != null && newAccessToken.isNotEmpty) 
         await UserSessionManager.updateTokens(
