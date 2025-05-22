@@ -85,11 +85,11 @@ class AuthService {
 
     final response = await http.post(
       Uri.parse(
-          '${_keycloak.config.frontendUrl}/realms/${_keycloak.config.realm}/protocol/openid-connect/token'),
+          'https://lnfoot-auth.hublots.co/realms/lnfoot/protocol/openid-connect/token'),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: {
         'grant_type': 'refresh_token',
-        'client_id': _keycloak.config.clientId,
+        'client_id': 'ln-foot-01',
         'refresh_token': oldRefreshToken,
       },
     );
