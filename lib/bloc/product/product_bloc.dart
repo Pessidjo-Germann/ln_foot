@@ -53,17 +53,25 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   Future<void> _onLoadAllProducts(
       LoadAllProducts event, Emitter<ProductState> emit) async {
+    // Check for cache usage
+    if (!event.forceRefresh && _allProducts.isNotEmpty) {
+      _applyFiltersAndEmit(emit); // Re-apply current filters to cached data
+      return; 
+    }
+
+    // Proceed with fetching if not using cache or if forcing refresh
     emit(ProductLoading());
     try {
       final products = await _productApi.getAllProducts();
       _allProducts = products ?? [];
+      // Reset filters only when fetching fresh data
       _currentSelectedCategoryName = null; 
       _searchQuery = ""; 
       _applyFiltersAndEmit(emit);
-    } on ApiException catch (e) {
-      emit(ProductError(ErrorMessages.productUpdateFailed));
-    } catch (e) {
-      emit(ProductError(ErrorMessages.unknownError));
+    } on ApiException catch (e) { // Be specific with error types if possible
+      emit(ProductError(e.message ?? ErrorMessages.productLoadFailed)); // Use error message from ApiException
+    } catch (e) { // Catch-all for other errors
+      emit(ProductError(e.toString())); // Or a generic message like ErrorMessages.unknownError
     }
   }
 

@@ -95,8 +95,8 @@ class _HomeContentState extends State<HomeContent>
   void initState() {
     super.initState();
     _searchController = TextEditingController(); // Initialize controller
-    _loadProducts();
-    _loadCategories();
+    _loadProducts(); // Defaults to forceRefresh: false
+    _loadCategories(); // Defaults to forceRefresh: false
   }
 
   @override
@@ -105,12 +105,12 @@ class _HomeContentState extends State<HomeContent>
     super.dispose();
   }
 
-  void _loadProducts() {
-    context.read<ProductBloc>().add(LoadAllProducts());
+  void _loadProducts({bool forceRefresh = false}) { // Add optional parameter
+    context.read<ProductBloc>().add(LoadAllProducts(forceRefresh: forceRefresh));
   }
 
-  void _loadCategories() {
-    context.read<CategoryBloc>().add(LoadAllCategories());
+  void _loadCategories({bool forceRefresh = false}) { // Add optional parameter
+    context.read<CategoryBloc>().add(LoadAllCategories(forceRefresh: forceRefresh));
   }
 
   @override
@@ -120,8 +120,8 @@ class _HomeContentState extends State<HomeContent>
       appBar: const HomeAppBar(),
       body: RefreshIndicator(
         onRefresh: () async {
-          _loadProducts();
-          _loadCategories();
+          _loadProducts(forceRefresh: true); // Pass true here
+          _loadCategories(forceRefresh: true); // Pass true here
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
