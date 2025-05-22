@@ -69,17 +69,6 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
             ProfileMenuItem(
-              icon: Icons.payment_outlined,
-              title: 'Modes de paiement',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const PaymentMethodScreen()),
-                );
-              },
-            ),
-            ProfileMenuItem(
               icon: Icons.notifications_none_outlined,
               title: 'Notifications',
               onTap: () {
