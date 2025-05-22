@@ -25,36 +25,15 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  String? _selectedSize;
-  Color? _selectedColor;
+   String? _selectedSize;
+  // Color? _selectedColor; // Removed
   bool _isFavorite = false;
+  List<ProductVariantDto> _productVariants = [];
+  ProductVariantDto? _selectedVariant;
 
-  // Replace static color map and color logic with dynamic colors from ColoredProductBloc
-  // late List<ColoredProductDto> _coloredProducts = [];
-  late Map<Color, String> _availableColorsMap = {};
+  
   List<ReviewDto> reviews = [];
-  Color? _colorFromNameOrCode(String? name) {
-    // TODO: Map backend color name/code to Flutter Color
-    switch (name?.toLowerCase()) {
-      case 'rouge':
-      case 'red':
-        return Colors.red;
-      case 'noir':
-      case 'black':
-        return Colors.black;
-      case 'bleu':
-      case 'blue':
-        return Colors.blue;
-      case 'rose':
-      case 'pink':
-        return Colors.pink;
-      case 'violet':
-      case 'purple':
-        return Colors.purple;
-      default:
-        return Colors.grey;
-    }
-  }
+ 
 
   @override
   void initState() {
@@ -71,15 +50,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     });
   }
 
-  void _handleColorSelected(Color? color) {
-    setState(() {
-      _selectedColor = color;
-    });
-  }
-
   void _handleFavoriteToggle() {
     setState(() {
       _isFavorite = !_isFavorite;
+    });
+  }
+  void _handleVariantSelected(ProductVariantDto variant) {
+    setState(() {
+      _selectedVariant = variant;
+      if (variant.sizes.isNotEmpty && (_selectedSize == null || !variant.sizes.contains(_selectedSize))) {
+        _selectedSize = null;
+      } else if (variant.sizes.isEmpty) {
+        _selectedSize = null;
+      }
     });
   }
 
@@ -95,11 +78,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     // }
 
     debugPrint(product.toString());
-    final colorName = _availableColorsMap[_selectedColor] ?? '';
+    final String colorName = _selectedVariant?.colorCode ?? '';
     context.read<CartBloc>().add(
           AddToCart(
             product: product,
-            size: _selectedSize!,
+            size: _selectedSize!, // Ensure _selectedSize is not null before calling this
             color: colorName,
             quantity: 1,
           ),
@@ -108,13 +91,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool canAddToCart = _selectedSize != null || _selectedColor != null;
-    final List<Color> availableColorValues = _availableColorsMap.keys.toList();
-    final String initialColorName = _availableColorsMap[
-            availableColorValues.isNotEmpty
-                ? availableColorValues.first
-                : Colors.grey] ??
-        '';
+     // final bool canAddToCart = _selectedSize != null || _selectedColor != null; // Updated canAddToCart logic
+    final bool canAddToCart = _selectedSize != null && _selectedVariant != null;
+     
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -174,7 +153,39 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             if (state is ProductLoading) {
               return const ProductDetailsLoadingView();
             } else if (state is ProductVariantsLoaded) {
-              final product = state.variants.first;
+               if (_productVariants != state.variants) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) {
+                    setState(() {
+                      _productVariants = state.variants;
+                      if (_productVariants.isNotEmpty) {
+                        final currentSelectedId = _selectedVariant?.id;
+                        _selectedVariant = _productVariants.first;
+                        if (currentSelectedId != null) {
+                          final previouslySelected = _productVariants
+                              .cast<ProductVariantDto?>()
+                              .firstWhere((v) => v?.id == currentSelectedId,
+                                  orElse: () => null);
+                          if (previouslySelected != null) {
+                            _selectedVariant = previouslySelected;
+                          }
+                        }
+                      } else {
+                        _selectedVariant = null;
+                      }
+                    });
+                  }
+                });
+              }
+
+              if (_selectedVariant == null) {
+                // This covers initial load before post-frame callback, or if variants become empty.
+                 if (state.variants.isEmpty) { // If API returns no variants initially or after an update
+                    return const Center(child: Text("No product variants available."));
+                 }
+                 // If variants are loading / _selectedVariant not yet set by post-frame callback
+                 return const ProductDetailsLoadingView();
+              }
 
               return SingleChildScrollView(
                 child: Column(
@@ -182,11 +193,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   children: [
                     const SizedBox(height: 16),
                     ProductImageSection(
-                      imageUrl: product.imageUrl!,
+                      imageUrl: _selectedVariant!.imageUrl!,
                       product: ProductDto(
-                          price: product.price!,
+                          price: _selectedVariant!.price!,
                           name: widget.product.name,
-                          id: product.id),
+                          id: _selectedVariant!.id),
                       initialIsFavorite: _isFavorite,
                       onFavoriteToggle: _handleFavoriteToggle,
                     ),
@@ -198,10 +209,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         children: [
                           ProductInfoSection(
                             name: widget.product.name ?? '',
-                            price: product.price!,
+                            price: _selectedVariant!.price!,
                             rating: 0,
                             reviewCount: 0,
-                            productId: product.id!,
+                            productId: _selectedVariant!.id!,
                           ),
                           const SizedBox(height: 16),
                           // const Divider(thickness: 0.4),
@@ -212,16 +223,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           const Divider(thickness: 0.15),
                           const SizedBox(height: 16),
                           SizeSelector(
-                            availableSizes: product.sizes,
+                            availableSizes: _selectedVariant!.sizes,
                             selectedSize: _selectedSize,
                             onSizeSelected: _handleSizeSelected,
                           ),
                           const SizedBox(height: 24),
-                          ColorSelector(
-                            availableColors: availableColorValues,
-                            selectedColor: _selectedColor,
-                            onColorSelected: _handleColorSelected,
-                            initialColorName: initialColorName,
+                         ColorSelector(
+                            variants: _productVariants,
+                            selectedVariant: _selectedVariant,
+                            onVariantSelected: _handleVariantSelected,
                           ),
                           const SizedBox(height: 16),
                           const Divider(thickness: 0.1),
@@ -245,25 +255,28 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
       bottomSheet: BlocBuilder<ProductBloc, ProductState>(
         builder: (context, state) {
-          if (state is ProductLoading) {
-            return const LoadingBottomSheet();
-          } else if (state is ProductVariantsLoaded) {
+           if (_selectedVariant == null) {
+            return const LoadingBottomSheet(); // Or a disabled AddToCartSection
+          }
             return AddToCartSection(
-              onAddToCart: () => _handleAddToCart(ProductDto(
-                  price: state.variants.first.price!,
-                  name: widget.product.name,
-                  stockQuantity: state.variants.first.stockQuantity,
-                  description: widget.product.description,
-                  categoryNames: widget.product.categoryNames,
-                  sizes: widget.product.sizes,
-                  file: state.variants.first.file,
-                  imageUrl: state.variants.first.imageUrl,
-                  id: state.variants.first.id)),
+              onAddToCart: () {
+              // _selectedVariant is already confirmed not-null here
+              _handleAddToCart(ProductDto(
+                price: _selectedVariant!.price ?? 0,
+                name: widget.product.name,
+                stockQuantity: _selectedVariant!.stockQuantity,
+                description: widget.product.description,
+                categoryNames: widget.product.categoryNames,
+                sizes: _selectedVariant!.sizes,
+                file: _selectedVariant!.file,
+                imageUrl: _selectedVariant!.imageUrl,
+                id: _selectedVariant!.id));
+            },
               canAddToCart: canAddToCart,
             );
           }
-          return const LoadingBottomSheet();
-        },
+         // return const LoadingBottomSheet();
+        //},
       ),
     );
   }

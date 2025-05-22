@@ -21,7 +21,7 @@ void main() async {
 
   final authService = await AuthService.create();
   final token = await authService.getAccessToken(); // Kept for potential debug or initial checks
-  final refresh = authService.getRefreshToken(); // Kept for potential debug
+  final refresh = authService.getAccessToken(); // Kept for potential debug
 
   debugPrint('Refresh token: $refresh');
   debugPrint('Token: $token');

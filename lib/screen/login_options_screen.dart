@@ -32,20 +32,18 @@ class LoginOptionsScreen extends StatelessWidget {
           } else if (state is Authenticated) {
             // Navigate to home screen on successful authentication
             context.read<AuthBloc>().add(CheckToken());
-           
-          }else if(state is AuthenticatedWithToken ){
+          } else if (state is AuthenticatedWithToken) {
             // Set the token in the ApiClient
             apiClient.setAuthToken(state.token);
             // Navigate to HomeScreen
-             ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                   builder: (context) =>
                       const HomeScreen()), // Navigate to HomeScreen
               (Route<dynamic> route) => false, // Remove all previous routes
             );
-          }
-           else if (state is AuthError) {
+          } else if (state is AuthError) {
             // Show error message
             debugPrint('AuthError: ${state.message}');
             ScaffoldMessenger.of(context)
@@ -90,6 +88,10 @@ class LoginOptionsScreen extends StatelessWidget {
                   //             color: Colors.grey.shade300, thickness: 0.4)),
                   //   ],
                   // ),
+                   const Spacer(),
+                  Image.asset(
+                    'images/Add to Cart-cuate 1.png',
+                  ),
                   const SizedBox(height: 32),
 
                   CustomButton(

@@ -1,76 +1,100 @@
 import 'package:flutter/material.dart';
+import 'package:lnFoot_api/api.dart'; // Import ProductVariantDto
 
 class ColorSelector extends StatelessWidget {
-  final List<Color> availableColors;
-  final Color? selectedColor;
-  final ValueChanged<Color?> onColorSelected;
-  final String initialColorName; 
+  final List<ProductVariantDto> variants;
+  final ProductVariantDto? selectedVariant;
+  final Function(ProductVariantDto variant) onVariantSelected;
 
   const ColorSelector({
     super.key,
-    required this.availableColors,
-    required this.selectedColor,
-    required this.onColorSelected,
-    this.initialColorName = '', // Default empty
-  }) ;
+    required this.variants,
+    required this.selectedVariant,
+    required this.onVariantSelected,
+  });
 
-  Color _getCheckmarkColor(Color backgroundColor) {
-    return ThemeData.estimateBrightnessForColor(backgroundColor) == Brightness.dark
-        ? Colors.white
-        : Colors.black;
+  Color _getColorFromCode(String? code) {
+    if (code == null) return Colors.grey; // Default
+    String lowerCode = code.toLowerCase();
+    if (lowerCode.startsWith('#')) {
+      // Ensure the hex code is valid (e.g., #RRGGBB or #AARRGGBB)
+      if (lowerCode.length == 7) { // #RRGGBB
+        return Color(int.parse(lowerCode.substring(1), radix: 16) + 0xFF000000);
+      } else if (lowerCode.length == 9) { // #AARRGGBB
+        return Color(int.parse(lowerCode.substring(1), radix: 16));
+      }
+    }
+    switch (lowerCode) {
+      case 'rouge':
+      case 'red':
+        return Colors.red;
+      case 'noir':
+      case 'black':
+        return Colors.black;
+      case 'bleu':
+      case 'blue':
+        return Colors.blue;
+      case 'vert':
+      case 'green':
+        return Colors.green;
+      case 'blanc':
+      case 'white':
+        return Colors.white;
+      case 'rose':
+      case 'pink':
+        return Colors.pink;
+      case 'violet':
+      case 'purple':
+        return Colors.purple;
+      // Add more known color names
+      default:
+        return Colors.grey; // Fallback for unknown names or invalid hex
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Consider using theme styles from app_theme.dart
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Selectionner couleur: ${selectedColor != null ? '' : initialColorName}', // Needs logic to map Color to Name
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87, // Use theme color
-          ),
+          'Couleur',
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold) ??
+                 const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 8),
         Wrap(
-          spacing: 12.0, // Horizontal space between circles
-          runSpacing: 8.0, // Vertical space between lines
-          children: availableColors.map((color) {
-            final bool isSelected = selectedColor == color;
+          spacing: 8.0,
+          runSpacing: 8.0,
+          children: variants.map((variant) {
+            final color = _getColorFromCode(variant.colorCode);
+            final bool isSelected = selectedVariant?.id == variant.id;
+
             return GestureDetector(
-              onTap: () {
-                onColorSelected(isSelected ? null : color);
-              },
+              onTap: () => onVariantSelected(variant),
               child: Container(
-                width: 32, // Adjust size as needed
+                width: 32,
                 height: 32,
                 decoration: BoxDecoration(
                   color: color,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isSelected ? Theme.of(context).primaryColor : Colors.grey[300]!,
-                    width: isSelected ? 2.5 : 1.0,
+                    color: isSelected ? Theme.of(context).primaryColor : Colors.transparent,
+                    width: 2,
                   ),
-                  boxShadow: isSelected ? [
+                  boxShadow: [
                     BoxShadow(
-                      color: Theme.of(context).primaryColor.withOpacity(0.5),
-                      blurRadius: 4,
-                      offset: Offset(0, 2),
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 1,
+                      blurRadius: 2,
                     )
-                  ] : null,
+                  ],
                 ),
-                child: isSelected
-                    ? Center(
-                        child: Icon(
-                          Icons.check,
-                          color: _getCheckmarkColor(color),
-                          size: 18,
-                        ),
-                      )
-                    : null,
+                child: isSelected && color.computeLuminance() > 0.5
+                    ? Icon(Icons.check, color: Colors.black, size: 18)
+                    : isSelected
+                        ? Icon(Icons.check, color: Colors.white, size: 18)
+                        : null,
               ),
             );
           }).toList(),

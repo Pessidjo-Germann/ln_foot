@@ -88,6 +88,7 @@ class _HomeContentState extends State<HomeContent>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+   late TextEditingController _searchController; 
   @override
   void initState() {
     super.initState();
@@ -107,14 +108,14 @@ class _HomeContentState extends State<HomeContent>
     // Add optional parameter
     context
         .read<ProductBloc>()
-        .add(LoadAllProducts(forceRefresh: forceRefresh));
+        .add(LoadAllProducts());
   }
 
   void _loadCategories({bool forceRefresh = false}) {
     // Add optional parameter
     context
         .read<CategoryBloc>()
-        .add(LoadAllCategories(forceRefresh: forceRefresh));
+        .add(LoadAllCategories());
   }
 
   void _loadHeadings({bool forceRefresh = false}) {
