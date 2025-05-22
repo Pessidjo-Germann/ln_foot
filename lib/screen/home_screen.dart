@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_foot/bloc/cart/cart_bloc.dart';
 import 'package:ln_foot/bloc/category/category_bloc.dart';
 import 'package:ln_foot/bloc/product/product_bloc.dart';
 import 'package:ln_foot/bloc/heading/heading_bloc.dart'; // Import HeadingBloc
 import 'package:ln_foot/screen/cart_screen.dart';
 import 'package:ln_foot/screen/profile_screen.dart';
-import 'package:ln_foot/service.dart';
 import 'package:ln_foot/widgets/home/home_app_bar.dart';
 import 'package:ln_foot/widgets/home/search_bar_widget.dart';
 import 'package:ln_foot/widgets/home/categories_section.dart'; // Import the Categories Section
 import 'package:ln_foot/widgets/home/headings_section.dart'; // Add this import
-import 'package:ln_foot/widgets/home/promo_banner.dart'; // Import the Promo Banner
+// import 'package:ln_foot/widgets/home/promo_banner.dart'; // Import the Promo Banner - REMOVED
 import 'package:ln_foot/widgets/home/special_offers_section.dart'; // Import the Special Offers Section
 import 'package:ln_foot/theme/app_theme.dart';
 
 import 'saved_items_screen.dart';
-import 'search_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -108,15 +105,22 @@ class _HomeContentState extends State<HomeContent>
     super.dispose();
   }
 
-  void _loadProducts({bool forceRefresh = false}) { // Add optional parameter
-    context.read<ProductBloc>().add(LoadAllProducts(forceRefresh: forceRefresh));
+  void _loadProducts({bool forceRefresh = false}) {
+    // Add optional parameter
+    context
+        .read<ProductBloc>()
+        .add(LoadAllProducts(forceRefresh: forceRefresh));
   }
 
-  void _loadCategories({bool forceRefresh = false}) { // Add optional parameter
-    context.read<CategoryBloc>().add(LoadAllCategories(forceRefresh: forceRefresh));
+  void _loadCategories({bool forceRefresh = false}) {
+    // Add optional parameter
+    context
+        .read<CategoryBloc>()
+        .add(LoadAllCategories(forceRefresh: forceRefresh));
   }
 
-  void _loadHeadings({bool forceRefresh = false}) { // Define _loadHeadings
+  void _loadHeadings({bool forceRefresh = false}) {
+    // Define _loadHeadings
     context.read<HeadingBloc>().add(LoadHeadings(forceRefresh: forceRefresh));
   }
 
@@ -129,7 +133,8 @@ class _HomeContentState extends State<HomeContent>
         onRefresh: () async {
           _loadProducts(forceRefresh: true); // Pass true here
           _loadCategories(forceRefresh: true); // Pass true here
-          _loadHeadings(forceRefresh: true); // Call _loadHeadings with forceRefresh: true
+          _loadHeadings(
+              forceRefresh: true); // Call _loadHeadings with forceRefresh: true
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -139,12 +144,13 @@ class _HomeContentState extends State<HomeContent>
               SearchBarWidget(
                 controller: _searchController,
                 isClickable: false, // Important change
-                isSearching: _searchController.text.isNotEmpty, // Reflects if there's text
+                isSearching: _searchController
+                    .text.isNotEmpty, // Reflects if there's text
                 onChanged: (query) {
                   context.read<ProductBloc>().add(SearchProducts(query));
-                  // We need to call setState to rebuild the SearchBarWidget 
+                  // We need to call setState to rebuild the SearchBarWidget
                   // itself to show/hide the clear button based on text input
-                  setState(() {}); 
+                  setState(() {});
                 },
                 onClear: () {
                   _searchController.clear();
@@ -157,9 +163,9 @@ class _HomeContentState extends State<HomeContent>
               const SizedBox(height: 8),
               CategoriesSection(),
               const SizedBox(height: 16), // Add some spacing if needed
-              const HeadingsSection(), // **** Add this line ****
+              const HeadingsSection(), // This will now act as the promo banner
               const SizedBox(height: 16), // Add some spacing if needed
-              const PromoBanner(),
+              // const PromoBanner(), // REMOVED
               const SpecialOffersSection(),
               const SizedBox(height: 24),
             ],
