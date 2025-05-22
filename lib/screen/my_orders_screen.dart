@@ -11,7 +11,7 @@ import '../widgets/my_orders/order_status_tabs.dart';
 import '../widgets/my_orders/order_list.dart';
 import '../widgets/my_orders/empty_orders_view.dart';
 import '../widgets/my_orders/review_bottom_sheet.dart';
-
+import '../model/order_status.dart';
 class MyOrdersScreen extends StatefulWidget {
   const MyOrdersScreen({super.key});
 
@@ -147,7 +147,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
   // Helper to build the content for each tab (corrigé pour List<Map<String, dynamic>>)
   Widget _buildTabView(List<Map<String, dynamic>> orders, OrderStatus status) { // Parameter type changed
     if (orders.isEmpty) {
-      return EmptyOrdersView(status: status); // Assuming EmptyOrdersView is compatible or will be updated
+      return Center(child: Text("Pas de commande pour le moment"),); // Assuming EmptyOrdersView is compatible or will be updated
     } else {
       return OrderList(
         orders: orders,

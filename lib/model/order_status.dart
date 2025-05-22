@@ -10,9 +10,9 @@ extension OrderStatusExtension on OrderStatus {
   String get displayName {
     switch (this) {
       case OrderStatus.ongoing:
-        return "En cours";
+        return "pending";
       case OrderStatus.completed:
-        return "Complete";
+        return "finished";
       case OrderStatus.review:
         return "Revoir";
       default:
