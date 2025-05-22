@@ -71,27 +71,6 @@ class LoginOptionsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SocialButton(
-                    icon: Image.asset('images/google icon.png', height: 20.0),
-                    text:
-                        'Se connecter avec Google', // Changed text slightly for clarity
-                    onPressed: () {
-                      // Dispatch LoginRequested event when Google button is pressed
-                      context.read<AuthBloc>().add(LoginRequested());
-                    },
-                  ),
-                  const SizedBox(height: 16),
-
-// Apple Button
-                  SocialButton(
-                    icon: const Icon(Icons.apple, color: Colors.black),
-                    text: 'S\'inscrire avec Apple',
-                    onPressed: () {
-                      print('Apple Sign Up pressed');
-                    },
-                  ),
-                  const SizedBox(height: 32),
-
                   // Divider with "Ou"
                   Row(
                     children: [
@@ -116,10 +95,7 @@ class LoginOptionsScreen extends StatelessWidget {
                   CustomButton(
                     text: 'Connexion par mail',
                     onPressed: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //       builder: (context) => const EmailLoginScreen()),
-                      // );
+                      context.read<AuthBloc>().add(LoginRequested());
                     },
                   ),
                   const Spacer(),
