@@ -107,14 +107,23 @@ class OrderConfirmationScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start, // Align items to the start if text wraps
         children: <Widget>[
-          Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
           Text(
-            value,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: isAmount ? FontWeight.bold : FontWeight.normal,
-                  color: isAmount ? kAppOrangeColor : null, // Highlight amount
-                ),
+            label,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(width: 8), // Add some spacing between label and value
+          Expanded( // Wrap the value Text with Expanded
+            child: Text(
+              value,
+              textAlign: TextAlign.right, // Keep value right-aligned
+              softWrap: true, // Ensure text wraps
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: isAmount ? FontWeight.bold : FontWeight.normal,
+                    color: isAmount ? kAppOrangeColor : null,
+                  ),
+            ),
           ),
         ],
       ),
