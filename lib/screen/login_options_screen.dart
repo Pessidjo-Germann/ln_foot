@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'; // Import flutter_bloc
 import 'package:lnFoot_api/api.dart';
 import 'package:ln_foot/bloc/auth/auth_bloc.dart'; // Import AuthBloc
-import 'package:ln_foot/screen/email_login_screen.dart';
+
 import 'package:ln_foot/screen/home_screen.dart'; // Import HomeScreen for navigation
-import 'package:ln_foot/screen/signup_options_screen.dart';
+
 import 'package:ln_foot/theme/app_theme.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
-import 'package:ln_foot/widgets/social_button.dart';
-
+ 
 class LoginOptionsScreen extends StatelessWidget {
   final ApiClient apiClient;
   const LoginOptionsScreen({super.key, required this.apiClient});
@@ -72,25 +71,8 @@ class LoginOptionsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Divider with "Ou"
-                  Row(
-                    children: [
-                      Expanded(
-                          child: Divider(
-                              color: Colors.grey.shade300, thickness: 0.4)),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text(
-                          'Ou',
-                          style: textTheme.bodyMedium
-                              ?.copyWith(color: Colors.grey.shade600),
-                        ),
-                      ),
-                      Expanded(
-                          child: Divider(
-                              color: Colors.grey.shade300, thickness: 0.4)),
-                    ],
-                  ),
-                  const SizedBox(height: 32),
+             
+                  const SizedBox(height: 100),
 
                   CustomButton(
                     text: 'Connexion par mail',
@@ -100,35 +82,7 @@ class LoginOptionsScreen extends StatelessWidget {
                   ),
                   const Spacer(),
 
-                  // Sign Up Text
-                  Center(
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Vous n\'avez pas de compte? ',
-                        style: textTheme.bodyMedium
-                            ?.copyWith(color: Colors.grey.shade600),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Inscrivez-vous',
-                            style: const TextStyle(
-                              color: kAppOrangeColor, // Use theme color
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                // Navigator.of(context).push(
-                                //   MaterialPageRoute(
-                                //       builder: (context) =>
-                                //           const SignupOptionsScreen()),
-                                // );
-                              },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+                 
                 ],
               ),
             ),
