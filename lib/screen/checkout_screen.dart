@@ -120,10 +120,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
             // Use OrderSummarySection Widget
             OrderSummarySection(
-              subtotal: widget.orderDto.orderItems.first.price!, // Example data
-              shippingFee: 20.00, // Example data
-              discount: 10.00, // Example data
-              total: 180.99, // Example data
+             orderItems: widget.orderDto.orderItems,// Example data
             ),
             const SizedBox(height: 30), // Space before bottom button
           ],

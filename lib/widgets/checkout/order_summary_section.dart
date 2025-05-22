@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // For currency formatting
+import 'package:intl/intl.dart';
+import 'package:lnFoot_api/api.dart'; // For currency formatting
 
 class OrderSummarySection extends StatelessWidget {
-  final double subtotal;
-  final double shippingFee;
-  final double discount;
-  final double total;
+  final List<OrderItemDto> orderItems;
+  final double shippingFee = 0; // Frais de livraison gratuits par défaut
 
   const OrderSummarySection({
     super.key,
-    required this.subtotal,
-    required this.shippingFee,
-    required this.discount,
-    required this.total,
+    required this.orderItems,
   });
+
+  double get subtotal {
+    return orderItems.fold(0, (sum, item) => sum + (item.price ?? 0) * (item.quantity ?? 1));
+  }
+
+  double get total => subtotal + shippingFee;
 
   // Helper to format currency (adjust locale and symbol as needed)
   String _formatCurrency(double amount) {
@@ -34,10 +36,9 @@ class OrderSummarySection extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         // Summary Rows
-        _buildSummaryRow(context, 'Total', _formatCurrency(subtotal)),
+        _buildSummaryRow(context, 'Sous-total', _formatCurrency(subtotal)),
         _buildSummaryRow(context, 'Frais de livraison', _formatCurrency(shippingFee)),
-        _buildSummaryRow(context, 'Rabais', '-${_formatCurrency(discount)}'), // Show discount as negative
-        const Divider(height: 24,thickness: 0.4, color: Colors.black12),
+        const Divider(height: 24, thickness: 0.4, color: Colors.black12),
         _buildSummaryRow(context, 'Total', _formatCurrency(total), isTotal: true),
       ],
     );
