@@ -18,7 +18,7 @@ class OrderSummarySection extends StatelessWidget {
   // Helper to format currency (adjust locale and symbol as needed)
   String _formatCurrency(double amount) {
     // Consider making the locale and symbol configurable or get from app settings
-    final format = NumberFormat.currency(locale: 'fr_FR', symbol: '\$', decimalDigits: 2);
+    final format = NumberFormat.currency(locale: 'fr_FR', symbol: 'FCFA', decimalDigits: 2);
     return format.format(amount);
   }
 

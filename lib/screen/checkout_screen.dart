@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ln_foot/screen/add_card_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lnFoot_api/api.dart';
+import 'package:ln_foot/bloc/order/order_bloc.dart';
+
+import 'package:ln_foot/user_session_manager.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
 // Import the newly created widgets
@@ -9,13 +13,47 @@ import 'package:ln_foot/widgets/checkout/order_summary_section.dart';
 import 'package:ln_foot/widgets/checkout/payment_success_dialog.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  const CheckoutScreen({super.key});
+  final OrderDto orderDto;
+  const CheckoutScreen({super.key, required this.orderDto});
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadUserInfo();
+  }
+
+  Map<String, dynamic> _userInfo = {};
+
+  Future<void> _loadUserInfo() async {
+    final data = await UserSessionManager.getUserInfo();
+    setState(() {
+      _userInfo = data!;
+    });
+  }
+
+  // Default selection
+  bool _initialized = false;
+  bool isLoading = false;
+  String phone = '';
+  String nom = '';
+  String email = '';
+  String address = '';
+  void _initUserData(Map<String, dynamic> user) {
+    if (_initialized) return;
+    nom = user['name'] ?? '';
+    email = user['email'] ?? '';
+
+    phone = user['phone_number'] ?? '';
+
+    _initialized = true;
+  }
+
   void _showSuccessDialog() {
     showDialog(
       context: context,
@@ -34,17 +72,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Replace placeholders with actual widgets
+    _initUserData(_userInfo);
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Vérification',
         onBackButtonPressed: Navigator.of(context).pop,
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_none_outlined), // Placeholder icon
-            onPressed: () {
-          
-            },
+            icon: const Icon(
+                Icons.notifications_none_outlined), // Placeholder icon
+            onPressed: () {},
           ),
         ],
       ),
@@ -55,25 +92,35 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           children: [
             // Use AddressSection Widget
             AddressSection(
-              addressType: 'Maison', // Example data
-              fullAddress: '925 S Chugach St #APT 10, Alaska 99645', // Example data
+              name: nom,
+              email: email,
+              address: address,
               onChangePressed: () {
-                // TODO: Implement address change logic
-                print("Change address pressed");
+                // Cette fonction n'est plus nécessaire mais conservée pour la rétrocompatibilité
+              },
+              onAddressUpdated: (newName, newEmail, newAddress) {
+                setState(() {
+                  nom = newName;
+                  email = newEmail;
+                  address = newAddress;
+                });
               },
             ),
             const SizedBox(height: 24),
 
             // Use PaymentMethodSection Widget
             PaymentMethodSection(
-              onEditCardPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>const AddCardScreen()),
-              // TODO: Pass actual payment methods, selected card details etc.
-            )),
+              onPhoneUpdated: (phone) {
+                setState(() {
+                  this.phone = phone;
+                });
+              },
+            ),
             const SizedBox(height: 24),
 
             // Use OrderSummarySection Widget
             OrderSummarySection(
-              subtotal: 170.75, // Example data
+              subtotal: widget.orderDto.orderItems.first.price!, // Example data
               shippingFee: 20.00, // Example data
               discount: 10.00, // Example data
               total: 180.99, // Example data
@@ -82,11 +129,46 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: CustomButton( // Using existing CustomButton
-          text: 'Passer la commande',
-          onPressed: _showSuccessDialog, // Show dialog on press
+      bottomNavigationBar: BlocListener<OrderBloc, OrderState>(
+        listener: (context, state) {
+          if (state is OrderConfirmed) {
+            setState(() {
+              isLoading = false;
+            });
+            _showSuccessDialog();
+          } else if (state is OrderError) {
+            setState(() {
+              isLoading = false;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          } else if (state is OrderLoading) {
+            setState(() {
+              isLoading = true;
+            });
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: CustomButton(
+            text: 'Passer la commande',
+            isLoading: isLoading,
+            onPressed: () {
+              debugPrint("""
+                  OrderDto: ${widget.orderDto.id!}
+                  Customer: ${Customer(name: nom, phone: "+237$phone", email: email).toJson()}
+                  """);
+
+              context.read<OrderBloc>().add(ConfirmOrder(
+                  orderId: widget.orderDto.id!,
+                  customer:
+                      Customer(name: nom, phone: "+237$phone", email: email)));
+            },
+          ),
         ),
       ),
     );

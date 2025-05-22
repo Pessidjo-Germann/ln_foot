@@ -38,7 +38,6 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
     final data = await UserSessionManager.getUserInfo();
     debugPrint('Données utilisateur récupérées : $data');
     if (!mounted) return;
-    
 
     if (data != null && data.containsKey('sub')) {
       final userId = data['sub'] as String?;
@@ -67,17 +66,17 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
   List<Map<String, dynamic>> _mapOrders(
       List<OrderDto> orders, OrderStatus status) {
     return orders.map((order) {
+      debugPrint('Order ID: ${order..orderItems.first.toJson()}');
       final item = order.orderItems.isNotEmpty ? order.orderItems.first : null;
       return {
         'id': order.id,
         'image': item != null
             ? 'images/product1.png'
             : null, // À adapter si tu as l'URL dans OrderItemDto
-        'name':
-            'Produit', // À adapter selon ton modèle
+        'name': order.status, // À adapter selon ton modèle
         'size': item?.size != null ? 'Taille: ${item!.size}' : '',
-        'price': 'Prix inconnu', // À adapter si tu as le prix
-        'status': status.name,
+        'price': item!.price.toString(), // À adapter si tu as le prix
+        'status': order.status,
         'reviewed': false, // À adapter si tu as cette info
       };
     }).toList();
@@ -107,6 +106,8 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
             return const Center(child: CircularProgressIndicator());
           } else if (state is OrdersLoaded) {
             // Ici, tu dois filtrer selon l'onglet sélectionné
+            debugPrint('Nombre de commandes: ${state.orders.length}');
+            debugPrint('Commande');
             final ongoing = _mapOrders(state.orders, OrderStatus.ongoing);
             final completed = _mapOrders(state.orders, OrderStatus.completed);
             final review = _mapOrders(state.orders, OrderStatus.review);

@@ -84,13 +84,16 @@ class _CartScreenState extends State<CartScreen> {
           return BlocListener<OrderBloc, OrderState>(
             listener: (context, state) {
               if (state is OrderCreated) {
-                Navigator.pushReplacement(
+                //Todo: remove item from cart and remplace 
+                context.read<CartBloc>().add(RemoveFromCart(state.order.orderItems.first.productVariantId!));
+                Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const CheckoutScreen()));
+                        builder: (context) =>  CheckoutScreen(orderDto: state.order)));
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text('Commande créée avec succès'),
                     backgroundColor: Colors.green));
+
               } else if (state is OrderError) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(state.message), backgroundColor: Colors.red));

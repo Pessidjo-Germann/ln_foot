@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:ln_foot/theme/app_theme.dart';
- 
-class CustomButton extends StatelessWidget {
+
+class CustomButton extends StatefulWidget {
   final String text;
   final VoidCallback onPressed;
   final bool isOutlined;
-  final Widget? icon; // Keep icon optional
-  final Color? buttonColor; // Nouveau paramètre pour la couleur du bouton
-  final Color? textColor; // Nouveau paramètre pour la couleur du texte
-
-  // Removed static color constant - should come from theme
+  final Widget? icon;
+  final Color? buttonColor;
+  final Color? textColor;
+  final bool isLoading;
 
   const CustomButton({
     super.key,
@@ -19,13 +18,18 @@ class CustomButton extends StatelessWidget {
     this.icon,
     this.buttonColor,
     this.textColor,
+    this.isLoading = false,
   });
 
+  @override
+  State<CustomButton> createState() => _CustomButtonState();
+}
+
+class _CustomButtonState extends State<CustomButton> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // Define base styles using theme properties, allowing overrides from specific themes
     final ButtonStyle defaultStyle = TextButton.styleFrom(
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
       shape: RoundedRectangleBorder(
@@ -34,55 +38,61 @@ class CustomButton extends StatelessWidget {
       textStyle: theme.textTheme.titleMedium?.copyWith(
         fontWeight: FontWeight.bold,
       ),
-      foregroundColor: textColor,
+      foregroundColor: widget.textColor,
     );
 
-    if (isOutlined) {
+    Widget buttonChild = widget.isLoading
+        ? SizedBox(
+            height: 20,
+            width: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                widget.isOutlined ? (widget.buttonColor ?? kAppOrangeColor) : Colors.white,
+              ),
+            ),
+          )
+        : widget.icon != null
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  widget.icon!,
+                  const SizedBox(width: 8),
+                  Text(widget.text),
+                ],
+              )
+            : Text(widget.text);
+
+    if (widget.isOutlined) {
       final outlinedStyle = theme.outlinedButtonTheme.style ??
           OutlinedButton.styleFrom(
-             //  foregroundColor: textColor ?? kAppOrangeColor,
-              // side: BorderSide(color: buttonColor ?? kAppOrangeColor),
-              );
+            side: BorderSide(color: widget.buttonColor ?? kAppOrangeColor),
+          );
 
       final effectiveStyle = defaultStyle.merge(outlinedStyle);
 
-      return icon != null
-          ? OutlinedButton.icon(
-              icon: icon!,
-              label: Text(text),
-              onPressed: onPressed,
-              style: effectiveStyle,
-            )
-          : OutlinedButton(
-              onPressed: onPressed,
-              style: effectiveStyle,
-              child: Text(text),
-            );
+      return OutlinedButton(
+        onPressed: widget.isLoading ? null : widget.onPressed,
+        style: effectiveStyle,
+        child: buttonChild,
+      );
     } else {
       final elevatedStyle = theme.elevatedButtonTheme.style ??
           ElevatedButton.styleFrom(
-               backgroundColor: buttonColor ?? kAppOrangeColor,
-              //  foregroundColor: textColor ?? Colors.white,
-              );
+            backgroundColor: widget.buttonColor ?? kAppOrangeColor,
+          );
 
       final effectiveStyle = defaultStyle.merge(elevatedStyle);
 
-      return icon != null
-          ? ElevatedButton.icon(
-              icon: icon!,
-              label: Text(text),
-              onPressed: onPressed,
-              style: effectiveStyle,
-            )
-          : ElevatedButton(
-              onPressed: onPressed,
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                  buttonColor?? kAppOrangeColor,
-                  ),
-              ),
-              child: Text(text),
-            );
+      return ElevatedButton(
+        onPressed: widget.isLoading ? null : widget.onPressed,
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(
+            widget.buttonColor ?? kAppOrangeColor,
+          ),
+        ),
+        child: buttonChild,
+      );
     }
   }
 }

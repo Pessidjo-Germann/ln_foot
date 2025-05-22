@@ -65,7 +65,7 @@ class AuthService {
     final token = _keycloak.accessToken;
     final storedToken = await _secureStorage.read(key: 'access_token');
 
-    return token;
+    return token ?? storedToken;
   }
 
   String? getRefreshToken() => _keycloak.refreshToken;

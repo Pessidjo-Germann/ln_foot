@@ -31,6 +31,12 @@ class OrderLoaded extends OrderState {
   List<Object?> get props => [order];
 }
 
+class OrderConfirmed extends OrderState {
+  final PaymentResponseDto paymentResponse;
+
+  const OrderConfirmed(this.paymentResponse);
+}
+
 // State for successful order creation
 class OrderCreated extends OrderState {
   final OrderDto order;

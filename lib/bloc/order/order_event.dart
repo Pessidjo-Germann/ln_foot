@@ -38,6 +38,13 @@ class LoadOrderById extends OrderEvent {
   List<Object?> get props => [orderId];
 }
 
+class ConfirmOrder extends OrderEvent {
+  final String orderId;
+  final Customer customer;
+
+  const ConfirmOrder({required this.orderId, required this.customer});
+}
+
 // Event to create a new order
 class CreateOrder extends OrderEvent {
   final OrderDto orderData;

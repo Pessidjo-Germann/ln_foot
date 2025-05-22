@@ -17,6 +17,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<CreateOrder>(_onCreateOrder);
     on<UpdateOrder>(_onUpdateOrder);
     on<DeleteOrder>(_onDeleteOrder);
+    on<ConfirmOrder>(_onConfirmOrder);
   }
 
   Future<void> _onLoadAllOrders(
@@ -43,6 +44,20 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(OrderError(ErrorMessages.orderUpdateFailed));
     } catch (e) {
       emit(OrderError(ErrorMessages.unknownError));
+    }
+  }
+
+  Future<void> _onConfirmOrder(
+      ConfirmOrder event, Emitter<OrderState> emit) async {
+    emit(OrderLoading());
+    try {
+      final paymentResponse =
+          await orderControllerApi.comfirmOrder(event.orderId, event.customer);
+      emit(OrderConfirmed(paymentResponse!));
+    } on ApiException catch (e) {
+      emit(OrderError(ErrorMessages.orderUpdateFailed));
+    } catch (e) {
+      emit(OrderError(ErrorMessages.orderUpdateFailed));
     }
   }
 
