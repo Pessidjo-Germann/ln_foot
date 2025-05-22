@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ class AuthService {
       // Enregistrement du token dans le stockage sécurisé
       final userInfo = await _keycloak.getUserInfo();
       debugPrint("les INDOE D SSD  sont : $userInfo");
+       scheduleTokenRefresh(_keycloak.tokenResponse!.accessTokenExpirationDateTime?.millisecond ?? 1200 , _keycloak.refreshToken!);
       if (userInfo != null) {
         await UserSessionManager.saveAuthenticatedUserData(
           accessToken: token!,
@@ -53,6 +55,32 @@ class AuthService {
     }
     return result;
   }
+  void scheduleTokenRefresh(int expiresInSeconds, String refreshToken) {
+  final refreshDuration = Duration(seconds: expiresInSeconds - 60); // refresh 1 min before expiry
+
+  Timer(refreshDuration, () async {
+    try {
+        await _keycloak.updateToken(refreshDuration);
+      print('Token refreshed successfully');
+
+      final newAccessToken = _keycloak.refreshToken;
+      final newRefreshToken = _keycloak.refreshToken; // This might be updated by the wrapper
+      
+    //  if (newAccessToken != null && newAccessToken.isNotEmpty) 
+        await UserSessionManager.updateTokens(
+          newAccessToken: newAccessToken??'',
+          newRefreshToken: newRefreshToken, // Pass along the new refresh token, if any
+        );
+
+      // Schedule the next refresh
+       scheduleTokenRefresh(_keycloak.tokenResponse!.accessTokenExpirationDateTime?.millisecond ?? 1200 , _keycloak.refreshToken!);
+    } catch (e) {
+      print('Failed to refresh token: $e');
+      // Possibly re-login or redirect to login page
+    }
+  });
+}
+
 
   Future<bool> logout() async {
     // final result = await _keycloak.logout();
@@ -83,8 +111,9 @@ class AuthService {
       // The duration is how long the new token should be valid for, if the server supports it.
       // Keycloak's default is often shorter, but the wrapper might use this for its own expiry checks.
       await _keycloak.updateToken(const Duration(minutes: 50)); 
-      
-      final newAccessToken = _keycloak.accessToken;
+       
+      debugPrint('Token refresh via updateToken completed ${_keycloak.accessToken} ${_keycloak.refreshToken}.');
+      final newAccessToken = _keycloak.refreshToken;
       final newRefreshToken = _keycloak.refreshToken; // This might be updated by the wrapper
 
       if (newAccessToken != null && newAccessToken.isNotEmpty) {
