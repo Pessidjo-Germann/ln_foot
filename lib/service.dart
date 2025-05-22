@@ -77,58 +77,39 @@ class AuthService {
   }
 
   Future<bool> refreshToken() async {
-    final String? oldRefreshToken = await UserSessionManager.getRefreshToken();
-    if (oldRefreshToken == null) {
-      debugPrint("No refresh token found in session manager.");
-      return false;
-    }
+    try {
+      debugPrint('Attempting to refresh token using keycloak_wrapper.updateToken()...');
+      // Attempt to update the token. The KeycloakWrapper should handle the refresh token internally.
+      // The duration is how long the new token should be valid for, if the server supports it.
+      // Keycloak's default is often shorter, but the wrapper might use this for its own expiry checks.
+      await _keycloak.updateToken(const Duration(minutes: 50)); 
+      
+      final newAccessToken = _keycloak.accessToken;
+      final newRefreshToken = _keycloak.refreshToken; // This might be updated by the wrapper
 
-    final response = await http.post(
-      Uri.parse(
-          'https://lnfoot-auth.hublots.co/realms/lnfoot/protocol/openid-connect/token'),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: {
-        'grant_type': 'refresh_token',
-        'client_id': 'ln-foot-01',
-        'refresh_token': oldRefreshToken,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> nouveauxTokens = json.decode(response.body);
-      final String? newAccessToken = nouveauxTokens['access_token'] as String?;
-      final String? newRefreshToken =
-          nouveauxTokens['refresh_token'] as String?;
-
-      if (newAccessToken != null) {
-        try {
-          await UserSessionManager.updateTokens(
-            newAccessToken: newAccessToken,
-            newRefreshToken: newRefreshToken, // Pass null if not present, UserSessionManager handles it
-          );
-          debugPrint("Tokens updated successfully via UserSessionManager.");
-          return true;
-        } catch (e) {
-          debugPrint("Error updating tokens via UserSessionManager: $e");
-          return false;
-        }
+      if (newAccessToken != null && newAccessToken.isNotEmpty) {
+        await UserSessionManager.updateTokens(
+          newAccessToken: newAccessToken,
+          newRefreshToken: newRefreshToken, // Pass along the new refresh token, if any
+        );
+        debugPrint('Token refreshed and updated in UserSessionManager successfully.');
+        return true;
       } else {
-        debugPrint("New access token is null in Keycloak response.");
+        debugPrint('Token refresh via updateToken seemed to succeed, but new access token is null or empty.');
+        // This case might indicate an issue with the wrapper or Keycloak's response after updateToken.
+        // Forcing a logout as it's an unexpected state post-refresh.
+        await logout();
         return false;
       }
-    } else {
-      debugPrint(
-          "Failed to refresh token. Status code: ${response.statusCode}, Body: ${response.body}");
-      try {
-        final Map<String, dynamic> decodedBody = json.decode(response.body);
-        if (decodedBody.containsKey('error') && decodedBody['error'] == 'invalid_grant') {
-          debugPrint("Refresh token failed due to 'invalid_grant'. User is being logged out.");
-          await logout();
-        }
-      } catch (e) {
-        // If response body is not valid JSON or not a map, just log the original error.
-        debugPrint("Error parsing Keycloak error response or unexpected format: $e");
-      }
+    } catch (e, s) { 
+      debugPrint('Error during keycloak_wrapper.updateToken(): $e');
+      debugPrint('Stack trace: $s');
+      
+      // Per the subtask's refined strategy: any failure in updateToken is treated as critical,
+      // indicating the session may no longer be valid (e.g., refresh token expired or revoked).
+      // Thus, proactively log out the user.
+      debugPrint('Keycloak updateToken failed. Assuming critical session issue, logging out...');
+      await logout();
       return false;
     }
   }

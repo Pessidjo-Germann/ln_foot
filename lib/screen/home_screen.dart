@@ -89,28 +89,19 @@ class _HomeContentState extends State<HomeContent>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  late TextEditingController _searchController; // Declare controller
-
   @override
   void initState() {
     super.initState();
-    _searchController = TextEditingController(); // Initialize controller
-    _loadProducts(); // Defaults to forceRefresh: false
-    _loadCategories(); // Defaults to forceRefresh: false
+    _loadProducts();
+    _loadCategories();
   }
 
-  @override
-  void dispose() {
-    _searchController.dispose(); // Dispose controller
-    super.dispose();
+  void _loadProducts() {
+    context.read<ProductBloc>().add(LoadAllProducts());
   }
 
-  void _loadProducts({bool forceRefresh = false}) { // Add optional parameter
-    context.read<ProductBloc>().add(LoadAllProducts(forceRefresh: forceRefresh));
-  }
-
-  void _loadCategories({bool forceRefresh = false}) { // Add optional parameter
-    context.read<CategoryBloc>().add(LoadAllCategories(forceRefresh: forceRefresh));
+  void _loadCategories() {
+    context.read<CategoryBloc>().add(LoadAllCategories());
   }
 
   @override
@@ -120,8 +111,8 @@ class _HomeContentState extends State<HomeContent>
       appBar: const HomeAppBar(),
       body: RefreshIndicator(
         onRefresh: () async {
-          _loadProducts(forceRefresh: true); // Pass true here
-          _loadCategories(forceRefresh: true); // Pass true here
+          _loadProducts();
+          _loadCategories();
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -129,22 +120,14 @@ class _HomeContentState extends State<HomeContent>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SearchBarWidget(
-                controller: _searchController,
-                isClickable: false, // Important change
-                isSearching: _searchController.text.isNotEmpty, // Reflects if there's text
-                onChanged: (query) {
-                  context.read<ProductBloc>().add(SearchProducts(query));
-                  // We need to call setState to rebuild the SearchBarWidget 
-                  // itself to show/hide the clear button based on text input
-                  setState(() {}); 
+                isClickable: true,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SearchScreen()),
+                  );
                 },
-                onClear: () {
-                  _searchController.clear();
-                  context.read<ProductBloc>().add(const SearchProducts(""));
-                  setState(() {}); // To update the clear button visibility
-                },
-                // onFilterTap: () { /* TODO: Implement filter action if needed */ },
-                // onSubmit: () { /* Handle submission if needed, e.g., keyboard done */ }
               ),
               const SizedBox(height: 8),
               CategoriesSection(),
