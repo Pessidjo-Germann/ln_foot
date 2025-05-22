@@ -62,10 +62,11 @@ class AuthService {
   }
 
   Future<String?> getAccessToken() async {
-    final token = _keycloak.accessToken;
     final storedToken = await _secureStorage.read(key: 'access_token');
-
-    return token ?? storedToken;
+    if (storedToken != null && storedToken.isNotEmpty) {
+      return storedToken;
+    }
+    return _keycloak.accessToken;
   }
 
   String? getRefreshToken() => _keycloak.refreshToken;
@@ -76,32 +77,59 @@ class AuthService {
   }
 
   Future<bool> refreshToken() async {
-    final refreshToken = getRefreshToken();
-    if (refreshToken == null) return false;
+    final String? oldRefreshToken = await UserSessionManager.getRefreshToken();
+    if (oldRefreshToken == null) {
+      debugPrint("No refresh token found in session manager.");
+      return false;
+    }
 
     final response = await http.post(
       Uri.parse(
-          'https://lnfoot-auth.hublots.co/realms/lnfoot/protocol/openid-connect/token'),
+          '${_keycloak.config.frontendUrl}/realms/${_keycloak.config.realm}/protocol/openid-connect/token'),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: {
         'grant_type': 'refresh_token',
-        'client_id': 'ln-foot-01',
-        'refresh_token': refreshToken,
-        // 'client_secret': 'votre-secret-si-necessaire', // à ajouter si besoin
+        'client_id': _keycloak.config.clientId,
+        'refresh_token': oldRefreshToken,
       },
     );
 
     if (response.statusCode == 200) {
-      final nouveauxTokens = json.decode(response.body);
-      final accessToken = nouveauxTokens['access_token'];
-      final newRefreshToken = nouveauxTokens['refresh_token'];
-      if (accessToken != null) {
-        await _secureStorage.write(key: 'access_token', value: accessToken);
-        // Si tu veux stocker le refresh token aussi :
-        // await _secureStorage.write(key: 'refresh_token', value: newRefreshToken);
-        return true;
+      final Map<String, dynamic> nouveauxTokens = json.decode(response.body);
+      final String? newAccessToken = nouveauxTokens['access_token'] as String?;
+      final String? newRefreshToken =
+          nouveauxTokens['refresh_token'] as String?;
+
+      if (newAccessToken != null) {
+        try {
+          await UserSessionManager.updateTokens(
+            newAccessToken: newAccessToken,
+            newRefreshToken: newRefreshToken, // Pass null if not present, UserSessionManager handles it
+          );
+          debugPrint("Tokens updated successfully via UserSessionManager.");
+          return true;
+        } catch (e) {
+          debugPrint("Error updating tokens via UserSessionManager: $e");
+          return false;
+        }
+      } else {
+        debugPrint("New access token is null in Keycloak response.");
+        return false;
       }
+    } else {
+      debugPrint(
+          "Failed to refresh token. Status code: ${response.statusCode}, Body: ${response.body}");
+      try {
+        final Map<String, dynamic> decodedBody = json.decode(response.body);
+        if (decodedBody.containsKey('error') && decodedBody['error'] == 'invalid_grant') {
+          debugPrint("Refresh token failed due to 'invalid_grant'. User is being logged out.");
+          await logout();
+        }
+      } catch (e) {
+        // If response body is not valid JSON or not a map, just log the original error.
+        debugPrint("Error parsing Keycloak error response or unexpected format: $e");
+      }
+      return false;
     }
-    return false;
   }
 }
