@@ -8,6 +8,7 @@ import 'package:ln_foot/bloc/order/order_bloc.dart';
 import 'package:ln_foot/bloc/category/category_bloc.dart';
 import 'package:ln_foot/bloc/colored_product/colored_product_bloc.dart';
 import 'package:ln_foot/bloc/review/review_bloc.dart';
+import 'package:ln_foot/bloc/heading/heading_bloc.dart'; // Import HeadingBloc
 import 'package:ln_foot/screen/splash_screen.dart';
 import 'package:ln_foot/theme/app_theme.dart';
 import 'package:ln_foot/service.dart';
@@ -35,6 +36,7 @@ void main() async {
   // final coloredProductControllerApi = ColoredProductControllerApi(apiClient);
   final reviewControllerApi = ReviewControllerApi(apiClient);
   final productVariantControllerApi= ProductVariantControllerApi(apiClient);
+  final headingControllerApi = HeadingControllerApi(apiClient); // Instantiate HeadingControllerApi
   runApp(MyApp(
     authService: authService,
     orderControllerApi: orderControllerApi,
@@ -43,6 +45,7 @@ void main() async {
     productVariantControllerApi: productVariantControllerApi,
     //  coloredProductControllerApi: coloredProductControllerApi,
     reviewControllerApi: reviewControllerApi,
+    headingControllerApi: headingControllerApi, // Pass HeadingControllerApi
     apiClient: apiClient,
   ));
 }
@@ -55,6 +58,7 @@ class MyApp extends StatelessWidget {
   // final ColoredProductControllerApi coloredProductControllerApi;
   final ReviewControllerApi reviewControllerApi;
   final ProductVariantControllerApi productVariantControllerApi;
+  final HeadingControllerApi headingControllerApi; // Add field for HeadingControllerApi
   final ApiClient apiClient;
 
   const MyApp({
@@ -66,6 +70,7 @@ class MyApp extends StatelessWidget {
     required this.productVariantControllerApi,
     // required this.coloredProductControllerApi,
     required this.reviewControllerApi,
+    required this.headingControllerApi, // Add to constructor
     required this.apiClient,
   });
 
@@ -90,7 +95,12 @@ class MyApp extends StatelessWidget {
         BlocProvider<CategoryBloc>(
           create: (_) =>
               CategoryBloc(categoryControllerApi: categoryControllerApi)
-                ..add(LoadAllCategories()),
+                ..add(const LoadAllCategories()), // Use const
+        ),
+        BlocProvider<HeadingBloc>( // Add HeadingBloc provider
+          create: (_) => 
+              HeadingBloc(headingControllerApi: headingControllerApi)
+                ..add(const LoadHeadings()), // Dispatch initial event, use const
         ),
         // BlocProvider<ColoredProductBloc>(
         //   create: (_) => ColoredProductBloc(

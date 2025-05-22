@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_foot/bloc/cart/cart_bloc.dart';
 import 'package:ln_foot/bloc/category/category_bloc.dart';
 import 'package:ln_foot/bloc/product/product_bloc.dart';
+import 'package:ln_foot/bloc/heading/heading_bloc.dart'; // Import HeadingBloc
 import 'package:ln_foot/screen/cart_screen.dart';
 import 'package:ln_foot/screen/profile_screen.dart';
 import 'package:ln_foot/service.dart';
 import 'package:ln_foot/widgets/home/home_app_bar.dart';
 import 'package:ln_foot/widgets/home/search_bar_widget.dart';
 import 'package:ln_foot/widgets/home/categories_section.dart'; // Import the Categories Section
+import 'package:ln_foot/widgets/home/headings_section.dart'; // Add this import
 import 'package:ln_foot/widgets/home/promo_banner.dart'; // Import the Promo Banner
 import 'package:ln_foot/widgets/home/special_offers_section.dart'; // Import the Special Offers Section
 import 'package:ln_foot/theme/app_theme.dart';
@@ -97,6 +99,7 @@ class _HomeContentState extends State<HomeContent>
     _searchController = TextEditingController(); // Initialize controller
     _loadProducts(); // Defaults to forceRefresh: false
     _loadCategories(); // Defaults to forceRefresh: false
+    _loadHeadings(); // Call _loadHeadings
   }
 
   @override
@@ -113,6 +116,10 @@ class _HomeContentState extends State<HomeContent>
     context.read<CategoryBloc>().add(LoadAllCategories(forceRefresh: forceRefresh));
   }
 
+  void _loadHeadings({bool forceRefresh = false}) { // Define _loadHeadings
+    context.read<HeadingBloc>().add(LoadHeadings(forceRefresh: forceRefresh));
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -122,6 +129,7 @@ class _HomeContentState extends State<HomeContent>
         onRefresh: () async {
           _loadProducts(forceRefresh: true); // Pass true here
           _loadCategories(forceRefresh: true); // Pass true here
+          _loadHeadings(forceRefresh: true); // Call _loadHeadings with forceRefresh: true
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -148,6 +156,9 @@ class _HomeContentState extends State<HomeContent>
               ),
               const SizedBox(height: 8),
               CategoriesSection(),
+              const SizedBox(height: 16), // Add some spacing if needed
+              const HeadingsSection(), // **** Add this line ****
+              const SizedBox(height: 16), // Add some spacing if needed
               const PromoBanner(),
               const SpecialOffersSection(),
               const SizedBox(height: 24),
