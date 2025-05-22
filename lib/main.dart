@@ -12,24 +12,31 @@ import 'package:ln_foot/bloc/heading/heading_bloc.dart'; // Import HeadingBloc
 import 'package:ln_foot/screen/splash_screen.dart';
 import 'package:ln_foot/theme/app_theme.dart';
 import 'package:ln_foot/service.dart';
+import 'package:ln_foot/service/refreshing_http_client.dart'; // Added import
+import 'package:http/http.dart' as http; // Added import
 import 'package:lnFoot_api/api.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final authService = await AuthService.create();
-  final token = await authService.getAccessToken();
-  final refresh = authService.getRefreshToken();
+  final token = await authService.getAccessToken(); // Kept for potential debug or initial checks
+  final refresh = authService.getRefreshToken(); // Kept for potential debug
 
   debugPrint('Refresh token: $refresh');
   debugPrint('Token: $token');
 
   final apiClient = ApiClient();
 
-  //if (token != null && token.isNotEmpty) {
-  //apiClient.addDefaultHeader('Bearer', token);
-  apiClient.setAuthToken(token ?? '');
-  debugPrint('Token set in ApiClient: $token');
+  // Instantiate and set RefreshingHttpClient
+  final baseHttpClient = http.Client(); 
+  final refreshingClient = RefreshingHttpClient(baseHttpClient, authService);
+  apiClient.client = refreshingClient; 
+  debugPrint('RefreshingHttpClient set on ApiClient.');
+
+  // Removed: apiClient.setAuthToken(token ?? '');
+  // debugPrint('Token set in ApiClient: $token'); // Also commented out related debugPrint
+
   final productApi = ProductControllerApi(apiClient);
   final orderControllerApi = OrderControllerApi(apiClient);
   final categoryControler = CategoryControllerApi(apiClient);
@@ -95,7 +102,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<CategoryBloc>(
           create: (_) =>
               CategoryBloc(categoryControllerApi: categoryControllerApi)
-                ..add(const LoadAllCategories()), // Use const
+                ..add( LoadAllCategories()), // Use const
         ),
         BlocProvider<HeadingBloc>( // Add HeadingBloc provider
           create: (_) => 

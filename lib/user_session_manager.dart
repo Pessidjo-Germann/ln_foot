@@ -38,6 +38,35 @@ class UserSessionManager {
     return null;
   }
 
+  static Future<String?> getRefreshToken() async {
+    try {
+      return await _secureStorage.read(key: 'refresh_token');
+    } catch (e) {
+      print("Erreur lors de la récupération du refresh token : $e");
+      return null;
+    }
+  }
+
+  static Future<void> updateTokens({
+    required String newAccessToken,
+    String? newRefreshToken,
+  }) async {
+    try {
+      await _secureStorage.write(key: 'access_token', value: newAccessToken);
+
+      if (newRefreshToken != null && newRefreshToken.isNotEmpty) {
+        await _secureStorage.write(key: 'refresh_token', value: newRefreshToken);
+      }
+
+      final now = DateTime.now();
+      final expiresAt = now.add(const Duration(minutes: 15));
+      await _secureStorage.write(
+          key: 'token_expires_at', value: expiresAt.toIso8601String());
+    } catch (e) {
+      print("Erreur lors de la mise à jour des tokens : $e");
+    }
+  }
+
   static Future<void> clearUserSession() async {
     await _secureStorage.deleteAll();
   }

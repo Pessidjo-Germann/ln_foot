@@ -14,36 +14,36 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   // Placeholder data - replace with actual data fetching logic
   final List<NotificationModel> _notifications = [
-    NotificationModel(
-      icon: Icons.local_offer_outlined,
-      title: '30% de réduction spéciale !',
-      subtitle: 'Promotion spéciale valable uniquement aujourd\'hui.',
-      dateGroup: 'Aujourd\'hui',
-    ),
-    NotificationModel(
-      icon: Icons.account_balance_wallet_outlined,
-      title: 'Rechargez votre portefeuille électronique avec succès !',
-      subtitle: 'Vous avez rechargé votre portefeuille électronique.',
-      dateGroup: 'Hier',
-    ),
-    NotificationModel(
-      icon: Icons.location_on_outlined,
-      title: 'Nouveau service disponible !',
-      subtitle: 'Vous pouvez désormais suivre votre commande en temps réel.',
-      dateGroup: 'Hier',
-    ),
-    NotificationModel(
-      icon: Icons.credit_card_outlined,
-      title: 'Carte de crédit connectée !',
-      subtitle: 'La carte de crédit a été liée.',
-      dateGroup: '15 juin 2024',
-    ),
-    NotificationModel(
-      icon: Icons.person_outline,
-      title: 'Configuration du compte réussie !',
-      subtitle: 'Votre compte a été créé.',
-      dateGroup: '15 juin 2024',
-    ),
+    // NotificationModel(
+    //   icon: Icons.local_offer_outlined,
+    //   title: '30% de réduction spéciale !',
+    //   subtitle: 'Promotion spéciale valable uniquement aujourd\'hui.',
+    //   dateGroup: 'Aujourd\'hui',
+    // ),
+    // NotificationModel(
+    //   icon: Icons.account_balance_wallet_outlined,
+    //   title: 'Rechargez votre portefeuille électronique avec succès !',
+    //   subtitle: 'Vous avez rechargé votre portefeuille électronique.',
+    //   dateGroup: 'Hier',
+    // ),
+    // NotificationModel(
+    //   icon: Icons.location_on_outlined,
+    //   title: 'Nouveau service disponible !',
+    //   subtitle: 'Vous pouvez désormais suivre votre commande en temps réel.',
+    //   dateGroup: 'Hier',
+    // ),
+    // NotificationModel(
+    //   icon: Icons.credit_card_outlined,
+    //   title: 'Carte de crédit connectée !',
+    //   subtitle: 'La carte de crédit a été liée.',
+    //   dateGroup: '15 juin 2024',
+    // ),
+    // NotificationModel(
+    //   icon: Icons.person_outline,
+    //   title: 'Configuration du compte réussie !',
+    //   subtitle: 'Votre compte a été créé.',
+    //   dateGroup: '15 juin 2024',
+    // ),
   ];
 
   // Group notifications by date

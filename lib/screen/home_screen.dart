@@ -88,8 +88,6 @@ class _HomeContentState extends State<HomeContent>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  late TextEditingController _searchController; // Declare controller
-
   @override
   void initState() {
     super.initState();
