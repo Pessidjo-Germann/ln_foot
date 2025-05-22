@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lnFoot_api/api.dart';
 import 'package:ln_foot/bloc/order/order_bloc.dart';
+import 'package:ln_foot/screen/home_screen.dart';
 
 import 'package:ln_foot/user_session_manager.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
@@ -130,7 +131,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
             // Use OrderSummarySection Widget
             OrderSummarySection(
-             orderItems: widget.orderDto.orderItems,// Example data
+              orderItems: widget.orderDto.orderItems, // Example data
             ),
             const SizedBox(height: 30), // Space before bottom button
           ],
