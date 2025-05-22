@@ -12,9 +12,9 @@ extension OrderStatusExtension on OrderStatus {
       case OrderStatus.ongoing:
         return "pending";
       case OrderStatus.completed:
-        return "finished";
+        return "completed";
       case OrderStatus.review:
-        return "Revoir";
+        return "failed";
       default:
         return "";
     }

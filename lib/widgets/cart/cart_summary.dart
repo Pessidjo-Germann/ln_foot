@@ -36,24 +36,24 @@ class CartSummary extends StatelessWidget {
           _buildSummaryRow(
             context,
             label: 'Sous-total',
-            value: '\$${_formatCurrency(subtotal)}',
+            value: 'FCFA${_formatCurrency(subtotal)}',
           ),
           _buildSummaryRow(
             context,
             label: 'Frais de livraison',
-            value: '\$${_formatCurrency(shipping)}',
+            value: 'FCFA ${_formatCurrency(shipping)}',
           ),
           _buildSummaryRow(
             context,
             label: 'Rabais',
             // Display discount as negative
-            value: discount > 0 ? '-\$${_formatCurrency(discount)}' : '\$0.00',
+            value: discount > 0 ? '-FCFA ${_formatCurrency(discount)}' : 'FCFA 0.00',
           ),
           const Divider(height: 16, thickness: 0.4),
           _buildSummaryRow(
             context,
             label: 'Total',
-            value: '\$${_formatCurrency(total)}',
+            value: 'FCFA ${_formatCurrency(total)}',
             isTotal: true,
           ),
         ],

@@ -72,24 +72,24 @@ class LoginOptionsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Divider with "Ou"
-                  Row(
-                    children: [
-                      Expanded(
-                          child: Divider(
-                              color: Colors.grey.shade300, thickness: 0.4)),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text(
-                          'Ou',
-                          style: textTheme.bodyMedium
-                              ?.copyWith(color: Colors.grey.shade600),
-                        ),
-                      ),
-                      Expanded(
-                          child: Divider(
-                              color: Colors.grey.shade300, thickness: 0.4)),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     Expanded(
+                  //         child: Divider(
+                  //             color: Colors.grey.shade300, thickness: 0.4)),
+                  //     Padding(
+                  //       padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  //       child: Text(
+                  //         'Ou',
+                  //         style: textTheme.bodyMedium
+                  //             ?.copyWith(color: Colors.grey.shade600),
+                  //       ),
+                  //     ),
+                  //     Expanded(
+                  //         child: Divider(
+                  //             color: Colors.grey.shade300, thickness: 0.4)),
+                  //   ],
+                  // ),
                   const SizedBox(height: 32),
 
                   CustomButton(
@@ -100,35 +100,35 @@ class LoginOptionsScreen extends StatelessWidget {
                   ),
                   const Spacer(),
 
-                  // Sign Up Text
-                  Center(
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Vous n\'avez pas de compte? ',
-                        style: textTheme.bodyMedium
-                            ?.copyWith(color: Colors.grey.shade600),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Inscrivez-vous',
-                            style: const TextStyle(
-                              color: kAppOrangeColor, // Use theme color
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                // Navigator.of(context).push(
-                                //   MaterialPageRoute(
-                                //       builder: (context) =>
-                                //           const SignupOptionsScreen()),
-                                // );
-                              },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+                  // // Sign Up Text
+                  // Center(
+                  //   child: RichText(
+                  //     text: TextSpan(
+                  //       text: 'Vous n\'avez pas de compte? ',
+                  //       style: textTheme.bodyMedium
+                  //           ?.copyWith(color: Colors.grey.shade600),
+                  //       children: <TextSpan>[
+                  //         TextSpan(
+                  //           text: 'Inscrivez-vous',
+                  //           style: const TextStyle(
+                  //             color: kAppOrangeColor, // Use theme color
+                  //             fontWeight: FontWeight.bold,
+                  //             decoration: TextDecoration.underline,
+                  //           ),
+                  //           recognizer: TapGestureRecognizer()
+                  //             ..onTap = () {
+                  //               // Navigator.of(context).push(
+                  //               //   MaterialPageRoute(
+                  //               //       builder: (context) =>
+                  //               //           const SignupOptionsScreen()),
+                  //               // );
+                  //             },
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  //const SizedBox(height: 16),
                 ],
               ),
             ),
