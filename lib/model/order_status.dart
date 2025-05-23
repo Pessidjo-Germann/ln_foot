@@ -15,8 +15,6 @@ extension OrderStatusExtension on OrderStatus {
         return "completed";
       case OrderStatus.review:
         return "failed";
-      default:
-        return "";
     }
   }
 }

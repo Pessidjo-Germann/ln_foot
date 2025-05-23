@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ln_foot/theme/app_theme.dart';
 
 class OrderItemWidget extends StatelessWidget {
-   final Map<String, dynamic> order;
-  final VoidCallback? onReviewPressed;  
+  final Map<String, dynamic> order;
+  final VoidCallback? onReviewPressed;
 
   const OrderItemWidget({
     super.key,
@@ -13,16 +13,18 @@ class OrderItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String imageUrl = order['image'] ?? 'images/placeholder.png'; // Handle missing image
+    final String imageUrl =
+        order['image'] ?? 'images/placeholder.png'; // Handle missing image
     final String name = order['name'] ?? 'Nom du produit';
     final String size = order['size'] ?? '';
     final String price = order['price'] ?? 'Prix inconnu';
     final String status = order['status'] ?? 'unknown';
-    final bool reviewed = order['reviewed'] ?? false; // Specific to 'review' status
+    final bool reviewed =
+        order['reviewed'] ?? false; // Specific to 'review' status
 
     // Use theme for consistent styling
     final textTheme = Theme.of(context).textTheme;
-   // final colorScheme = Theme.of(context).colorScheme;
+    // final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
@@ -31,11 +33,13 @@ class OrderItemWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start, // Align items to the top
+          crossAxisAlignment:
+              CrossAxisAlignment.start, // Align items to the top
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset( // Consider using Image.network if URLs are used
+              child: Image.network(
+                // Consider using Image.network if URLs are used
                 imageUrl,
                 width: 70,
                 height: 70,
@@ -45,7 +49,8 @@ class OrderItemWidget extends StatelessWidget {
                   width: 70,
                   height: 70,
                   color: Colors.grey[200],
-                  child: Icon(Icons.image_not_supported, color: Colors.grey[400]),
+                  child:
+                      Icon(Icons.image_not_supported, color: Colors.grey[400]),
                 ),
               ),
             ),
@@ -56,18 +61,22 @@ class OrderItemWidget extends StatelessWidget {
                 children: [
                   Text(
                     name,
-                    style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    style: textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   if (size.isNotEmpty) ...[
                     const SizedBox(height: 4),
-                    Text(size, style: textTheme.bodySmall?.copyWith(color: Colors.grey[600])),
+                    Text(size,
+                        style: textTheme.bodySmall
+                            ?.copyWith(color: Colors.grey[600])),
                   ],
                   const SizedBox(height: 4),
                   Text(
                     price,
-                    style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                    style: textTheme.titleSmall
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -81,7 +90,8 @@ class OrderItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusWidget(BuildContext context, String status, bool reviewed) {
+  Widget _buildStatusWidget(
+      BuildContext context, String status, bool reviewed) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -89,16 +99,16 @@ class OrderItemWidget extends StatelessWidget {
       case 'ongoing':
         return Padding(
           padding: const EdgeInsets.only(top: 28),
-          child: const Text('suivi de commande',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            
-            color: kAppOrangeColor
-          ),),
+          child: const Text(
+            'suivi de commande',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: kAppOrangeColor),
+          ),
         );
       case 'completed':
-        return Padding( // Add padding for alignment
-           padding: const EdgeInsets.only(top: 28),
+        return Padding(
+          // Add padding for alignment
+          padding: const EdgeInsets.only(top: 28),
           child: Text(
             'Livré',
             style: textTheme.bodyMedium?.copyWith(
@@ -108,8 +118,7 @@ class OrderItemWidget extends StatelessWidget {
           ),
         );
       case 'review':
-          
-         if (reviewed) {
+        if (reviewed) {
           // For reviewed items, just show text instead of a button
           return InkWell(
             onTap: onReviewPressed,
@@ -130,12 +139,13 @@ class OrderItemWidget extends StatelessWidget {
           return ElevatedButton(
             onPressed: onReviewPressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFF16A26).withOpacity(0.8),
-              foregroundColor: colorScheme.onTertiaryContainer,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              textStyle: textTheme.labelSmall?.copyWith(fontWeight: FontWeight.bold)
-            ),
+                backgroundColor: Color(0xFFF16A26).withOpacity(0.8),
+                foregroundColor: colorScheme.onTertiaryContainer,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                textStyle: textTheme.labelSmall
+                    ?.copyWith(fontWeight: FontWeight.bold)),
             child: const Text('Revoir'),
           );
         }

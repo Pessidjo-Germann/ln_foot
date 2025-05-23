@@ -27,6 +27,12 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
   String? _userId;
   Map<String, dynamic>? _userInfo;
 
+  // Ajout : API et cache pour les variantes de produit
+  final ProductVariantControllerApi _productVariantApi =
+      ProductVariantControllerApi();
+  final ProductControllerApi _productApi = ProductControllerApi();
+  final Map<String, ProductVariantDto?> _productVariantCache = {};
+  final Map<String, ProductDto?> _productCache = {};
   @override
   void initState() {
     super.initState();
@@ -65,29 +71,70 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
     }
   }
 
-  // Helper pour convertir OrderDto en Map<String, dynamic> pour OrderList
-  List<Map<String, dynamic>> _mapOrders(
-      List<OrderDto> orders, OrderStatus status) {
-    // Parameter type changed
-    return orders
+  // Nouvelle version asynchrone
+  Future<List<Map<String, dynamic>>> _mapOrders(
+      List<OrderDto> orders, OrderStatus status) async {
+    final filteredOrders = orders
         .where((order) =>
-            order.status != null &&
-            order.status == status.displayName) // Added filter
-        .map((order) {
-      debugPrint('Order ID: ${order..orderItems.first.toJson()}');
+            order.status != null && order.status == status.displayName)
+        .toList();
+
+    final List<Map<String, dynamic>> mappedOrders = [];
+
+    for (final order in filteredOrders) {
       final item = order.orderItems.isNotEmpty ? order.orderItems.first : null;
-      return {
+      String? imageUrl;
+      print('hello');
+      String productName = 'Produit';
+      // Récupérer les détails de la variante de produit
+      if (item?.productVariantId != null) {
+        try {
+          ProductVariantDto? productVariant;
+          if (_productVariantCache.containsKey(item!.productVariantId)) {
+            productVariant = _productVariantCache[item.productVariantId];
+          } else {
+            productVariant = await _productVariantApi
+                .getProductVariant(item.productVariantId!);
+            _productVariantCache[item.productVariantId!] = productVariant;
+          }
+          if (productVariant != null) {
+            imageUrl = productVariant.imageUrl;
+            print('la valeur de imageUrl est $imageUrl');
+            // Récupérer le nom du produit via productId
+            if (productVariant.productId != null) {
+              ProductDto? product;
+              if (_productCache.containsKey(productVariant.productId)) {
+                product = _productCache[productVariant.productId];
+              } else {
+                product =
+                    await _productApi.getProductById(productVariant.productId!);
+                _productCache[productVariant.productId!] = product;
+              }
+              if (product != null && product.name != null) {
+                productName = product.name!;
+              }
+            }
+          }
+        } catch (e) {
+          debugPrint(
+              'Erreur lors de la récupération de la variante ou du produit: $e');
+        }
+      }
+      mappedOrders.add({
         'id': order.id,
-        'image': item != null
-            ? 'images/product1.png'
-            : null, // À adapter si tu as l'URL dans OrderItemDto
-        'name': order.status, // À adapter selon ton modèle
+        'image': imageUrl ?? 'images/product1.png',
+        'name': productName,
         'size': item?.size != null ? 'Taille: ${item!.size}' : '',
-        'price': item!.price.toString(), // À adapter si tu as le prix
-        'status': order.status,
-        'reviewed': false, // À adapter si tu as cette info
-      };
-    }).toList();
+        'price': item?.price?.toString() ?? '0',
+        'status': order.status == 'pending'
+            ? OrderStatus.ongoing.displayName
+            : order.status == 'completed'
+                ? OrderStatus.completed.displayName
+                : OrderStatus.review.displayName,
+        'reviewed': false,
+      });
+    }
+    return mappedOrders;
   }
 
   @override
@@ -97,7 +144,6 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
         if (networkState is NetworkOffline) {
           return const OfflinePage();
         }
-
         return Scaffold(
           appBar: CustomAppBar(
             title: 'Mes commandes',
@@ -119,31 +165,47 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
               if (state is OrderLoading) {
                 return const Center(child: CircularProgressIndicator());
               } else if (state is OrdersLoaded) {
-                // Ici, tu dois filtrer selon l'onglet sélectionné
-                debugPrint('Nombre de commandes: ${state.orders.length}');
-                debugPrint('Commande');
-                // Use the imported OrderStatus for filtering
-                final ongoing = _mapOrders(state.orders, OrderStatus.ongoing);
-                final completed =
-                    _mapOrders(state.orders, OrderStatus.completed);
-                final review = _mapOrders(state.orders, OrderStatus.review);
-                return Column(
-                  children: [
-                    OrderStatusTabs(tabController: _tabController),
-                    Expanded(
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          // Tab 1: Ongoing Orders
-                          _buildTabView(ongoing, OrderStatus.ongoing),
-                          // Tab 2: Completed Orders
-                          _buildTabView(completed, OrderStatus.completed),
-                          // Tab 3: Review Orders
-                          _buildTabView(review, OrderStatus.review),
-                        ],
-                      ),
-                    ),
-                  ],
+                // Utilisation de FutureBuilder pour gérer le mapping asynchrone
+                return FutureBuilder<List<List<Map<String, dynamic>>>>(
+                  future: Future.wait([
+                    _mapOrders(state.orders, OrderStatus.ongoing),
+                    _mapOrders(state.orders, OrderStatus.completed),
+                    _mapOrders(state.orders, OrderStatus.review),
+                  ]),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Erreur: ${snapshot.error}'));
+                    }
+                    final data = snapshot.data;
+                    if (data == null) {
+                      return const Center(
+                          child: Text('Aucune donnée disponible'));
+                    }
+                    final ongoing = data[0];
+                    final completed = data[1];
+                    final review = data[2];
+                    return Column(
+                      children: [
+                        OrderStatusTabs(tabController: _tabController),
+                        Expanded(
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: [
+                              // Tab 1: Ongoing Orders
+                              _buildTabView(ongoing, OrderStatus.ongoing),
+                              // Tab 2: Completed Orders
+                              _buildTabView(completed, OrderStatus.completed),
+                              // Tab 3: Review Orders
+                              _buildTabView(review, OrderStatus.review),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 );
               } else if (state is OrderError) {
                 return Center(child: Text('Erreur: ${state.message}'));

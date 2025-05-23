@@ -79,20 +79,19 @@ class _CartScreenState extends State<CartScreen> {
           const double shipping = 00;
           const double discount = 00;
           final double total = cartState.total + shipping - discount;
-
           return BlocListener<OrderBloc, OrderState>(
             listener: (context, state) {
               if (state is OrderCreated) {
-                //Todo: remove item from cart and remplace 
-                context.read<CartBloc>().add(RemoveFromCart(state.order.orderItems.first.productVariantId!));
+                // Vider complètement le panier après la création de la commande
+                context.read<CartBloc>().add(ClearCart());
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>  CheckoutScreen(orderDto: state.order)));
+                        builder: (context) =>
+                            CheckoutScreen(orderDto: state.order)));
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text('Commande créée avec succès'),
                     backgroundColor: Colors.green));
-
               } else if (state is OrderError) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(state.message), backgroundColor: Colors.red));
@@ -148,17 +147,13 @@ class _CartScreenState extends State<CartScreen> {
 
                     final orderItems = cartState.items
                         .map((item) => OrderItemDto(
-                          
                             quantity: item.quantity,
                             size: item.size,
-                             
                             price: item.product.price,
-                           productVariantId: item.product.id
-                            ))
+                            productVariantId: item.product.id))
                         .toList();
 
                     final orderData = OrderDto(
-                      
                       status: 'pending',
                       orderDate: DateTime.now(),
                       orderItems: orderItems,

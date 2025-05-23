@@ -19,7 +19,8 @@ class OrderConfirmationScreen extends StatelessWidget {
 
   String _formatDate(DateTime? date) {
     if (date == null) return 'N/A';
-    return DateFormat('dd/MM/yyyy HH:mm').format(date); // Adjust format as needed
+    return DateFormat('dd/MM/yyyy HH:mm')
+        .format(date); // Adjust format as needed
   }
 
   String _formatCurrency(double amount) {
@@ -34,12 +35,14 @@ class OrderConfirmationScreen extends StatelessWidget {
         title: const Text('Confirmation de Commande'),
         automaticallyImplyLeading: false, // No back button
         centerTitle: true,
-        backgroundColor: Theme.of(context).primaryColor, // Or your app's theme color
+        backgroundColor:
+            Theme.of(context).primaryColor, // Or your app's theme color
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch, // Make children take full width
+          crossAxisAlignment:
+              CrossAxisAlignment.stretch, // Make children take full width
           children: <Widget>[
             Icon(
               Icons.check_circle_outline,
@@ -64,7 +67,8 @@ class OrderConfirmationScreen extends StatelessWidget {
             const SizedBox(height: 24.0),
             Card(
               elevation: 2.0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0)),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -77,11 +81,15 @@ class OrderConfirmationScreen extends StatelessWidget {
                           ),
                     ),
                     const Divider(height: 20, thickness: 1),
-                    _buildInfoRow(context, 'ID de la Commande:', paymentResponse.orderId ?? 'N/A'),
-                    _buildInfoRow(context, 'ID du Paiement:', paymentResponse.paymentId ?? 'N/A'),
-                    _buildInfoRow(context, 'Statut du Paiement:', paymentResponse.status ?? 'N/A'),
-                    _buildInfoRow(context, 'Date:', _formatDate(paymentResponse.createdAt)),
-                    _buildInfoRow(context, 'Montant Total:', _formatCurrency(totalAmount), isAmount: true),
+                    // _buildInfoRow(context, 'ID de la Commande:', paymentResponse.orderId ?? 'N/A'),
+                    //  _buildInfoRow(context, 'ID du Paiement:', paymentResponse.paymentId ?? 'N/A'),
+                    _buildInfoRow(context, 'Statut du Paiement:',
+                        paymentResponse.status ?? 'N/A'),
+                    _buildInfoRow(context, 'Date:',
+                        _formatDate(paymentResponse.createdAt)),
+                    _buildInfoRow(
+                        context, 'Montant Total:', _formatCurrency(totalAmount),
+                        isAmount: true),
                   ],
                 ),
               ),
@@ -102,19 +110,26 @@ class OrderConfirmationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(BuildContext context, String label, String value, {bool isAmount = false}) {
+  Widget _buildInfoRow(BuildContext context, String label, String value,
+      {bool isAmount = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Expanded(child: Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500))),
+          Expanded(
+              child: Text(label,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w500))),
           Expanded(
             child: Text(
               value,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: isAmount ? FontWeight.bold : FontWeight.normal,
-                    color: isAmount ? kAppOrangeColor : null, // Highlight amount
+                    color:
+                        isAmount ? kAppOrangeColor : null, // Highlight amount
                   ),
             ),
           ),
