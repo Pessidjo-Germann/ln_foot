@@ -122,7 +122,7 @@ void showLogoutDialog(BuildContext context) {
           if (state is Unauthenticated) {
             Navigator.of(context)
                 .pushReplacement(MaterialPageRoute(builder: (context) {
-              return LoginOptionsScreen(apiClient: ApiClient());
+              return LoginOptionsScreen();
             }));
           }
         },

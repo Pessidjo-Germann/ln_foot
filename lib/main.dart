@@ -153,6 +153,7 @@ class AuthWrapper extends StatelessWidget {
             (Route<dynamic> route) => false,
           );
         } else if (state is Authenticated) {
+          debugPrint("hello we are in wapper");
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const HomeScreen()),
             (Route<dynamic> route) => false,
@@ -174,6 +175,7 @@ class AuthWrapper extends StatelessWidget {
         if (state is AuthLoading || state is AuthInitial) {
           return SplashScreen(apiClient: apiClient);
         } else if (state is Authenticated || state is AuthenticatedWithToken) {
+          debugPrint("hello we are in wapper");
           return const HomeScreen();
         } else {
           // Si l'état est non géré (par exemple AuthError ou Unauthenticated)

@@ -28,9 +28,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final orders = await orderControllerApi.getAllOrders();
       emit(OrdersLoaded(orders ?? []));
     } on ApiException catch (e) {
-      emit(OrderError(ErrorMessages.orderUpdateFailed));
+      emit(OrderError(e.message??''));
     } catch (e) {
-      emit(OrderError(ErrorMessages.unknownError));
+      emit(OrderError(e.toString()));
     }
   }
 
@@ -41,9 +41,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final orders = await orderControllerApi.getUserOrders();
       emit(OrdersLoaded(orders ?? []));
     } on ApiException catch (e) {
-      emit(OrderError(ErrorMessages.orderUpdateFailed));
+      emit(OrderError(e.message??''));
     } catch (e) {
-      emit(OrderError(ErrorMessages.unknownError));
+      emit(OrderError(e.toString()));
     }
   }
 
@@ -92,9 +92,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         emit(const OrderError('Order creation failed silently.'));
       }
     } on ApiException catch (e) {
-      emit(OrderError(ErrorMessages.orderUpdateFailed));
+      emit(OrderError(e.message??''));
     } catch (e) {
-      emit(OrderError(ErrorMessages.unknownError));
+      emit(OrderError(e.toString()));
     }
   }
 

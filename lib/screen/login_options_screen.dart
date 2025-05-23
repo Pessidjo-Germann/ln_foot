@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:ln_foot/bloc/auth/auth_bloc.dart';
+import 'package:ln_foot/screen/home_screen.dart';
 
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
@@ -23,7 +24,15 @@ class LoginOptionsScreen extends StatelessWidget {
               const SnackBar(content: Text('Connexion en cours...')),
             );
         } else if (state is Authenticated) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          //  ScaffoldMessenger.of(context)
+          //   ..hideCurrentSnackBar()
+          //   ..showSnackBar(
+          //     SnackBar(content: Text('Erreur de connexion: ${state.user}')),
+          //   );
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            (Route<dynamic> route) => false,
+          );
 
           // NE PAS NAVIGUER ICI. Le AuthWrapper s'en charge.
           // context.read<AuthBloc>().add(CheckToken()); // Cette ligne est inutile et doit être retirée

@@ -64,7 +64,7 @@ class OnboardingScreen extends StatelessWidget {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                           builder: (context) =>  LoginOptionsScreen(
-                            apiClient: apiClient,
+                         
                           )),
                     );
                   },
