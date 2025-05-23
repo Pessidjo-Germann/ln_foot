@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_foot/bloc/auth/auth_bloc.dart';
 import 'package:ln_foot/bloc/product/product_bloc.dart';
 import 'package:ln_foot/screen/product_details_screen.dart';
 import 'package:ln_foot/widgets/common/product_card.dart';
@@ -38,9 +39,13 @@ class SpecialOffersSection extends StatelessWidget {
                   ProductsLoaded(products: final products) => products.isEmpty
                       ? const Center(child: Text('Aucun produit trouvé.'))
                       : _buildProductGrid(context, products),
-                  ProductError(message: final message) =>
-                    Center(child: Text('Erreur: $message')),
-                  _ => _buildLoadingGrid(),
+                    ProductError(message: final message) => () {
+                    if (message.contains('401')) {
+                      context.read<AuthBloc>().add(LogoutRequested());
+                    }
+                    return _buildLoadingGrid();
+                    }(),
+                    _ => _buildLoadingGrid(),
                 };
               },
             ),

@@ -9,7 +9,6 @@ import 'package:lnFoot_api/api.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/cart/cart_item_list.dart';
 import '../widgets/cart/cart_summary.dart';
-import '../widgets/cart/cart_item_widget.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -138,7 +137,7 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 AddToCartSection(
                   title: 'Passer à la caisse',
-                  canAddToCart: !cartState.items.isEmpty,
+                  canAddToCart: cartState.items.isNotEmpty,
                   onAddToCart: () {
                     if (cartState.items.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_foot/blocs/network_bloc/network_bloc.dart';
-
+ 
 class OfflinePage extends StatelessWidget {
   const OfflinePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Offline'),
-        automaticallyImplyLeading: false, // No back button if it's a full-screen state
-      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -54,18 +48,21 @@ class OfflinePage extends StatelessWidget {
                   // We can add a new event to NetworkBloc for this.
                   // For now, let's just print a message.
                   // A more robust solution would be to add a specific event like "ManualCheckRequested" to NetworkBloc.
-                  
+
                   // Example: Dispatch an event to NetworkBloc if it's set up to handle it.
                   // BlocProvider.of<NetworkBloc>(context).add(NetworkCheckRequested());
                   // Since NetworkBloc re-checks on listen, we can just print a message for now.
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Checking for connection... (Not implemented yet)')),
+                    const SnackBar(
+                        content: Text(
+                            'Checking for connection... (Not implemented yet)')),
                   );
                   // Actual retry logic to be implemented, possibly by interacting with NetworkBloc
                   // or a specific app refresh mechanism.
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   textStyle: const TextStyle(fontSize: 16),
                 ),
               ),

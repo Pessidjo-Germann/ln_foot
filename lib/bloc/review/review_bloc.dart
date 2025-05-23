@@ -23,7 +23,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     try {
       final reviews = await reviewControllerApi.getAllReviews();
       emit(ReviewsLoaded(reviews ?? [])); // Gérer la nullabilité potentielle
-    } on ApiException catch (e) {
+    } on ApiException {
       emit(ReviewError(ErrorMessages.unknownError));
     } catch (e) {
       emit(ReviewError(ErrorMessages.unknownError));
@@ -40,7 +40,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
       } else {
         emit(const ReviewError('Review not found.'));
       }
-    } on ApiException catch (e) {
+    } on ApiException {
       emit(ReviewError(ErrorMessages.unknownError));
     } catch (e) {
       emit(ReviewError(ErrorMessages.unknownError));
@@ -61,7 +61,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
       } else {
         emit(const ReviewError('Review creation failed silently.'));
       }
-    } on ApiException catch (e) {
+    } on ApiException {
       emit(ReviewError(ErrorMessages.unknownError));
     } catch (e) {
       emit(ReviewError(ErrorMessages.unknownError));
@@ -83,7 +83,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
       } else {
         emit(const ReviewError('Review update failed silently.'));
       }
-    } on ApiException catch (e) {
+    } on ApiException {
       emit(ReviewError(ErrorMessages.unknownError));
     } catch (e) {
       emit(ReviewError(ErrorMessages.unknownError));
@@ -98,7 +98,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
       emit(ReviewDeleted());
       // Optionnel : rafraîchir la liste après suppression
       // add(LoadAllReviews());
-    } on ApiException catch (e) {
+    } on ApiException {
       emit(ReviewError(ErrorMessages.unknownError));
     } catch (e) {
       emit(ReviewError(ErrorMessages.unknownError));

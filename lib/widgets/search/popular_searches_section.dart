@@ -38,14 +38,14 @@ class PopularSearchesSection extends StatelessWidget {
             ),
             TextButton(
               onPressed: onClearAll,
-              child: Text(
-                "Clear All",
-                style: TextStyle(color: Colors.grey[600]), // Use theme color later
-              ),
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
                 minimumSize: const Size(50, 30), // Adjust size if needed
                 alignment: Alignment.centerRight,
+              ),
+              child: Text(
+                "Clear All",
+                style: TextStyle(color: Colors.grey[600]), // Use theme color later
               ),
             ),
           ],

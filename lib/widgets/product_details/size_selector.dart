@@ -6,11 +6,11 @@ class SizeSelector extends StatelessWidget {
   final ValueChanged<String?> onSizeSelected;
 
   const SizeSelector({
-    Key? key,
+    super.key,
     required this.availableSizes,
     required this.selectedSize,
     required this.onSizeSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

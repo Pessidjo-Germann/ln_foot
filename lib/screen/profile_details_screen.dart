@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_foot/bloc/auth/auth_bloc.dart';
 import 'package:ln_foot/user_session_manager.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
@@ -51,7 +49,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     _emailController.text = user['email'] ?? '';
     _dobController.text = user['birthdate'] ?? '';
     _phoneController.text = user['phone_number'] ?? '';
-    _selectedGender = user['gender'] ?? null;
+    _selectedGender = user['gender'];
     _initialized = true;
   }
 

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_foot/bloc/auth/auth_bloc.dart';
 import 'package:ln_foot/bloc/category/category_bloc.dart';
 import 'package:ln_foot/bloc/product/product_bloc.dart';
 import 'package:ln_foot/bloc/heading/heading_bloc.dart'; // Import HeadingBloc
+import 'package:ln_foot/blocs/network_bloc/network_bloc.dart';
+import 'package:ln_foot/pages/offline_page.dart';
 import 'package:ln_foot/screen/cart_screen.dart';
+import 'package:ln_foot/screen/login_options_screen.dart';
 import 'package:ln_foot/screen/profile_screen.dart';
 import 'package:ln_foot/widgets/home/home_app_bar.dart';
 import 'package:ln_foot/widgets/home/search_bar_widget.dart';
@@ -88,7 +92,7 @@ class _HomeContentState extends State<HomeContent>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-   late TextEditingController _searchController; 
+  late TextEditingController _searchController;
   @override
   void initState() {
     super.initState();
@@ -106,16 +110,12 @@ class _HomeContentState extends State<HomeContent>
 
   void _loadProducts({bool forceRefresh = false}) {
     // Add optional parameter
-    context
-        .read<ProductBloc>()
-        .add(LoadAllProducts());
+    context.read<ProductBloc>().add(LoadAllProducts());
   }
 
   void _loadCategories({bool forceRefresh = false}) {
     // Add optional parameter
-    context
-        .read<CategoryBloc>()
-        .add(LoadAllCategories());
+    context.read<CategoryBloc>().add(LoadAllCategories());
   }
 
   void _loadHeadings({bool forceRefresh = false}) {
@@ -126,51 +126,64 @@ class _HomeContentState extends State<HomeContent>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-      appBar: const HomeAppBar(),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          _loadProducts(forceRefresh: true); // Pass true here
-          _loadCategories(forceRefresh: true); // Pass true here
-          _loadHeadings(
-              forceRefresh: true); // Call _loadHeadings with forceRefresh: true
-        },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SearchBarWidget(
-                controller: _searchController,
-                isClickable: false, // Important change
-                isSearching: _searchController
-                    .text.isNotEmpty, // Reflects if there's text
-                onChanged: (query) {
-                  context.read<ProductBloc>().add(SearchProducts(query));
-                  // We need to call setState to rebuild the SearchBarWidget
-                  // itself to show/hide the clear button based on text input
-                  setState(() {});
+    return BlocBuilder<NetworkBloc, NetworkState>(
+      builder: (context, networkState) {
+        if (networkState is NetworkOffline) {
+          return const OfflinePage();
+        }
+
+        return BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, authState) {
+            if (authState is Unauthenticated) {
+              return const LoginOptionsScreen();
+            }
+
+            return Scaffold(
+              appBar: const HomeAppBar(),
+              body: RefreshIndicator(
+                onRefresh: () async {
+                  _loadProducts(forceRefresh: true);
+                  _loadCategories(forceRefresh: true);
+                  _loadHeadings(forceRefresh: true);
                 },
-                onClear: () {
-                  _searchController.clear();
-                  context.read<ProductBloc>().add(const SearchProducts(""));
-                  setState(() {}); // To update the clear button visibility
-                },
-                // onFilterTap: () { /* TODO: Implement filter action if needed */ },
-                // onSubmit: () { /* Handle submission if needed, e.g., keyboard done */ }
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SearchBarWidget(
+                        controller: _searchController,
+                        isClickable: false,
+                        isSearching: _searchController.text.isNotEmpty,
+                        onChanged: (query) {
+                          context
+                              .read<ProductBloc>()
+                              .add(SearchProducts(query));
+                          setState(() {});
+                        },
+                        onClear: () {
+                          _searchController.clear();
+                          context
+                              .read<ProductBloc>()
+                              .add(const SearchProducts(""));
+                          setState(() {});
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                      CategoriesSection(),
+                      const SizedBox(height: 16),
+                      const HeadingsSection(),
+                      const SizedBox(height: 16),
+                      const SpecialOffersSection(),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
+                ),
               ),
-              const SizedBox(height: 8),
-              CategoriesSection(),
-              const SizedBox(height: 16), // Add some spacing if needed
-              const HeadingsSection(), // This will now act as the promo banner
-              const SizedBox(height: 16), // Add some spacing if needed
-              // const PromoBanner(), // REMOVED
-              const SpecialOffersSection(),
-              const SizedBox(height: 24),
-            ],
-          ),
-        ),
-      ),
+            );
+          },
+        );
+      },
     );
   }
 }

@@ -54,7 +54,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final paymentResponse =
           await orderControllerApi.comfirmOrder(event.orderId, event.customer);
       emit(OrderConfirmed(paymentResponse!));
-    } on ApiException catch (e) {
+    } on ApiException {
       emit(OrderError(ErrorMessages.orderUpdateFailed));
     } catch (e) {
       emit(OrderError(ErrorMessages.orderUpdateFailed));
@@ -71,7 +71,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       } else {
         emit(const OrderError('Order not found.'));
       }
-    } on ApiException catch (e) {
+    } on ApiException {
       emit(OrderError(ErrorMessages.orderUpdateFailed));
     } catch (e) {
       emit(OrderError(ErrorMessages.unknownError));
@@ -111,7 +111,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       } else {
         emit(OrderError(ErrorMessages.orderUpdateFailed));
       }
-    } on ApiException catch (e) {
+    } on ApiException {
       emit(OrderError(ErrorMessages.orderUpdateFailed));
     } catch (e) {
       emit(OrderError(ErrorMessages.unknownError));
@@ -126,7 +126,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(OrderDeleted());
       // Optionnel: Recharger les commandes de l'utilisateur après suppression
       // Il faudrait récupérer le userId d'une autre manière ici (peut-être depuis l'état actuel ou un service d'authentification)
-    } on ApiException catch (e) {
+    } on ApiException {
       emit(OrderError(ErrorMessages.orderUpdateFailed));
     } catch (e) {
       emit(OrderError(ErrorMessages.unknownError));

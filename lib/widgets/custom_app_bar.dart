@@ -20,9 +20,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     final appBarTheme = theme.appBarTheme;
 
     final backgroundColor =
-        appBarTheme.backgroundColor ?? theme.colorScheme.background;
+        appBarTheme.backgroundColor ?? theme.colorScheme.surface;
     final foregroundColor =
-        appBarTheme.foregroundColor ?? theme.colorScheme.onBackground;
+        appBarTheme.foregroundColor ?? theme.colorScheme.onSurface;
     final titleTextStyle = appBarTheme.titleTextStyle ??
         theme.textTheme.titleLarge?.copyWith(
           fontWeight: FontWeight.bold,

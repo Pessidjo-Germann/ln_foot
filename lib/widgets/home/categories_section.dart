@@ -75,8 +75,7 @@ class CategoriesSection extends StatelessWidget {
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: categories.length,
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 16.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         separatorBuilder: (context, index) =>
                             const SizedBox(width: 20),
                         itemBuilder: (context, index) {
@@ -93,8 +92,7 @@ class CategoriesSection extends StatelessWidget {
                                 print(
                                     'Category ${category.name} tapped - dispatching FilterProductsByCategory');
                               } else {
-                                print(
-                                    'Category name is null, cannot filter.');
+                                print('Category name is null, cannot filter.');
                               }
                             },
                             isSelected: isItemSelected,
@@ -108,7 +106,7 @@ class CategoriesSection extends StatelessWidget {
             },
           );
         } else if (categoryState is CategoryError) {
-          return Center(child: Text('Erreur: ${categoryState.message}'));
+          return const SizedBox.shrink();
         } else {
           return const SizedBox.shrink();
         }

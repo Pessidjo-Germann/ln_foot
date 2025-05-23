@@ -60,7 +60,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       _currentSelectedCategoryName = null; 
       _searchQuery = ""; 
       _applyFiltersAndEmit(emit);
-    } on ApiException catch (e) {
+    } on ApiException {
       emit(ProductError(ErrorMessages.productUpdateFailed));
     } catch (e) {
       emit(ProductError(ErrorMessages.unknownError));
@@ -74,7 +74,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           final productVariants = await _productVariantApi.getProductVariants(event.productId);
           debugPrint('Product Variants: $productVariants');
           emit(ProductVariantsLoaded(productVariants!));
-        } on ApiException catch (e) {
+        } on ApiException {
           emit(ProductError(ErrorMessages.productUpdateFailed));
         } catch (e) {
           emit(ProductError(ErrorMessages.productUpdateFailed));
@@ -132,7 +132,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       } else {
         emit(ProductError(ErrorMessages.productUpdateFailed));
       }
-    } on ApiException catch (e) {
+    } on ApiException {
       emit(ProductError(ErrorMessages.productUpdateFailed));
     } catch (e) {
       emit(ProductError(ErrorMessages.unknownError));
@@ -145,7 +145,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     try {
       await _productApi.deleteProduct(event.productId);
       emit(ProductDeleted());
-    } on ApiException catch (e) {
+    } on ApiException {
       emit(ProductError(ErrorMessages.productUpdateFailed));
     } catch (e) {
       emit(ProductError(ErrorMessages.unknownError));

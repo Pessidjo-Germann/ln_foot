@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'; // Import Bloc
-import 'package:lnFoot_api/api.dart';
 import 'package:ln_foot/bloc/saved_items/saved_items_bloc.dart'; // Import Bloc
 import 'package:ln_foot/screen/product_details_screen.dart';
 import 'package:ln_foot/widgets/saved_items/shimmer_product_card.dart';

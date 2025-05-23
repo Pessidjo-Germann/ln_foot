@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ln_foot/screen/home_screen.dart';
 import 'package:ln_foot/screen/my_orders_screen.dart';
 import 'package:ln_foot/screen/notification_screen.dart'; // Added import
-import 'package:ln_foot/screen/payment_method_screen.dart'; // Added import
+
 import 'package:ln_foot/screen/profile_details_screen.dart';
 import 'package:ln_foot/screen/privacy_policy_screen.dart'; // Import PrivacyPolicyScreen
 import 'package:ln_foot/widgets/common/logout_confirmation_dialog.dart';

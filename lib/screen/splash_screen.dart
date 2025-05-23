@@ -4,7 +4,6 @@ import 'package:lnFoot_api/api.dart';
 import 'package:ln_foot/bloc/auth/auth_bloc.dart';
 import 'package:ln_foot/screen/home_screen.dart';
 import 'package:ln_foot/screen/onboarding_screen.dart';
-import 'package:ln_foot/service.dart';
 
 class SplashScreen extends StatefulWidget {
   final ApiClient apiClient;

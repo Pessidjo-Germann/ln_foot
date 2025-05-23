@@ -9,14 +9,14 @@ class SocialButton extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
 
   const SocialButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
     required this.icon,
     this.foregroundColor = Colors.black87,
     this.borderColor,
     this.padding = const EdgeInsets.symmetric(vertical: 14),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

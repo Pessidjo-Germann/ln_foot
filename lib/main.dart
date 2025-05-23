@@ -14,6 +14,7 @@ import 'package:connectivity_plus/connectivity_plus.dart'; // Import Connectivit
 import 'package:ln_foot/widgets/offline_notification_banner.dart'; // Import OfflineNotificationBanner
 import 'package:ln_foot/screen/home_screen.dart';
 import 'package:ln_foot/screen/login_options_screen.dart';
+import 'package:ln_foot/screen/offline_page.dart';
 import 'package:ln_foot/screen/splash_screen.dart';
 import 'package:ln_foot/theme/app_theme.dart';
 import 'package:ln_foot/service.dart';
@@ -129,7 +130,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<ReviewBloc>(
           create: (_) => ReviewBloc(reviewControllerApi: reviewControllerApi),
         ),
-        BlocProvider<NetworkBloc>( // Add NetworkBloc provider
+        BlocProvider<NetworkBloc>(
+          // Add NetworkBloc provider
           create: (_) => NetworkBloc(connectivity: Connectivity()),
         ),
       ],
@@ -158,44 +160,57 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is Unauthenticated) {
-          Navigator.of(context).pushAndRemoveUntil(
-            // Ici, tu instancies LoginOptionsScreen au lieu de LoginScreen simple
-            MaterialPageRoute(builder: (context) => LoginOptionsScreen()),
-            (Route<dynamic> route) => false,
-          );
-        } else if (state is Authenticated) {
-          debugPrint("hello we are in wapper");
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
-            (Route<dynamic> route) => false,
-          );
-        } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text('Erreur d\'authentification: ${state.message}')),
-          );
-          // Redirige vers la connexion même en cas d'erreur grave
-          Navigator.of(context).pushAndRemoveUntil(
-            // Ici aussi
-            MaterialPageRoute(builder: (context) => LoginOptionsScreen()),
-            (Route<dynamic> route) => false,
-          );
+    // Vérifie d'abord l'état de la connexion réseau
+    return BlocBuilder<NetworkBloc, NetworkState>(
+      builder: (context, networkState) {
+        // Si l'utilisateur est hors ligne, affiche la page offline
+        if (networkState is NetworkOffline) {
+          return const OfflinePage();
         }
-      },
-      builder: (context, state) {
-        if (state is AuthLoading || state is AuthInitial) {
-          return SplashScreen(apiClient: apiClient);
-        } else if (state is Authenticated || state is AuthenticatedWithToken) {
-          debugPrint("hello we are in wapper");
-          return const HomeScreen();
-        } else {
-          // Si l'état est non géré (par exemple AuthError ou Unauthenticated)
-          // le builder initial affichera la page de connexion avant que le listener ne navigue.
-          return LoginOptionsScreen(); // Ici aussi
-        }
+
+        // Si l'utilisateur est en ligne, procède avec l'authentification normale
+        return BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is Unauthenticated) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => const LoginOptionsScreen()),
+                (Route<dynamic> route) => false,
+              );
+            } else if (state is Authenticated) {
+              debugPrint("hello we are in wapper");
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const HomeScreen()),
+                (Route<dynamic> route) => false,
+              );
+            } else if (state is AuthError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Erreur d\'authentification: ${state.message}'),
+                ),
+              );
+              // Redirige vers la connexion même en cas d'erreur grave
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => const LoginOptionsScreen()),
+                (Route<dynamic> route) => false,
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state is AuthLoading || state is AuthInitial) {
+              return SplashScreen(apiClient: apiClient);
+            } else if (state is Authenticated ||
+                state is AuthenticatedWithToken) {
+              debugPrint("hello we are in wapper");
+              return const HomeScreen();
+            } else {
+              // Si l'état est non géré (par exemple AuthError ou Unauthenticated)
+              // le builder initial affichera la page de connexion avant que le listener ne navigue.
+              return const LoginOptionsScreen();
+            }
+          },
+        );
       },
     );
   }

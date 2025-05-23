@@ -5,7 +5,7 @@ import 'package:ln_foot/bloc/saved_items/saved_items_bloc.dart'; // Import Saved
 
 import 'package:ln_foot/screen/product_details_screen.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
-import 'package:ln_foot/model/product.dart'; // Garder Product pour l'instant
+// Garder Product pour l'instant
 import 'package:ln_foot/widgets/common/product_card.dart';
 import 'package:ln_foot/widgets/search/empty_search_result.dart';
 

@@ -21,7 +21,7 @@ class CartSummary extends StatelessWidget {
     // final format = NumberFormat.currency(locale: 'fr_FR', symbol: 'FCFA', decimalDigits: 0);
     // return format.format(amount);
     // Simple formatting for now:
-    return '${amount.toStringAsFixed(2)}'; // Match the image format ($XX.XX)
+    return amount.toStringAsFixed(2); // Match the image format ($XX.XX)
                                           // The image uses $, but the item price uses FCFA.
                                           // Using $ for consistency with the summary in the image.
   }

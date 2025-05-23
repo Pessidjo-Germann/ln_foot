@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lnFoot_api/api.dart';
 import 'package:ln_foot/bloc/auth/auth_bloc.dart';
 import 'package:ln_foot/screen/login_options_screen.dart';
 import '../custom_button.dart';
@@ -10,10 +9,10 @@ class LogoutConfirmationDialog extends StatelessWidget {
   final VoidCallback onCancel;
 
   const LogoutConfirmationDialog({
-    Key? key,
+    super.key,
     required this.onConfirm,
     required this.onCancel,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -6,8 +6,7 @@ import 'package:lnFoot_api/api.dart';
 class SubmitReviewDialog extends StatefulWidget {
   final String productId;
 
-  const SubmitReviewDialog({Key? key, required this.productId})
-      : super(key: key);
+  const SubmitReviewDialog({super.key, required this.productId});
 
   @override
   _SubmitReviewDialogState createState() => _SubmitReviewDialogState();

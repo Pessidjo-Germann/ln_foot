@@ -67,13 +67,13 @@ class _AddressSectionState extends State<AddressSection> {
             ),
             TextButton(
               onPressed: () => _showAddressModal(context),
-              child: const Text('Modifier'),
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 foregroundColor: Theme.of(context).primaryColor,
               ),
+              child: const Text('Modifier'),
             ),
           ],
         ),
