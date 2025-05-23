@@ -13,20 +13,12 @@ part of openapi.api;
 class PromotionProductDto {
   /// Returns a new [PromotionProductDto] instance.
   PromotionProductDto({
-    this.id,
     required this.productVariantId,
     required this.discountedPrice,
     required this.startDate,
     required this.endDate,
+    this.id,
   });
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? id;
 
   String productVariantId;
 
@@ -36,37 +28,48 @@ class PromotionProductDto {
 
   DateTime endDate;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? id;
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is PromotionProductDto &&
-    other.id == id &&
-    other.productVariantId == productVariantId &&
-    other.discountedPrice == discountedPrice &&
-    other.startDate == startDate &&
-    other.endDate == endDate;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PromotionProductDto &&
+          other.productVariantId == productVariantId &&
+          other.discountedPrice == discountedPrice &&
+          other.startDate == startDate &&
+          other.endDate == endDate &&
+          other.id == id;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (id == null ? 0 : id!.hashCode) +
-    (productVariantId.hashCode) +
-    (discountedPrice.hashCode) +
-    (startDate.hashCode) +
-    (endDate.hashCode);
+      // ignore: unnecessary_parenthesis
+      (productVariantId.hashCode) +
+      (discountedPrice.hashCode) +
+      (startDate.hashCode) +
+      (endDate.hashCode) +
+      (id == null ? 0 : id!.hashCode);
 
   @override
-  String toString() => 'PromotionProductDto[id=$id, productVariantId=$productVariantId, discountedPrice=$discountedPrice, startDate=$startDate, endDate=$endDate]';
+  String toString() =>
+      'PromotionProductDto[productVariantId=$productVariantId, discountedPrice=$discountedPrice, startDate=$startDate, endDate=$endDate, id=$id]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+    json[r'productVariantId'] = this.productVariantId;
+    json[r'discountedPrice'] = this.discountedPrice;
+    json[r'startDate'] = _dateFormatter.format(this.startDate.toUtc());
+    json[r'endDate'] = _dateFormatter.format(this.endDate.toUtc());
     if (this.id != null) {
       json[r'id'] = this.id;
     } else {
       json[r'id'] = null;
     }
-      json[r'productVariantId'] = this.productVariantId;
-      json[r'discountedPrice'] = this.discountedPrice;
-      json[r'startDate'] = _dateFormatter.format(this.startDate.toUtc());
-      json[r'endDate'] = _dateFormatter.format(this.endDate.toUtc());
     return json;
   }
 
@@ -82,24 +85,29 @@ class PromotionProductDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "PromotionProductDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "PromotionProductDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "PromotionProductDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "PromotionProductDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
       return PromotionProductDto(
-        id: mapValueOfType<String>(json, r'id'),
         productVariantId: mapValueOfType<String>(json, r'productVariantId')!,
         discountedPrice: mapValueOfType<double>(json, r'discountedPrice')!,
         startDate: mapDateTime(json, r'startDate', r'')!,
         endDate: mapDateTime(json, r'endDate', r'')!,
+        id: mapValueOfType<String>(json, r'id'),
       );
     }
     return null;
   }
 
-  static List<PromotionProductDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<PromotionProductDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <PromotionProductDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -127,13 +135,19 @@ class PromotionProductDto {
   }
 
   // maps a json object with a list of PromotionProductDto-objects as value to a dart map
-  static Map<String, List<PromotionProductDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<PromotionProductDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<PromotionProductDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = PromotionProductDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = PromotionProductDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -147,4 +161,3 @@ class PromotionProductDto {
     'endDate',
   };
 }
-

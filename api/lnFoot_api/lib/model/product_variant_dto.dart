@@ -82,30 +82,33 @@ class ProductVariantDto {
   List<String> sizes;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ProductVariantDto &&
-    other.id == id &&
-    other.imageUrl == imageUrl &&
-    other.file == file &&
-    other.colorCode == colorCode &&
-    other.productId == productId &&
-    other.price == price &&
-    other.stockQuantity == stockQuantity &&
-    _deepEquality.equals(other.sizes, sizes);
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProductVariantDto &&
+          other.id == id &&
+          other.imageUrl == imageUrl &&
+          other.file == file &&
+          other.colorCode == colorCode &&
+          other.productId == productId &&
+          other.price == price &&
+          other.stockQuantity == stockQuantity &&
+          _deepEquality.equals(other.sizes, sizes);
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (id == null ? 0 : id!.hashCode) +
-    (imageUrl == null ? 0 : imageUrl!.hashCode) +
-    (file == null ? 0 : file!.hashCode) +
-    (colorCode == null ? 0 : colorCode!.hashCode) +
-    (productId == null ? 0 : productId!.hashCode) +
-    (price == null ? 0 : price!.hashCode) +
-    (stockQuantity == null ? 0 : stockQuantity!.hashCode) +
-    (sizes.hashCode);
+      // ignore: unnecessary_parenthesis
+      (id == null ? 0 : id!.hashCode) +
+      (imageUrl == null ? 0 : imageUrl!.hashCode) +
+      (file == null ? 0 : file!.hashCode) +
+      (colorCode == null ? 0 : colorCode!.hashCode) +
+      (productId == null ? 0 : productId!.hashCode) +
+      (price == null ? 0 : price!.hashCode) +
+      (stockQuantity == null ? 0 : stockQuantity!.hashCode) +
+      (sizes.hashCode);
 
   @override
-  String toString() => 'ProductVariantDto[id=$id, imageUrl=$imageUrl, file=$file, colorCode=$colorCode, productId=$productId, price=$price, stockQuantity=$stockQuantity, sizes=$sizes]';
+  String toString() =>
+      'ProductVariantDto[id=$id, imageUrl=$imageUrl, file=$file, colorCode=$colorCode, productId=$productId, price=$price, stockQuantity=$stockQuantity, sizes=$sizes]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -144,7 +147,7 @@ class ProductVariantDto {
     } else {
       json[r'stockQuantity'] = null;
     }
-      json[r'sizes'] = this.sizes;
+    json[r'sizes'] = this.sizes;
     return json;
   }
 
@@ -160,8 +163,10 @@ class ProductVariantDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "ProductVariantDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "ProductVariantDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "ProductVariantDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "ProductVariantDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -175,14 +180,19 @@ class ProductVariantDto {
         price: mapValueOfType<double>(json, r'price'),
         stockQuantity: mapValueOfType<int>(json, r'stockQuantity'),
         sizes: json[r'sizes'] is Iterable
-            ? (json[r'sizes'] as Iterable).cast<String>().toList(growable: false)
+            ? (json[r'sizes'] as Iterable)
+                .cast<String>()
+                .toList(growable: false)
             : const [],
       );
     }
     return null;
   }
 
-  static List<ProductVariantDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<ProductVariantDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <ProductVariantDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -210,20 +220,24 @@ class ProductVariantDto {
   }
 
   // maps a json object with a list of ProductVariantDto-objects as value to a dart map
-  static Map<String, List<ProductVariantDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<ProductVariantDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<ProductVariantDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = ProductVariantDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = ProductVariantDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
   }
 
   /// The list of required keys that must be present in a JSON.
-  static const requiredKeys = <String>{
-  };
+  static const requiredKeys = <String>{};
 }
-

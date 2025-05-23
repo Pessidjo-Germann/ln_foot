@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
-
 class ProductVariantControllerApi {
-  ProductVariantControllerApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
+  ProductVariantControllerApi([ApiClient? apiClient])
+      : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -34,7 +34,16 @@ class ProductVariantControllerApi {
   /// * [int] stockQuantity:
   ///
   /// * [List<String>] sizes:
-  Future<Response> createProductVariantWithHttpInfo({ String? id, String? imageUrl, MultipartFile? file, String? colorCode, String? productId, double? price, int? stockQuantity, List<String>? sizes, }) async {
+  Future<Response> createProductVariantWithHttpInfo({
+    String? id,
+    String? imageUrl,
+    MultipartFile? file,
+    String? colorCode,
+    String? productId,
+    double? price,
+    int? stockQuantity,
+    List<String>? sizes,
+  }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/product-variants';
 
@@ -114,17 +123,38 @@ class ProductVariantControllerApi {
   /// * [int] stockQuantity:
   ///
   /// * [List<String>] sizes:
-  Future<ProductVariantDto?> createProductVariant({ String? id, String? imageUrl, MultipartFile? file, String? colorCode, String? productId, double? price, int? stockQuantity, List<String>? sizes, }) async {
-    final response = await createProductVariantWithHttpInfo( id: id, imageUrl: imageUrl, file: file, colorCode: colorCode, productId: productId, price: price, stockQuantity: stockQuantity, sizes: sizes, );
+  Future<ProductVariantDto?> createProductVariant({
+    String? id,
+    String? imageUrl,
+    MultipartFile? file,
+    String? colorCode,
+    String? productId,
+    double? price,
+    int? stockQuantity,
+    List<String>? sizes,
+  }) async {
+    final response = await createProductVariantWithHttpInfo(
+      id: id,
+      imageUrl: imageUrl,
+      file: file,
+      colorCode: colorCode,
+      productId: productId,
+      price: price,
+      stockQuantity: stockQuantity,
+      sizes: sizes,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ProductVariantDto',) as ProductVariantDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ProductVariantDto',
+      ) as ProductVariantDto;
     }
     return null;
   }
@@ -168,12 +198,13 @@ class ProductVariantControllerApi {
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<ProductVariantDto>') as List)
-        .cast<ProductVariantDto>()
-        .toList(growable: false);
-
+      return (await apiClient.deserializeAsync(
+              responseBody, 'List<ProductVariantDto>') as List)
+          .cast<ProductVariantDto>()
+          .toList(growable: false);
     }
     return null;
   }
@@ -182,10 +213,11 @@ class ProductVariantControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> deleteProductVariantWithHttpInfo(String id,) async {
+  Future<Response> deleteProductVariantWithHttpInfo(
+    String id,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/product-variants/{id}'
-      .replaceAll('{id}', id);
+    final path = r'/api/product-variants/{id}'.replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -195,7 +227,6 @@ class ProductVariantControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -211,8 +242,12 @@ class ProductVariantControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<void> deleteProductVariant(String id,) async {
-    final response = await deleteProductVariantWithHttpInfo(id,);
+  Future<void> deleteProductVariant(
+    String id,
+  ) async {
+    final response = await deleteProductVariantWithHttpInfo(
+      id,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -222,10 +257,11 @@ class ProductVariantControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> getProductVariantWithHttpInfo(String id,) async {
+  Future<Response> getProductVariantWithHttpInfo(
+    String id,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/product-variants/{id}'
-      .replaceAll('{id}', id);
+    final path = r'/api/product-variants/{id}'.replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -235,7 +271,6 @@ class ProductVariantControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -251,17 +286,24 @@ class ProductVariantControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<ProductVariantDto?> getProductVariant(String id,) async {
-    final response = await getProductVariantWithHttpInfo(id,);
+  Future<ProductVariantDto?> getProductVariant(
+    String id,
+  ) async {
+    final response = await getProductVariantWithHttpInfo(
+      id,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ProductVariantDto',) as ProductVariantDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ProductVariantDto',
+      ) as ProductVariantDto;
     }
     return null;
   }
@@ -270,7 +312,9 @@ class ProductVariantControllerApi {
   /// Parameters:
   ///
   /// * [String] productId (required):
-  Future<Response> getProductVariantsWithHttpInfo(String productId,) async {
+  Future<Response> getProductVariantsWithHttpInfo(
+    String productId,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/api/product-variants';
 
@@ -281,10 +325,9 @@ class ProductVariantControllerApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-      queryParams.addAll(_queryParams('', 'productId', productId));
+    queryParams.addAll(_queryParams('', 'productId', productId));
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -300,20 +343,25 @@ class ProductVariantControllerApi {
   /// Parameters:
   ///
   /// * [String] productId (required):
-  Future<List<ProductVariantDto>?> getProductVariants(String productId,) async {
-    final response = await getProductVariantsWithHttpInfo(productId,);
+  Future<List<ProductVariantDto>?> getProductVariants(
+    String productId,
+  ) async {
+    final response = await getProductVariantsWithHttpInfo(
+      productId,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<ProductVariantDto>') as List)
-        .cast<ProductVariantDto>()
-        .toList(growable: false);
-
+      return (await apiClient.deserializeAsync(
+              responseBody, 'List<ProductVariantDto>') as List)
+          .cast<ProductVariantDto>()
+          .toList(growable: false);
     }
     return null;
   }
@@ -324,10 +372,12 @@ class ProductVariantControllerApi {
   /// * [String] id (required):
   ///
   /// * [ProductVariantDto] productVariantDto:
-  Future<Response> updateProductVariantWithHttpInfo(String id, { ProductVariantDto? productVariantDto, }) async {
+  Future<Response> updateProductVariantWithHttpInfo(
+    String id, {
+    ProductVariantDto? productVariantDto,
+  }) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/product-variants/{id}'
-      .replaceAll('{id}', id);
+    final path = r'/api/product-variants/{id}'.replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody = productVariantDto;
@@ -337,7 +387,6 @@ class ProductVariantControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
-
 
     return apiClient.invokeAPI(
       path,
@@ -355,17 +404,26 @@ class ProductVariantControllerApi {
   /// * [String] id (required):
   ///
   /// * [ProductVariantDto] productVariantDto:
-  Future<ProductVariantDto?> updateProductVariant(String id, { ProductVariantDto? productVariantDto, }) async {
-    final response = await updateProductVariantWithHttpInfo(id,  productVariantDto: productVariantDto, );
+  Future<ProductVariantDto?> updateProductVariant(
+    String id, {
+    ProductVariantDto? productVariantDto,
+  }) async {
+    final response = await updateProductVariantWithHttpInfo(
+      id,
+      productVariantDto: productVariantDto,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ProductVariantDto',) as ProductVariantDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ProductVariantDto',
+      ) as ProductVariantDto;
     }
     return null;
   }

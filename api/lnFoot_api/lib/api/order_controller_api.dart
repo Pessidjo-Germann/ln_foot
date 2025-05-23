@@ -62,12 +62,6 @@ class OrderControllerApi {
       id,
       customer,
     );
-    print(response.reasonPhrase);
-    print(response.statusCode);
-    print(response.body);
-    print(response.headers);
-    print(response.request);
-
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -123,10 +117,6 @@ class OrderControllerApi {
     final response = await createOrderWithHttpInfo(
       orderDto,
     );
-    print(response.reasonPhrase);
-    print(response.statusCode);
-    print(response.body);
-    print(response.headers);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

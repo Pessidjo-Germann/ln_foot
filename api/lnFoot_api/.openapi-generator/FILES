@@ -51,5 +51,3 @@ lib/model/promotion_product_dto.dart
 lib/model/review_dto.dart
 lib/model/size_dto.dart
 pubspec.yaml
-test/heading_controller_api_test.dart
-test/heading_dto_test.dart

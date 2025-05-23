@@ -1,8 +1,8 @@
-# lnfoot_api.model.Customer
+# lnFoot_api.model.Customer
 
 ## Load the model package
 ```dart
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 ```
 
 ## Properties

@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
-
 class HeadingControllerApi {
-  HeadingControllerApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
+  HeadingControllerApi([ApiClient? apiClient])
+      : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -20,7 +20,9 @@ class HeadingControllerApi {
   /// Parameters:
   ///
   /// * [HeadingDto] headingDto (required):
-  Future<Response> createHeadingWithHttpInfo(HeadingDto headingDto,) async {
+  Future<Response> createHeadingWithHttpInfo(
+    HeadingDto headingDto,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/api/headings';
 
@@ -32,7 +34,6 @@ class HeadingControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
-
 
     return apiClient.invokeAPI(
       path,
@@ -48,17 +49,24 @@ class HeadingControllerApi {
   /// Parameters:
   ///
   /// * [HeadingDto] headingDto (required):
-  Future<HeadingDto?> createHeading(HeadingDto headingDto,) async {
-    final response = await createHeadingWithHttpInfo(headingDto,);
+  Future<HeadingDto?> createHeading(
+    HeadingDto headingDto,
+  ) async {
+    final response = await createHeadingWithHttpInfo(
+      headingDto,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'HeadingDto',) as HeadingDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'HeadingDto',
+      ) as HeadingDto;
     }
     return null;
   }
@@ -67,10 +75,11 @@ class HeadingControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> deleteProduct1WithHttpInfo(String id,) async {
+  Future<Response> deleteProduct1WithHttpInfo(
+    String id,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/headings/{id}'
-      .replaceAll('{id}', id);
+    final path = r'/api/headings/{id}'.replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -80,7 +89,6 @@ class HeadingControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -96,8 +104,12 @@ class HeadingControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<void> deleteProduct1(String id,) async {
-    final response = await deleteProduct1WithHttpInfo(id,);
+  Future<void> deleteProduct1(
+    String id,
+  ) async {
+    final response = await deleteProduct1WithHttpInfo(
+      id,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -116,7 +128,6 @@ class HeadingControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -137,12 +148,13 @@ class HeadingControllerApi {
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<HeadingDto>') as List)
-        .cast<HeadingDto>()
-        .toList(growable: false);
-
+      return (await apiClient.deserializeAsync(responseBody, 'List<HeadingDto>')
+              as List)
+          .cast<HeadingDto>()
+          .toList(growable: false);
     }
     return null;
   }
@@ -151,10 +163,11 @@ class HeadingControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> getOrderById1WithHttpInfo(String id,) async {
+  Future<Response> getOrderById1WithHttpInfo(
+    String id,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/headings/{id}'
-      .replaceAll('{id}', id);
+    final path = r'/api/headings/{id}'.replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -164,7 +177,6 @@ class HeadingControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -180,17 +192,24 @@ class HeadingControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<HeadingDto?> getOrderById1(String id,) async {
-    final response = await getOrderById1WithHttpInfo(id,);
+  Future<HeadingDto?> getOrderById1(
+    String id,
+  ) async {
+    final response = await getOrderById1WithHttpInfo(
+      id,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'HeadingDto',) as HeadingDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'HeadingDto',
+      ) as HeadingDto;
     }
     return null;
   }

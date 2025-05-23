@@ -11,7 +11,6 @@
 import 'package:lnfoot_api/api.dart';
 import 'package:test/test.dart';
 
-
 /// tests for SizeControllerApi
 void main() {
   // final instance = SizeControllerApi();
@@ -41,6 +40,5 @@ void main() {
     test('test updateSize', () async {
       // TODO
     });
-
   });
 }

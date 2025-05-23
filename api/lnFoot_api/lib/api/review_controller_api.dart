@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
-
 class ReviewControllerApi {
-  ReviewControllerApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
+  ReviewControllerApi([ApiClient? apiClient])
+      : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -20,7 +20,9 @@ class ReviewControllerApi {
   /// Parameters:
   ///
   /// * [ReviewDto] reviewDto (required):
-  Future<Response> createReviewWithHttpInfo(ReviewDto reviewDto,) async {
+  Future<Response> createReviewWithHttpInfo(
+    ReviewDto reviewDto,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/api/reviews';
 
@@ -32,7 +34,6 @@ class ReviewControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
-
 
     return apiClient.invokeAPI(
       path,
@@ -48,17 +49,24 @@ class ReviewControllerApi {
   /// Parameters:
   ///
   /// * [ReviewDto] reviewDto (required):
-  Future<ReviewDto?> createReview(ReviewDto reviewDto,) async {
-    final response = await createReviewWithHttpInfo(reviewDto,);
+  Future<ReviewDto?> createReview(
+    ReviewDto reviewDto,
+  ) async {
+    final response = await createReviewWithHttpInfo(
+      reviewDto,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ReviewDto',) as ReviewDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ReviewDto',
+      ) as ReviewDto;
     }
     return null;
   }
@@ -67,10 +75,11 @@ class ReviewControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> deleteReviewWithHttpInfo(String id,) async {
+  Future<Response> deleteReviewWithHttpInfo(
+    String id,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/reviews/{id}'
-      .replaceAll('{id}', id);
+    final path = r'/api/reviews/{id}'.replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -80,7 +89,6 @@ class ReviewControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -96,8 +104,12 @@ class ReviewControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<void> deleteReview(String id,) async {
-    final response = await deleteReviewWithHttpInfo(id,);
+  Future<void> deleteReview(
+    String id,
+  ) async {
+    final response = await deleteReviewWithHttpInfo(
+      id,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -116,7 +128,6 @@ class ReviewControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -137,12 +148,13 @@ class ReviewControllerApi {
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<ReviewDto>') as List)
-        .cast<ReviewDto>()
-        .toList(growable: false);
-
+      return (await apiClient.deserializeAsync(responseBody, 'List<ReviewDto>')
+              as List)
+          .cast<ReviewDto>()
+          .toList(growable: false);
     }
     return null;
   }
@@ -151,10 +163,11 @@ class ReviewControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> getReviewByIdWithHttpInfo(String id,) async {
+  Future<Response> getReviewByIdWithHttpInfo(
+    String id,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/reviews/{id}'
-      .replaceAll('{id}', id);
+    final path = r'/api/reviews/{id}'.replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -164,7 +177,6 @@ class ReviewControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -180,17 +192,24 @@ class ReviewControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<ReviewDto?> getReviewById(String id,) async {
-    final response = await getReviewByIdWithHttpInfo(id,);
+  Future<ReviewDto?> getReviewById(
+    String id,
+  ) async {
+    final response = await getReviewByIdWithHttpInfo(
+      id,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ReviewDto',) as ReviewDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ReviewDto',
+      ) as ReviewDto;
     }
     return null;
   }
@@ -201,10 +220,12 @@ class ReviewControllerApi {
   /// * [String] id (required):
   ///
   /// * [ReviewDto] reviewDto (required):
-  Future<Response> updateReviewWithHttpInfo(String id, ReviewDto reviewDto,) async {
+  Future<Response> updateReviewWithHttpInfo(
+    String id,
+    ReviewDto reviewDto,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/reviews/{id}'
-      .replaceAll('{id}', id);
+    final path = r'/api/reviews/{id}'.replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody = reviewDto;
@@ -214,7 +235,6 @@ class ReviewControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
-
 
     return apiClient.invokeAPI(
       path,
@@ -232,17 +252,26 @@ class ReviewControllerApi {
   /// * [String] id (required):
   ///
   /// * [ReviewDto] reviewDto (required):
-  Future<ReviewDto?> updateReview(String id, ReviewDto reviewDto,) async {
-    final response = await updateReviewWithHttpInfo(id, reviewDto,);
+  Future<ReviewDto?> updateReview(
+    String id,
+    ReviewDto reviewDto,
+  ) async {
+    final response = await updateReviewWithHttpInfo(
+      id,
+      reviewDto,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ReviewDto',) as ReviewDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ReviewDto',
+      ) as ReviewDto;
     }
     return null;
   }

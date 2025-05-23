@@ -70,26 +70,29 @@ class PaymentResponseDto {
   DateTime? updatedAt;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is PaymentResponseDto &&
-    other.id == id &&
-    other.orderId == orderId &&
-    other.paymentId == paymentId &&
-    other.status == status &&
-    other.createdAt == createdAt &&
-    other.updatedAt == updatedAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PaymentResponseDto &&
+          other.id == id &&
+          other.orderId == orderId &&
+          other.paymentId == paymentId &&
+          other.status == status &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (id == null ? 0 : id!.hashCode) +
-    (orderId == null ? 0 : orderId!.hashCode) +
-    (paymentId == null ? 0 : paymentId!.hashCode) +
-    (status == null ? 0 : status!.hashCode) +
-    (createdAt == null ? 0 : createdAt!.hashCode) +
-    (updatedAt == null ? 0 : updatedAt!.hashCode);
+      // ignore: unnecessary_parenthesis
+      (id == null ? 0 : id!.hashCode) +
+      (orderId == null ? 0 : orderId!.hashCode) +
+      (paymentId == null ? 0 : paymentId!.hashCode) +
+      (status == null ? 0 : status!.hashCode) +
+      (createdAt == null ? 0 : createdAt!.hashCode) +
+      (updatedAt == null ? 0 : updatedAt!.hashCode);
 
   @override
-  String toString() => 'PaymentResponseDto[id=$id, orderId=$orderId, paymentId=$paymentId, status=$status, createdAt=$createdAt, updatedAt=$updatedAt]';
+  String toString() =>
+      'PaymentResponseDto[id=$id, orderId=$orderId, paymentId=$paymentId, status=$status, createdAt=$createdAt, updatedAt=$updatedAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -138,8 +141,10 @@ class PaymentResponseDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "PaymentResponseDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "PaymentResponseDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "PaymentResponseDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "PaymentResponseDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -156,7 +161,10 @@ class PaymentResponseDto {
     return null;
   }
 
-  static List<PaymentResponseDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<PaymentResponseDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <PaymentResponseDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -184,20 +192,24 @@ class PaymentResponseDto {
   }
 
   // maps a json object with a list of PaymentResponseDto-objects as value to a dart map
-  static Map<String, List<PaymentResponseDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<PaymentResponseDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<PaymentResponseDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = PaymentResponseDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = PaymentResponseDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
   }
 
   /// The list of required keys that must be present in a JSON.
-  static const requiredKeys = <String>{
-  };
+  static const requiredKeys = <String>{};
 }
-

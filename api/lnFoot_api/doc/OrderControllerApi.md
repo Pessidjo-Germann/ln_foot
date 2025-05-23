@@ -1,8 +1,8 @@
-# lnfoot_api.api.OrderControllerApi
+# lnFoot_api.api.OrderControllerApi
 
 ## Load the API package
 ```dart
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 ```
 
 All URIs are relative to *https://lnfoot-api.hublots.co*
@@ -25,7 +25,7 @@ Method | HTTP request | Description
 
 ### Example
 ```dart
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -70,7 +70,7 @@ Name | Type | Description  | Notes
 
 ### Example
 ```dart
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -113,7 +113,7 @@ Name | Type | Description  | Notes
 
 ### Example
 ```dart
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -155,7 +155,7 @@ void (empty response body)
 
 ### Example
 ```dart
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -194,7 +194,7 @@ This endpoint does not need any parameter.
 
 ### Example
 ```dart
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -237,7 +237,7 @@ Name | Type | Description  | Notes
 
 ### Example
 ```dart
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -276,7 +276,7 @@ This endpoint does not need any parameter.
 
 ### Example
 ```dart
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 

@@ -1,8 +1,8 @@
-# lnfoot_api.model.ProductVariantDto
+# lnFoot_api.model.ProductVariantDto
 
 ## Load the model package
 ```dart
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 ```
 
 ## Properties

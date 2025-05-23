@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
-
 class ProductControllerApi {
-  ProductControllerApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
+  ProductControllerApi([ApiClient? apiClient])
+      : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -36,7 +36,17 @@ class ProductControllerApi {
   /// * [List<String>] categoryNames:
   ///
   /// * [List<String>] sizes:
-  Future<Response> createProductWithHttpInfo(double price, { String? id, String? imageUrl, MultipartFile? file, String? name, String? description, int? stockQuantity, List<String>? categoryNames, List<String>? sizes, }) async {
+  Future<Response> createProductWithHttpInfo(
+    double price, {
+    String? id,
+    String? imageUrl,
+    MultipartFile? file,
+    String? name,
+    String? description,
+    int? stockQuantity,
+    List<String>? categoryNames,
+    List<String>? sizes,
+  }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/products';
 
@@ -122,17 +132,40 @@ class ProductControllerApi {
   /// * [List<String>] categoryNames:
   ///
   /// * [List<String>] sizes:
-  Future<ProductDto?> createProduct(double price, { String? id, String? imageUrl, MultipartFile? file, String? name, String? description, int? stockQuantity, List<String>? categoryNames, List<String>? sizes, }) async {
-    final response = await createProductWithHttpInfo(price,  id: id, imageUrl: imageUrl, file: file, name: name, description: description, stockQuantity: stockQuantity, categoryNames: categoryNames, sizes: sizes, );
+  Future<ProductDto?> createProduct(
+    double price, {
+    String? id,
+    String? imageUrl,
+    MultipartFile? file,
+    String? name,
+    String? description,
+    int? stockQuantity,
+    List<String>? categoryNames,
+    List<String>? sizes,
+  }) async {
+    final response = await createProductWithHttpInfo(
+      price,
+      id: id,
+      imageUrl: imageUrl,
+      file: file,
+      name: name,
+      description: description,
+      stockQuantity: stockQuantity,
+      categoryNames: categoryNames,
+      sizes: sizes,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ProductDto',) as ProductDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ProductDto',
+      ) as ProductDto;
     }
     return null;
   }
@@ -141,10 +174,11 @@ class ProductControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> deleteProductWithHttpInfo(String id,) async {
+  Future<Response> deleteProductWithHttpInfo(
+    String id,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/products/{id}'
-      .replaceAll('{id}', id);
+    final path = r'/api/products/{id}'.replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -154,7 +188,6 @@ class ProductControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -170,8 +203,12 @@ class ProductControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<void> deleteProduct(String id,) async {
-    final response = await deleteProductWithHttpInfo(id,);
+  Future<void> deleteProduct(
+    String id,
+  ) async {
+    final response = await deleteProductWithHttpInfo(
+      id,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -190,7 +227,6 @@ class ProductControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -211,12 +247,13 @@ class ProductControllerApi {
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<ProductDto>') as List)
-        .cast<ProductDto>()
-        .toList(growable: false);
-
+      return (await apiClient.deserializeAsync(responseBody, 'List<ProductDto>')
+              as List)
+          .cast<ProductDto>()
+          .toList(growable: false);
     }
     return null;
   }
@@ -225,10 +262,11 @@ class ProductControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> getProductByIdWithHttpInfo(String id,) async {
+  Future<Response> getProductByIdWithHttpInfo(
+    String id,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/products/{id}'
-      .replaceAll('{id}', id);
+    final path = r'/api/products/{id}'.replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -238,7 +276,6 @@ class ProductControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -254,17 +291,24 @@ class ProductControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<ProductDto?> getProductById(String id,) async {
-    final response = await getProductByIdWithHttpInfo(id,);
+  Future<ProductDto?> getProductById(
+    String id,
+  ) async {
+    final response = await getProductByIdWithHttpInfo(
+      id,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ProductDto',) as ProductDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ProductDto',
+      ) as ProductDto;
     }
     return null;
   }
@@ -275,10 +319,12 @@ class ProductControllerApi {
   /// * [String] id (required):
   ///
   /// * [ProductDto] productDto:
-  Future<Response> updateProductWithHttpInfo(String id, { ProductDto? productDto, }) async {
+  Future<Response> updateProductWithHttpInfo(
+    String id, {
+    ProductDto? productDto,
+  }) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/products/{id}'
-      .replaceAll('{id}', id);
+    final path = r'/api/products/{id}'.replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody = productDto;
@@ -288,7 +334,6 @@ class ProductControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
-
 
     return apiClient.invokeAPI(
       path,
@@ -306,17 +351,26 @@ class ProductControllerApi {
   /// * [String] id (required):
   ///
   /// * [ProductDto] productDto:
-  Future<ProductDto?> updateProduct(String id, { ProductDto? productDto, }) async {
-    final response = await updateProductWithHttpInfo(id,  productDto: productDto, );
+  Future<ProductDto?> updateProduct(
+    String id, {
+    ProductDto? productDto,
+  }) async {
+    final response = await updateProductWithHttpInfo(
+      id,
+      productDto: productDto,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ProductDto',) as ProductDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ProductDto',
+      ) as ProductDto;
     }
     return null;
   }

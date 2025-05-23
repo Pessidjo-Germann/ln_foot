@@ -13,16 +13,18 @@ part of openapi.api;
 class ProductDto {
   /// Returns a new [ProductDto] instance.
   ProductDto({
+    required this.price,
     this.id,
     this.imageUrl,
     this.file,
     this.name,
     this.description,
-    required this.price,
     this.stockQuantity,
     this.categoryNames = const [],
     this.sizes = const [],
   });
+
+  double price;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -64,8 +66,6 @@ class ProductDto {
   ///
   String? description;
 
-  double price;
-
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -79,35 +79,39 @@ class ProductDto {
   List<String> sizes;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ProductDto &&
-    other.id == id &&
-    other.imageUrl == imageUrl &&
-    other.file == file &&
-    other.name == name &&
-    other.description == description &&
-    other.price == price &&
-    other.stockQuantity == stockQuantity &&
-    _deepEquality.equals(other.categoryNames, categoryNames) &&
-    _deepEquality.equals(other.sizes, sizes);
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProductDto &&
+          other.price == price &&
+          other.id == id &&
+          other.imageUrl == imageUrl &&
+          other.file == file &&
+          other.name == name &&
+          other.description == description &&
+          other.stockQuantity == stockQuantity &&
+          _deepEquality.equals(other.categoryNames, categoryNames) &&
+          _deepEquality.equals(other.sizes, sizes);
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (id == null ? 0 : id!.hashCode) +
-    (imageUrl == null ? 0 : imageUrl!.hashCode) +
-    (file == null ? 0 : file!.hashCode) +
-    (name == null ? 0 : name!.hashCode) +
-    (description == null ? 0 : description!.hashCode) +
-    (price.hashCode) +
-    (stockQuantity == null ? 0 : stockQuantity!.hashCode) +
-    (categoryNames.hashCode) +
-    (sizes.hashCode);
+      // ignore: unnecessary_parenthesis
+      (price.hashCode) +
+      (id == null ? 0 : id!.hashCode) +
+      (imageUrl == null ? 0 : imageUrl!.hashCode) +
+      (file == null ? 0 : file!.hashCode) +
+      (name == null ? 0 : name!.hashCode) +
+      (description == null ? 0 : description!.hashCode) +
+      (stockQuantity == null ? 0 : stockQuantity!.hashCode) +
+      (categoryNames.hashCode) +
+      (sizes.hashCode);
 
   @override
-  String toString() => 'ProductDto[id=$id, imageUrl=$imageUrl, file=$file, name=$name, description=$description, price=$price, stockQuantity=$stockQuantity, categoryNames=$categoryNames, sizes=$sizes]';
+  String toString() =>
+      'ProductDto[price=$price, id=$id, imageUrl=$imageUrl, file=$file, name=$name, description=$description, stockQuantity=$stockQuantity, categoryNames=$categoryNames, sizes=$sizes]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+    json[r'price'] = this.price;
     if (this.id != null) {
       json[r'id'] = this.id;
     } else {
@@ -133,14 +137,13 @@ class ProductDto {
     } else {
       json[r'description'] = null;
     }
-      json[r'price'] = this.price;
     if (this.stockQuantity != null) {
       json[r'stockQuantity'] = this.stockQuantity;
     } else {
       json[r'stockQuantity'] = null;
     }
-      json[r'categoryNames'] = this.categoryNames;
-      json[r'sizes'] = this.sizes;
+    json[r'categoryNames'] = this.categoryNames;
+    json[r'sizes'] = this.sizes;
     return json;
   }
 
@@ -156,32 +159,41 @@ class ProductDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "ProductDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "ProductDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "ProductDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "ProductDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
       return ProductDto(
+        price: mapValueOfType<double>(json, r'price')!,
         id: mapValueOfType<String>(json, r'id'),
         imageUrl: mapValueOfType<String>(json, r'imageUrl'),
         file: null, // No support for decoding binary content from JSON
         name: mapValueOfType<String>(json, r'name'),
         description: mapValueOfType<String>(json, r'description'),
-        price: mapValueOfType<double>(json, r'price')!,
         stockQuantity: mapValueOfType<int>(json, r'stockQuantity'),
         categoryNames: json[r'categoryNames'] is Iterable
-            ? (json[r'categoryNames'] as Iterable).cast<String>().toList(growable: false)
+            ? (json[r'categoryNames'] as Iterable)
+                .cast<String>()
+                .toList(growable: false)
             : const [],
         sizes: json[r'sizes'] is Iterable
-            ? (json[r'sizes'] as Iterable).cast<String>().toList(growable: false)
+            ? (json[r'sizes'] as Iterable)
+                .cast<String>()
+                .toList(growable: false)
             : const [],
       );
     }
     return null;
   }
 
-  static List<ProductDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<ProductDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <ProductDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -209,13 +221,19 @@ class ProductDto {
   }
 
   // maps a json object with a list of ProductDto-objects as value to a dart map
-  static Map<String, List<ProductDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<ProductDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<ProductDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = ProductDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = ProductDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -226,4 +244,3 @@ class ProductDto {
     'price',
   };
 }
-

@@ -11,7 +11,6 @@
 import 'package:lnfoot_api/api.dart';
 import 'package:test/test.dart';
 
-
 /// tests for OrderControllerApi
 void main() {
   // final instance = OrderControllerApi();
@@ -51,6 +50,5 @@ void main() {
     test('test updateOrder', () async {
       // TODO
     });
-
   });
 }

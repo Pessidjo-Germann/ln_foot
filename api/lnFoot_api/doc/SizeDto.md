@@ -1,8 +1,8 @@
-# lnfoot_api.model.SizeDto
+# lnFoot_api.model.SizeDto
 
 ## Load the model package
 ```dart
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 ```
 
 ## Properties

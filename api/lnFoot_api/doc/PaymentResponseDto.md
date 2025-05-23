@@ -1,8 +1,8 @@
-# lnfoot_api.model.PaymentResponseDto
+# lnFoot_api.model.PaymentResponseDto
 
 ## Load the model package
 ```dart
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 ```
 
 ## Properties

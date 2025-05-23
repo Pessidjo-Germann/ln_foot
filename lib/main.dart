@@ -9,6 +9,9 @@ import 'package:ln_foot/bloc/category/category_bloc.dart';
 
 import 'package:ln_foot/bloc/review/review_bloc.dart';
 import 'package:ln_foot/bloc/heading/heading_bloc.dart'; // Import HeadingBloc
+import 'package:ln_foot/blocs/network_bloc/network_bloc.dart'; // Import NetworkBloc
+import 'package:connectivity_plus/connectivity_plus.dart'; // Import Connectivity
+import 'package:ln_foot/widgets/offline_notification_banner.dart'; // Import OfflineNotificationBanner
 import 'package:ln_foot/screen/home_screen.dart';
 import 'package:ln_foot/screen/login_options_screen.dart';
 import 'package:ln_foot/screen/splash_screen.dart';
@@ -126,12 +129,23 @@ class MyApp extends StatelessWidget {
         BlocProvider<ReviewBloc>(
           create: (_) => ReviewBloc(reviewControllerApi: reviewControllerApi),
         ),
+        BlocProvider<NetworkBloc>( // Add NetworkBloc provider
+          create: (_) => NetworkBloc(connectivity: Connectivity()),
+        ),
       ],
       child: MaterialApp(
         title: 'LN Foot',
         theme: appThemeData,
         home: AuthWrapper(apiClient: apiClient),
         debugShowCheckedModeBanner: false,
+        builder: (context, child) {
+          return Column(
+            children: [
+              const OfflineNotificationBanner(),
+              Expanded(child: child!),
+            ],
+          );
+        },
       ),
     );
   }

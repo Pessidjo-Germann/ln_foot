@@ -1,8 +1,8 @@
-# lnfoot_api.model.OrderDto
+# lnFoot_api.model.OrderDto
 
 ## Load the model package
 ```dart
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 ```
 
 ## Properties
