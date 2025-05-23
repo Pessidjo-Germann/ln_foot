@@ -35,7 +35,7 @@ class _CartScreenState extends State<CartScreen> {
       ));
     }
   }
-
+  bool isLoading = false;
   void _handleDecreaseQuantity(String itemId) {
     final bloc = context.read<CartBloc>();
     if (bloc.state is CartLoaded) {
@@ -82,7 +82,9 @@ class _CartScreenState extends State<CartScreen> {
           return BlocListener<OrderBloc, OrderState>(
             listener: (context, state) {
               if (state is OrderCreated) {
-                // Vider complètement le panier après la création de la commande
+                setState(() {
+                  isLoading = false;
+                });
                 context.read<CartBloc>().add(ClearCart());
                 Navigator.push(
                     context,
@@ -93,8 +95,15 @@ class _CartScreenState extends State<CartScreen> {
                     content: Text('Commande créée avec succès'),
                     backgroundColor: Colors.green));
               } else if (state is OrderError) {
+                setState(() {
+                  isLoading = false;
+                });
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(state.message), backgroundColor: Colors.red));
+              }else if (state is OrderLoading) {
+                setState(() {
+                  isLoading = true;
+                });
               }
             },
             child: Scaffold(
@@ -136,6 +145,7 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 AddToCartSection(
                   title: 'Passer à la caisse',
+                  isLoading: isLoading,
                   canAddToCart: cartState.items.isNotEmpty,
                   onAddToCart: () {
                     if (cartState.items.isEmpty) {

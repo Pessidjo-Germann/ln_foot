@@ -5,13 +5,15 @@ class AddToCartSection extends StatelessWidget {
   final VoidCallback onAddToCart;
   final bool canAddToCart; 
   final String title;
+  final bool isLoading;
 
   const AddToCartSection({
     super.key,
+    this.isLoading = false,
     required this.onAddToCart,
     this.canAddToCart = true, 
     this.title = 'Ajouter au panier',
-  }) ;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,7 @@ class AddToCartSection extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: CustomButton(
+          isLoading: isLoading,
           text: title, 
           onPressed: canAddToCart ? onAddToCart : () {},
           buttonColor: canAddToCart ? theme.primaryColor : Colors.grey, 

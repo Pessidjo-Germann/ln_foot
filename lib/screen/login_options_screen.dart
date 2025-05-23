@@ -7,23 +7,34 @@ import 'package:ln_foot/screen/home_screen.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
 
-class LoginOptionsScreen extends StatelessWidget {
-  // Retire la propriété apiClient car elle n'est plus nécessaire ici
-  // final ApiClient apiClient;
-  // const LoginOptionsScreen({super.key, required this.apiClient}); // Retire apiClient du constructeur aussi
-  const LoginOptionsScreen({super.key}); // Nouveau constructeur sans apiClient
+class LoginOptionsScreen extends StatefulWidget {
+  // Nouveau constructeur sans apiClient
+   LoginOptionsScreen({super.key});
+
+  @override
+  State<LoginOptionsScreen> createState() => _LoginOptionsScreenState();
+}
+
+class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthLoading) {
+          setState(() {
+            isLoading = true;
+          });
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               const SnackBar(content: Text('Connexion en cours...')),
             );
         } else if (state is Authenticated) {
+          setState(() {
+            isLoading = false;
+          });
           //  ScaffoldMessenger.of(context)
           //   ..hideCurrentSnackBar()
           //   ..showSnackBar(
@@ -33,16 +44,12 @@ class LoginOptionsScreen extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const HomeScreen()),
             (Route<dynamic> route) => false,
           );
-
-          // NE PAS NAVIGUER ICI. Le AuthWrapper s'en charge.
-          // context.read<AuthBloc>().add(CheckToken()); // Cette ligne est inutile et doit être retirée
         } else if (state is AuthenticatedWithToken) {
-          // Similaire à Authenticated. Le AuthWrapper gère la navigation.
-          // Cette condition est moins probable si Authenticated est toujours émis en premier.
+          setState(() {
+            isLoading = false;
+          });
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          // NE PAS NAVIGUER ICI.
-          // apiClient.setAuthToken(state.token); // Cette ligne est redondante, la supprimer
-          // Navigator.of(context).pushAndRemoveUntil(...) // La navigation est gérée par AuthWrapper
+           
         } else if (state is AuthError) {
           // Afficher le message d'erreur
           debugPrint('AuthError: ${state.message}');
@@ -79,6 +86,7 @@ class LoginOptionsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 CustomButton(
+                  isLoading: isLoading,
                   text: 'Connexion par mail',
                   onPressed: () {
                     context.read<AuthBloc>().add(LoginRequested());

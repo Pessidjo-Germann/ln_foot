@@ -21,47 +21,49 @@ import 'package:ln_foot/service.dart';
 import 'package:ln_foot/service/refreshing_http_client.dart'; // Added import
 import 'package:http/http.dart' as http; // Added import
 import 'package:lnFoot_api/api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Vérifie si c'est le premier lancement
+  final prefs = await SharedPreferences.getInstance();
+  final isFirstLaunch = prefs.getBool('is_first_launch') ?? true;
+
+  if (isFirstLaunch) {
+    await prefs.setBool('is_first_launch', false);
+  }
+
   final authService = await AuthService.create();
-  final token = await authService
-      .getAccessToken(); // Kept for potential debug or initial checks
-  final refresh = authService.getAccessToken(); // Kept for potential debug
+  final token = await authService.getAccessToken();
+  final refresh = authService.getAccessToken();
 
   debugPrint('Refresh token: $refresh');
   debugPrint('Token: $token');
 
   final apiClient = ApiClient();
-
-  // Instantiate and set RefreshingHttpClient
   final baseHttpClient = http.Client();
   final refreshingClient = RefreshingHttpClient(baseHttpClient, authService);
   apiClient.client = refreshingClient;
   debugPrint('RefreshingHttpClient set on ApiClient.');
 
-  // Removed: apiClient.setAuthToken(token ?? '');
-  // debugPrint('Token set in ApiClient: $token'); // Also commented out related debugPrint
-
   final productApi = ProductControllerApi(apiClient);
   final orderControllerApi = OrderControllerApi(apiClient);
   final categoryControler = CategoryControllerApi(apiClient);
-  // final coloredProductControllerApi = ColoredProductControllerApi(apiClient);
   final reviewControllerApi = ReviewControllerApi(apiClient);
   final productVariantControllerApi = ProductVariantControllerApi(apiClient);
-  final headingControllerApi =
-      HeadingControllerApi(apiClient); // Instantiate HeadingControllerApi
+  final headingControllerApi = HeadingControllerApi(apiClient);
+
   runApp(MyApp(
     authService: authService,
     orderControllerApi: orderControllerApi,
     productApi: productApi,
     categoryControllerApi: categoryControler,
     productVariantControllerApi: productVariantControllerApi,
-    //  coloredProductControllerApi: coloredProductControllerApi,
     reviewControllerApi: reviewControllerApi,
-    headingControllerApi: headingControllerApi, // Pass HeadingControllerApi
+    headingControllerApi: headingControllerApi,
     apiClient: apiClient,
+    isFirstLaunch: isFirstLaunch,
   ));
 }
 
@@ -70,12 +72,11 @@ class MyApp extends StatelessWidget {
   final OrderControllerApi orderControllerApi;
   final ProductControllerApi productApi;
   final CategoryControllerApi categoryControllerApi;
-  // final ColoredProductControllerApi coloredProductControllerApi;
   final ReviewControllerApi reviewControllerApi;
   final ProductVariantControllerApi productVariantControllerApi;
-  final HeadingControllerApi
-      headingControllerApi; // Add field for HeadingControllerApi
+  final HeadingControllerApi headingControllerApi;
   final ApiClient apiClient;
+  final bool isFirstLaunch;
 
   const MyApp({
     super.key,
@@ -84,10 +85,10 @@ class MyApp extends StatelessWidget {
     required this.productApi,
     required this.categoryControllerApi,
     required this.productVariantControllerApi,
-    // required this.coloredProductControllerApi,
     required this.reviewControllerApi,
-    required this.headingControllerApi, // Add to constructor
+    required this.headingControllerApi,
     required this.apiClient,
+    required this.isFirstLaunch,
   });
 
   @override
@@ -136,9 +137,11 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'LN Foot',
+        title: 'LN SHOP',
         theme: appThemeData,
-        home: AuthWrapper(apiClient: apiClient),
+        home: isFirstLaunch
+            ? SplashScreen(apiClient: apiClient)
+            : AuthWrapper(apiClient: apiClient),
         debugShowCheckedModeBanner: false,
         builder: (context, child) {
           return Column(
@@ -173,8 +176,7 @@ class AuthWrapper extends StatelessWidget {
           listener: (context, state) {
             if (state is Unauthenticated) {
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                    builder: (context) => const LoginOptionsScreen()),
+                MaterialPageRoute(builder: (context) => LoginOptionsScreen()),
                 (Route<dynamic> route) => false,
               );
             } else if (state is Authenticated) {
@@ -191,8 +193,7 @@ class AuthWrapper extends StatelessWidget {
               );
               // Redirige vers la connexion même en cas d'erreur grave
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                    builder: (context) => const LoginOptionsScreen()),
+                MaterialPageRoute(builder: (context) => LoginOptionsScreen()),
                 (Route<dynamic> route) => false,
               );
             }
@@ -205,9 +206,7 @@ class AuthWrapper extends StatelessWidget {
               debugPrint("hello we are in wapper");
               return const HomeScreen();
             } else {
-              // Si l'état est non géré (par exemple AuthError ou Unauthenticated)
-              // le builder initial affichera la page de connexion avant que le listener ne navigue.
-              return const LoginOptionsScreen();
+              return LoginOptionsScreen();
             }
           },
         );

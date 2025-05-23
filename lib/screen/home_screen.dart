@@ -135,7 +135,7 @@ class _HomeContentState extends State<HomeContent>
         return BlocBuilder<AuthBloc, AuthState>(
           builder: (context, authState) {
             if (authState is Unauthenticated) {
-              return const LoginOptionsScreen();
+              return  LoginOptionsScreen();
             }
 
             return Scaffold(

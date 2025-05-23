@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lnFoot_api/api.dart';
-import 'package:ln_foot/bloc/auth/auth_bloc.dart';
-import 'package:ln_foot/screen/home_screen.dart';
 import 'package:ln_foot/screen/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,16 +16,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Déclenche la vérification du token stocké au démarrage
-    context.read<AuthBloc>().add(CheckTokenStored());
-  }
-
-  void _navigateOnce(Widget page) {
-    if (_navigated) return;
-    _navigated = true;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => page),
-    );
+    Future.delayed(const Duration(seconds: 7), () {
+      if (!_navigated && mounted) {
+        _navigated = true;
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => OnboardingScreen(apiClient: widget.apiClient),
+          ),
+        );
+      }
+    });
   }
 
   @override
@@ -38,41 +35,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) async{
-          if (state is Authenticated) {
-            context.read<AuthBloc>().add(CheckToken());
-          }else if(state is AuthenticatedWithToken ){
-            // Set the token in the ApiClient
-            // widget.apiClient.setAuthToken(state.token);
-            // Navigate to HomeScreen
-            _navigateOnce(const HomeScreen());
-          }
-          else if (state is AuthError) {
-            // Show error message
-            debugPrint('AuthError: ${state.message}');
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(content: Text('Erreur de connexion: ${state.message}')),
-              );
-          _navigateOnce(OnboardingScreen(
-              apiClient: widget.apiClient,
-            ));
-          } 
-          
-          
-           else if (state is Unauthenticated) {
-            _navigateOnce(OnboardingScreen(
-              apiClient: widget.apiClient,
-            ));
-          }
-        },
-        child: Center(
-          child: Image.asset(
-            'images/LNFOOT2 1.png',
-            width: 150,
-          ),
+      body: Center(
+        child: Image.asset(
+          'images/LNFOOT2 1.png',
+          width: 150,
         ),
       ),
     );
