@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
             context.read<AuthBloc>().add(CheckToken());
           }else if(state is AuthenticatedWithToken ){
             // Set the token in the ApiClient
-            widget.apiClient.setAuthToken(state.token);
+            // widget.apiClient.setAuthToken(state.token);
             // Navigate to HomeScreen
             _navigateOnce(const HomeScreen());
           }

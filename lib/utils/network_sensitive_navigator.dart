@@ -23,7 +23,7 @@ class NetworkSensitiveNavigator {
       // if you use named routes, or maintaining a flag in a service/bloc.
       bool isAlreadyOnOfflinePage = false;
       Navigator.popUntil(context, (route) {
-        if (route.settings.name == '/offline' || route.builder == (_) => const OfflinePage()) { // A simple check, might need refinement
+        if (route.settings.name == '/offline' || (route is MaterialPageRoute && route.builder == (_) => const OfflinePage())) { // A simple check, might need refinement
           isAlreadyOnOfflinePage = true;
         }
         return true; // Continue popping, but we've captured the info
