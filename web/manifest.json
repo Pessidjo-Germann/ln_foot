@@ -1,9 +1,9 @@
 {
-    "name": "ln_foot",
-    "short_name": "ln_foot",
+    "name": "Ln Shop",
+    "short_name": "Ln Shop",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#FFFFFF",
+    "background_color": "#ffffff",
     "theme_color": "#000000",
     "description": "A new Flutter project.",
     "orientation": "portrait-primary",

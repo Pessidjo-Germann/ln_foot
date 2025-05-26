@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: backgroundColor,
       body: Center(
         child: Image.asset(
-          'images/LNFOOT2 1.png',
+          'images/ln_foot.jpg',
           width: 150,
         ),
       ),

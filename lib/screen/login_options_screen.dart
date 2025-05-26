@@ -9,7 +9,7 @@ import 'package:ln_foot/widgets/custom_button.dart';
 
 class LoginOptionsScreen extends StatefulWidget {
   // Nouveau constructeur sans apiClient
-   LoginOptionsScreen({super.key});
+  LoginOptionsScreen({super.key});
 
   @override
   State<LoginOptionsScreen> createState() => _LoginOptionsScreenState();
@@ -49,7 +49,6 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
             isLoading = false;
           });
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-           
         } else if (state is AuthError) {
           // Afficher le message d'erreur
           debugPrint('AuthError: ${state.message}');
@@ -58,9 +57,15 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
             ..showSnackBar(
               SnackBar(content: Text('Erreur de connexion: ${state.message}')),
             );
+          setState(() {
+            isLoading = false;
+          });
           // Si l'erreur est critique (par exemple, refresh token expiré),
           // AuthBloc aura déjà émis Unauthenticated et AuthWrapper aura redirigé vers cette page.
         } else if (state is Unauthenticated) {
+          setState(() {
+            isLoading = false;
+          });
           // Si on est déjà sur l'écran de login et on reçoit Unauthenticated,
           // cela confirme qu'on doit rester ici. On peut cacher un éventuel snackbar de chargement.
           ScaffoldMessenger.of(context).hideCurrentSnackBar();

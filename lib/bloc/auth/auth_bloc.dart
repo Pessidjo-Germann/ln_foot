@@ -65,7 +65,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<LogoutRequested>((event, emit) async {
-      // await authService.logout();
+    await authService.logout();
       emit(
           Unauthenticated()); // L'état Unauthenticated sera émis ici et via le stream
     });
