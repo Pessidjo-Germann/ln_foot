@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://lnfoot-api.hublots.co"
+      "url": "https://api.ln-foot.com"
     }
   ],
   "security": [
@@ -555,7 +555,7 @@
         "tags": [
           "order-controller"
         ],
-        "operationId": "comfirmOrder",
+        "operationId": "confirmOrder",
         "parameters": [
           {
             "name": "id",
@@ -928,7 +928,7 @@
           {
             "name": "productId",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -988,10 +988,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ProductVariantDto"
-                }
+                "$ref": "#/components/schemas/BulkProductVariantDto"
               }
             }
           }
@@ -1222,7 +1219,7 @@
         "tags": [
           "heading-controller"
         ],
-        "operationId": "deleteProduct_1",
+        "operationId": "deleteHeading",
         "parameters": [
           {
             "name": "id",
@@ -1333,8 +1330,7 @@
             "minLength": 1
           },
           "price": {
-            "type": "number",
-            "format": "double"
+            "type": "number"
           },
           "stockQuantity": {
             "type": "integer",
@@ -1380,7 +1376,7 @@
           },
           "price": {
             "type": "number",
-            "format": "double"
+            "minimum": 0
           },
           "stockQuantity": {
             "type": "integer",
@@ -1392,7 +1388,10 @@
               "type": "string"
             }
           }
-        }
+        },
+        "required": [
+          "price"
+        ]
       },
       "OrderDto": {
         "type": "object",
@@ -1414,6 +1413,15 @@
             },
             "maxItems": 2147483647,
             "minItems": 1
+          },
+          "deliveryFee": {
+            "type": "number"
+          },
+          "deliveryAddress": {
+            "type": "string"
+          },
+          "totalAmount": {
+            "type": "number"
           }
         }
       },
@@ -1429,7 +1437,8 @@
           },
           "quantity": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "minimum": 1
           },
           "size": {
             "type": "string"
@@ -1438,8 +1447,7 @@
             "type": "string"
           },
           "price": {
-            "type": "number",
-            "format": "double"
+            "type": "number"
           }
         }
       },
@@ -1494,6 +1502,21 @@
           }
         }
       },
+      "BulkProductVariantDto": {
+        "type": "object",
+        "properties": {
+          "variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductVariantDto"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "variants"
+        ]
+      },
       "HeadingDto": {
         "type": "object",
         "properties": {
@@ -1519,8 +1542,8 @@
         "type": "oauth2",
         "flows": {
           "authorizationCode": {
-            "authorizationUrl": "https://lnfoot-auth.hublots.co/realms/lnfoot/protocol/openid-connect/auth",
-            "tokenUrl": "https://lnfoot-auth.hublots.co/realms/lnfoot/protocol/openid-connect/token",
+            "authorizationUrl": "https://auth.ln-foot.com/realms/lnfoot/protocol/openid-connect/auth",
+            "tokenUrl": "https://auth.ln-foot.com/realms/lnfoot/protocol/openid-connect/token",
             "scopes": {
               "openid": "OpenID Connect"
             }

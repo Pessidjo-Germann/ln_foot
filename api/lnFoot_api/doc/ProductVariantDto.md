@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **file** | [**MultipartFile**](MultipartFile.md) |  | [optional] 
 **colorCode** | **String** |  | [optional] 
 **productId** | **String** |  | [optional] 
-**price** | **double** |  | [optional] 
+**price** | **num** |  | 
 **stockQuantity** | **int** |  | [optional] 
 **sizes** | **List<String>** |  | [optional] [default to const []]
 

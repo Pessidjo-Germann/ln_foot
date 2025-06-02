@@ -5,11 +5,11 @@
 import 'package:lnFoot_api/api.dart';
 ```
 
-All URIs are relative to *https://lnfoot-api.hublots.co*
+All URIs are relative to *https://api.ln-foot.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**comfirmOrder**](OrderControllerApi.md#comfirmorder) | **PUT** /api/orders/{id}/confirm | 
+[**confirmOrder**](OrderControllerApi.md#confirmorder) | **PUT** /api/orders/{id}/confirm | 
 [**createOrder**](OrderControllerApi.md#createorder) | **POST** /api/orders | 
 [**deleteOrder**](OrderControllerApi.md#deleteorder) | **DELETE** /api/orders/{id} | 
 [**getAllOrders**](OrderControllerApi.md#getallorders) | **GET** /api/orders | 
@@ -18,8 +18,8 @@ Method | HTTP request | Description
 [**updateOrder**](OrderControllerApi.md#updateorder) | **PUT** /api/orders/{id} | 
 
 
-# **comfirmOrder**
-> PaymentResponseDto comfirmOrder(id, customer)
+# **confirmOrder**
+> PaymentResponseDto confirmOrder(id, customer)
 
 
 
@@ -34,10 +34,10 @@ final id = id_example; // String |
 final customer = Customer(); // Customer | 
 
 try {
-    final result = api_instance.comfirmOrder(id, customer);
+    final result = api_instance.confirmOrder(id, customer);
     print(result);
 } catch (e) {
-    print('Exception when calling OrderControllerApi->comfirmOrder: $e\n');
+    print('Exception when calling OrderControllerApi->confirmOrder: $e\n');
 }
 ```
 

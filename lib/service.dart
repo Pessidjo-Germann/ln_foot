@@ -23,7 +23,7 @@ class AuthService {
       config: KeycloakConfig(
         bundleIdentifier: 'com.lnfoot',
         clientId: 'ln-foot-01',
-        frontendUrl: 'https://lnfoot-auth.hublots.co',
+        frontendUrl: 'https://auth.ln-foot.com',
         realm: 'lnfoot',
       ),
     );
@@ -113,12 +113,17 @@ class AuthService {
   }
 
   Future<bool> logout() async {
-    await _keycloak
-        .logout(); // Décommenter si tu veux déconnecter de Keycloak aussi
+    try {
+      // Décommenter cette ligne pour notifier Keycloak
+      await _keycloak.logout();
+    } catch (e) {
+      debugPrint('Erreur lors de la déconnexion Keycloak: $e');
+    }
+
     await _secureStorage.delete(key: 'access_token');
     await UserSessionManager.clearUserSession();
-    _isRefreshing = false; // Réinitialiser le flag de rafraîchissement
-    _refreshCompleter = null; // Réinitialiser le completer
+    _isRefreshing = false;
+    _refreshCompleter = null;
     return true;
   }
 

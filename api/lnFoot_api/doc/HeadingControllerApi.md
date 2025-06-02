@@ -5,12 +5,12 @@
 import 'package:lnFoot_api/api.dart';
 ```
 
-All URIs are relative to *https://lnfoot-api.hublots.co*
+All URIs are relative to *https://api.ln-foot.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**createHeading**](HeadingControllerApi.md#createheading) | **POST** /api/headings | 
-[**deleteProduct1**](HeadingControllerApi.md#deleteproduct1) | **DELETE** /api/headings/{id} | 
+[**deleteHeading**](HeadingControllerApi.md#deleteheading) | **DELETE** /api/headings/{id} | 
 [**getHeadings**](HeadingControllerApi.md#getheadings) | **GET** /api/headings | 
 [**getOrderById1**](HeadingControllerApi.md#getorderbyid1) | **GET** /api/headings/{id} | 
 
@@ -58,8 +58,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **deleteProduct1**
-> deleteProduct1(id)
+# **deleteHeading**
+> deleteHeading(id)
 
 
 
@@ -73,9 +73,9 @@ final api_instance = HeadingControllerApi();
 final id = id_example; // String | 
 
 try {
-    api_instance.deleteProduct1(id);
+    api_instance.deleteHeading(id);
 } catch (e) {
-    print('Exception when calling HeadingControllerApi->deleteProduct1: $e\n');
+    print('Exception when calling HeadingControllerApi->deleteHeading: $e\n');
 }
 ```
 

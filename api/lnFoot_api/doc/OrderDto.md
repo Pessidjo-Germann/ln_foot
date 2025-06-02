@@ -12,6 +12,9 @@ Name | Type | Description | Notes
 **orderDate** | [**DateTime**](DateTime.md) |  | [optional] 
 **status** | **String** |  | [optional] 
 **orderItems** | [**List<OrderItemDto>**](OrderItemDto.md) |  | [optional] [default to const []]
+**deliveryFee** | **num** |  | [optional] 
+**deliveryAddress** | **String** |  | [optional] 
+**totalAmount** | **num** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

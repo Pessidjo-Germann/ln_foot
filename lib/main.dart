@@ -96,8 +96,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
-          create: (_) =>
-              AuthBloc(authService: authService)..add(CheckTokenStored()),
+          create: (_) => AuthBloc(authService: authService)..add(AppStarted()),
         ),
         BlocProvider<ProductBloc>(
           create: (_) => ProductBloc(

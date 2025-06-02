@@ -5,7 +5,7 @@
 import 'package:lnFoot_api/api.dart';
 ```
 
-All URIs are relative to *https://lnfoot-api.hublots.co*
+All URIs are relative to *https://api.ln-foot.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -28,7 +28,7 @@ import 'package:lnFoot_api/api.dart';
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
 final api_instance = ProductControllerApi();
-final price = 1.2; // double | 
+final price = 8.14; // num | 
 final id = id_example; // String | 
 final imageUrl = imageUrl_example; // String | 
 final file = BINARY_DATA_HERE; // MultipartFile | 
@@ -50,7 +50,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **price** | **double**|  | 
+ **price** | **num**|  | 
  **id** | **String**|  | [optional] 
  **imageUrl** | **String**|  | [optional] 
  **file** | **MultipartFile**|  | [optional] 

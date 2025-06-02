@@ -5,7 +5,7 @@
 import 'package:lnFoot_api/api.dart';
 ```
 
-All URIs are relative to *https://lnfoot-api.hublots.co*
+All URIs are relative to *https://api.ln-foot.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

@@ -8,12 +8,12 @@ import 'package:lnFoot_api/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**price** | **double** |  | 
 **id** | **String** |  | [optional] 
 **imageUrl** | **String** |  | [optional] 
 **file** | [**MultipartFile**](MultipartFile.md) |  | [optional] 
 **name** | **String** |  | [optional] 
 **description** | **String** |  | [optional] 
+**price** | **num** |  | 
 **stockQuantity** | **int** |  | [optional] 
 **categoryNames** | **List<String>** |  | [optional] [default to const []]
 **sizes** | **List<String>** |  | [optional] [default to const []]

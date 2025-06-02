@@ -5,7 +5,7 @@
 import 'package:lnFoot_api/api.dart';
 ```
 
-All URIs are relative to *https://lnfoot-api.hublots.co*
+All URIs are relative to *https://api.ln-foot.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -18,7 +18,7 @@ Method | HTTP request | Description
 
 
 # **createProductVariant**
-> ProductVariantDto createProductVariant(id, imageUrl, file, colorCode, productId, price, stockQuantity, sizes)
+> ProductVariantDto createProductVariant(price, id, imageUrl, file, colorCode, productId, stockQuantity, sizes)
 
 
 
@@ -29,17 +29,17 @@ import 'package:lnFoot_api/api.dart';
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
 final api_instance = ProductVariantControllerApi();
+final price = 8.14; // num | 
 final id = id_example; // String | 
 final imageUrl = imageUrl_example; // String | 
 final file = BINARY_DATA_HERE; // MultipartFile | 
 final colorCode = colorCode_example; // String | 
 final productId = productId_example; // String | 
-final price = 1.2; // double | 
 final stockQuantity = 56; // int | 
 final sizes = []; // List<String> | 
 
 try {
-    final result = api_instance.createProductVariant(id, imageUrl, file, colorCode, productId, price, stockQuantity, sizes);
+    final result = api_instance.createProductVariant(price, id, imageUrl, file, colorCode, productId, stockQuantity, sizes);
     print(result);
 } catch (e) {
     print('Exception when calling ProductVariantControllerApi->createProductVariant: $e\n');
@@ -50,12 +50,12 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **price** | **num**|  | 
  **id** | **String**|  | [optional] 
  **imageUrl** | **String**|  | [optional] 
  **file** | **MultipartFile**|  | [optional] 
  **colorCode** | **String**|  | [optional] 
  **productId** | **String**|  | [optional] 
- **price** | **double**|  | [optional] 
  **stockQuantity** | **int**|  | [optional] 
  **sizes** | [**List<String>**](String.md)|  | [optional] 
 
@@ -75,7 +75,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **createProductVariants**
-> List<ProductVariantDto> createProductVariants()
+> List<ProductVariantDto> createProductVariants(variants)
 
 
 
@@ -86,9 +86,10 @@ import 'package:lnFoot_api/api.dart';
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
 final api_instance = ProductVariantControllerApi();
+final variants = []; // List<ProductVariantDto> | 
 
 try {
-    final result = api_instance.createProductVariants();
+    final result = api_instance.createProductVariants(variants);
     print(result);
 } catch (e) {
     print('Exception when calling ProductVariantControllerApi->createProductVariants: $e\n');
@@ -96,7 +97,10 @@ try {
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **variants** | [**List<ProductVariantDto>**](ProductVariantDto.md)|  | 
 
 ### Return type
 
@@ -224,7 +228,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **productId** | **String**|  | 
+ **productId** | **String**|  | [optional] 
 
 ### Return type
 
