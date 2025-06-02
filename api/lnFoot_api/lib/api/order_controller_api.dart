@@ -305,6 +305,8 @@ class OrderControllerApi {
 
   Future<List<OrderDto>?> getUserOrders() async {
     final response = await getUserOrdersWithHttpInfo();
+    print(
+        'Response: ${response.body} with status code: ${response.statusCode} for getUserOrders');
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:lnFoot_api/api.dart'; // Import depuis le package API lnFoot_api
+import 'dart:convert'; // Ajouté pour jsonDecode
 
 import 'package:ln_foot/constants/error_messages.dart';
 part 'order_event.dart';
@@ -28,7 +30,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final orders = await orderControllerApi.getAllOrders();
       emit(OrdersLoaded(orders ?? []));
     } on ApiException catch (e) {
-      emit(OrderError(e.message??''));
+      emit(OrderError(e.message ?? ''));
     } catch (e) {
       emit(OrderError(e.toString()));
     }
@@ -38,12 +40,49 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       LoadUserOrders event, Emitter<OrderState> emit) async {
     emit(OrderLoading());
     try {
-      final orders = await orderControllerApi.getUserOrders();
-      emit(OrdersLoaded(orders ?? []));
+      debugPrint('Chargement des commandes pour userId: ${event.userId}');
+
+      // ✅ Récupération de la réponse brute
+      final response = await orderControllerApi.getUserOrdersWithHttpInfo();
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
+
+      // ✅ Parse manuel plus sécurisé
+      final List<dynamic> jsonList = jsonDecode(response.body);
+      final List<OrderDto> orders = [];
+
+      for (final jsonItem in jsonList) {
+        try {
+          // Nettoyage des valeurs problématiques avant parsing
+          final cleanedJson = Map<String, dynamic>.from(jsonItem);
+
+          // Remplacer les null par des valeurs par défaut
+          if (cleanedJson['deliveryFee'] == null) {
+            cleanedJson['deliveryFee'] = 0.0;
+          }
+          if (cleanedJson['totalAmount'] == null) {
+            cleanedJson['totalAmount'] = 0.0;
+          }
+
+          final order = OrderDto.fromJson(cleanedJson);
+          if (order != null) {
+            orders.add(order);
+          }
+        } catch (e) {
+          debugPrint('Erreur parsing commande individuelle: $e');
+          // Continue avec les autres commandes
+        }
+      }
+
+      debugPrint('Commandes parsées avec succès: ${orders.length}');
+      emit(OrdersLoaded(orders));
     } on ApiException catch (e) {
-      emit(OrderError(e.message??''));
-    } catch (e) {
-      emit(OrderError(e.toString()));
+      debugPrint('ApiException: ${e.message}, Code: ${e.code}');
+      emit(OrderError('Erreur API: ${e.message ?? "Erreur inconnue"}'));
+    } catch (e, stackTrace) {
+      debugPrint('Erreur générale: $e');
+      debugPrint('StackTrace: $stackTrace');
+      emit(OrderError('Erreur lors du chargement: ${e.toString()}'));
     }
   }
 
@@ -92,7 +131,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         emit(const OrderError('Order creation failed silently.'));
       }
     } on ApiException catch (e) {
-      emit(OrderError(e.message??''));
+      emit(OrderError(e.message ?? ''));
     } catch (e) {
       emit(OrderError(e.toString()));
     }

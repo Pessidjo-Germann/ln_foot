@@ -82,59 +82,103 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
     final List<Map<String, dynamic>> mappedOrders = [];
 
     for (final order in filteredOrders) {
-      final item = order.orderItems.isNotEmpty ? order.orderItems.first : null;
-      String? imageUrl;
-      print('hello');
-      String productName = 'Produit';
-      // Récupérer les détails de la variante de produit
-      if (item?.productVariantId != null) {
-        try {
-          ProductVariantDto? productVariant;
-          if (_productVariantCache.containsKey(item!.productVariantId)) {
-            productVariant = _productVariantCache[item.productVariantId];
-          } else {
-            productVariant = await _productVariantApi
-                .getProductVariant(item.productVariantId!);
-            _productVariantCache[item.productVariantId!] = productVariant;
-          }
-          if (productVariant != null) {
-            imageUrl = productVariant.imageUrl;
-            print('la valeur de imageUrl est $imageUrl');
-            // Récupérer le nom du produit via productId
-            if (productVariant.productId != null) {
-              ProductDto? product;
-              if (_productCache.containsKey(productVariant.productId)) {
-                product = _productCache[productVariant.productId];
-              } else {
-                product =
-                    await _productApi.getProductById(productVariant.productId!);
-                _productCache[productVariant.productId!] = product;
-              }
-              if (product != null && product.name != null) {
-                productName = product.name!;
+      try {
+        final item =
+            order.orderItems.isNotEmpty ? order.orderItems.first : null;
+        String? imageUrl;
+        String productName = 'Produit';
+
+        // Vérification plus robuste
+        if (item?.productVariantId != null &&
+            item!.productVariantId!.isNotEmpty) {
+          try {
+            ProductVariantDto? productVariant;
+            final variantId = item.productVariantId!;
+
+            if (_productVariantCache.containsKey(variantId)) {
+              productVariant = _productVariantCache[variantId];
+            } else {
+              debugPrint('Récupération de la variante: $variantId');
+              productVariant =
+                  await _productVariantApi.getProductVariant(variantId);
+              _productVariantCache[variantId] = productVariant;
+            }
+
+            if (productVariant != null) {
+              imageUrl = productVariant.imageUrl;
+              debugPrint('ImageUrl récupérée: $imageUrl');
+
+              // Récupération sécurisée du nom du produit
+              if (productVariant.productId != null &&
+                  productVariant.productId!.isNotEmpty) {
+                ProductDto? product;
+                final productId = productVariant.productId!;
+
+                if (_productCache.containsKey(productId)) {
+                  product = _productCache[productId];
+                } else {
+                  debugPrint('Récupération du produit: $productId');
+                  product = await _productApi.getProductById(productId);
+                  _productCache[productId] = product;
+                }
+
+                if (product?.name != null && product!.name!.isNotEmpty) {
+                  productName = product.name!;
+                }
               }
             }
+          } catch (e) {
+            debugPrint(
+                'Erreur lors de la récupération de la variante/produit: $e');
+            // Continue avec les valeurs par défaut
           }
-        } catch (e) {
-          debugPrint(
-              'Erreur lors de la récupération de la variante ou du produit: $e');
         }
+
+        // Vérification des valeurs avant ajout
+        final orderMap = {
+          'id': order.id ?? 'unknown',
+          'image': imageUrl ?? 'images/product1.png',
+          'name': productName,
+          'size': item?.size != null ? 'Taille: ${item!.size}' : '',
+          'price': _safeParsePrice(item?.price),
+          'status': _mapOrderStatus(order.status),
+          'reviewed': false,
+        };
+
+        debugPrint('Commande mappée: $orderMap');
+        mappedOrders.add(orderMap);
+      } catch (e) {
+        debugPrint('Erreur lors du mapping de la commande ${order.id}: $e');
+        // Ajoutez une commande par défaut ou ignorez
       }
-      mappedOrders.add({
-        'id': order.id,
-        'image': imageUrl ?? 'images/product1.png',
-        'name': productName,
-        'size': item?.size != null ? 'Taille: ${item!.size}' : '',
-        'price': item?.price?.toString() ?? '0',
-        'status': order.status == 'pending'
-            ? OrderStatus.ongoing.displayName
-            : order.status == 'completed'
-                ? OrderStatus.completed.displayName
-                : OrderStatus.review.displayName,
-        'reviewed': false,
-      });
     }
+
     return mappedOrders;
+  }
+
+  // Méthodes helper
+  String _safeParsePrice(dynamic price) {
+    if (price == null) return '0';
+    if (price is num) return price.toString();
+    if (price is String) {
+      try {
+        return double.parse(price).toString();
+      } catch (e) {
+        return '0';
+      }
+    }
+    return '0';
+  }
+
+  String _mapOrderStatus(String? status) {
+    switch (status?.toLowerCase()) {
+      case 'pending':
+        return OrderStatus.ongoing.displayName;
+      case 'completed':
+        return OrderStatus.completed.displayName;
+      default:
+        return OrderStatus.review.displayName;
+    }
   }
 
   @override
