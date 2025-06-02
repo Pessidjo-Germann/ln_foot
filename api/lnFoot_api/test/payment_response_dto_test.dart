@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 import 'package:test/test.dart';
 
 // tests for PaymentResponseDto
@@ -45,5 +45,8 @@ void main() {
     test('to test the property `updatedAt`', () async {
       // TODO
     });
+
+
   });
+
 }

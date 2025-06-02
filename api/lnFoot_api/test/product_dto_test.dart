@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 import 'package:test/test.dart';
 
 // tests for ProductDto
@@ -41,7 +41,7 @@ void main() {
       // TODO
     });
 
-    // double price
+    // num price
     test('to test the property `price`', () async {
       // TODO
     });
@@ -60,5 +60,8 @@ void main() {
     test('to test the property `sizes`', () async {
       // TODO
     });
+
+
   });
+
 }

@@ -51,7 +51,7 @@ class OrderConfirmationScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             Text(
-              'Paiement Réussi !',
+              'Paiement En cours !',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,

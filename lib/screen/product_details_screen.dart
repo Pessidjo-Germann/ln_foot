@@ -208,7 +208,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         children: [
                           ProductInfoSection(
                             name: widget.product.name ?? '',
-                            price: _selectedVariant!.price!,
+                            price: _selectedVariant!.price.toDouble(),
                             rating: 0,
                             reviewCount: 0,
                             productId: _selectedVariant!.id!,

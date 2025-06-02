@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'package:lnfoot_api/api.dart';
+import 'package:lnFoot_api/api.dart';
 import 'package:test/test.dart';
 
 // tests for OrderDto
@@ -35,5 +35,23 @@ void main() {
     test('to test the property `orderItems`', () async {
       // TODO
     });
+
+    // num deliveryFee
+    test('to test the property `deliveryFee`', () async {
+      // TODO
+    });
+
+    // String deliveryAddress
+    test('to test the property `deliveryAddress`', () async {
+      // TODO
+    });
+
+    // num totalAmount
+    test('to test the property `totalAmount`', () async {
+      // TODO
+    });
+
+
   });
+
 }

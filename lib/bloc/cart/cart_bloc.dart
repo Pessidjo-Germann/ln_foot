@@ -130,7 +130,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       try {
         final currentState = state as CartLoaded;
         final updatedItems = currentState.items
-            .where((item) => item.product.id != event.productId)
+            .where((item) => !(item.product.id == event.productId &&
+                item.size == event.size &&
+                item.color == event.color))
             .toList();
         await _saveCartItems(updatedItems);
         _emitLoadedState(emit, updatedItems);
@@ -149,7 +151,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       try {
         final currentState = state as CartLoaded;
         final updatedItems = currentState.items.map((item) {
-          if (item.product.id == event.productId) {
+          if (item.product.id == event.productId &&
+              item.size == event.size &&
+              item.color == event.color) {
             return item.copyWith(quantity: event.quantity);
           }
           return item;

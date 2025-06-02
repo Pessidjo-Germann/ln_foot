@@ -5,9 +5,9 @@ import 'cart_item_widget.dart';
 
 class CartItemList extends StatelessWidget {
   final List<CartItem> items;
-  final Function(String itemId) onIncreaseQuantity;
-  final Function(String itemId) onDecreaseQuantity;
-  final Function(String itemId) onRemoveItem;
+  final Function(String itemId, String size, String color) onIncreaseQuantity;
+  final Function(String itemId, String size, String color) onDecreaseQuantity;
+  final Function(String itemId, String size, String color) onRemoveItem;
 
   const CartItemList({
     super.key,
@@ -58,9 +58,12 @@ class CartItemList extends StatelessWidget {
         final item = items[index];
         return CartItemWidget(
           item: item,
-          onIncreaseQuantity: () => onIncreaseQuantity(item.product.id!),
-          onDecreaseQuantity: () => onDecreaseQuantity(item.product.id!),
-          onRemoveItem: () => onRemoveItem(item.product.id!),
+          onIncreaseQuantity: () =>
+              onIncreaseQuantity(item.product.id!, item.size, item.color),
+          onDecreaseQuantity: () =>
+              onDecreaseQuantity(item.product.id!, item.size, item.color),
+          onRemoveItem: () =>
+              onRemoveItem(item.product.id!, item.size, item.color),
         );
       },
       separatorBuilder: (context, index) => const Divider(
@@ -70,4 +73,3 @@ class CartItemList extends StatelessWidget {
     );
   }
 }
-  

@@ -24,34 +24,49 @@ class _CartScreenState extends State<CartScreen> {
     context.read<CartBloc>().add(LoadCart());
   }
 
-  void _handleIncreaseQuantity(String itemId) {
+  void _handleIncreaseQuantity(String itemId, String size, String color) {
     final bloc = context.read<CartBloc>();
     if (bloc.state is CartLoaded) {
       final state = bloc.state as CartLoaded;
-      final item = state.items.firstWhere((item) => item.product.id == itemId);
+      final item = state.items.firstWhere((item) =>
+          item.product.id == itemId &&
+          item.size == size &&
+          item.color == color);
       bloc.add(UpdateCartItemQuantity(
         productId: itemId,
+        size: size,
+        color: color,
         quantity: item.quantity + 1,
       ));
     }
   }
+
   bool isLoading = false;
-  void _handleDecreaseQuantity(String itemId) {
+  void _handleDecreaseQuantity(String itemId, String size, String color) {
     final bloc = context.read<CartBloc>();
     if (bloc.state is CartLoaded) {
       final state = bloc.state as CartLoaded;
-      final item = state.items.firstWhere((item) => item.product.id == itemId);
+      final item = state.items.firstWhere((item) =>
+          item.product.id == itemId &&
+          item.size == size &&
+          item.color == color);
       if (item.quantity > 1) {
         bloc.add(UpdateCartItemQuantity(
           productId: itemId,
+          size: size,
+          color: color,
           quantity: item.quantity - 1,
         ));
       }
     }
   }
 
-  void _handleRemoveItem(String itemId) {
-    context.read<CartBloc>().add(RemoveFromCart(itemId));
+  void _handleRemoveItem(String itemId, String size, String color) {
+    context.read<CartBloc>().add(RemoveFromCart(
+          productId: itemId,
+          size: size,
+          color: color,
+        ));
   }
 
   List<CartItem> _convertCartItems(List<CartItem> items) {
@@ -98,9 +113,18 @@ class _CartScreenState extends State<CartScreen> {
                 setState(() {
                   isLoading = false;
                 });
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(state.message), backgroundColor: Colors.red));
-              }else if (state is OrderLoading) {
+                print(state.message);
+                if (state.message.contains('Not enough stock for product')) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          'La quantite demandée n\'est pas disponible en stock!'),
+                      backgroundColor: Colors.red));
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Veuillez réessayer plus tard"),
+                      backgroundColor: Colors.red));
+                }
+              } else if (state is OrderLoading) {
                 setState(() {
                   isLoading = true;
                 });
@@ -167,6 +191,9 @@ class _CartScreenState extends State<CartScreen> {
                       status: 'pending',
                       orderDate: DateTime.now(),
                       orderItems: orderItems,
+                      //deliveryAddress: 'Adresse de livraison',
+                      totalAmount: total,
+                      deliveryFee: 0,
                     );
                     debugPrint(orderData.toString());
                     context

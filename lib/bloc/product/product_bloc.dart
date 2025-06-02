@@ -71,7 +71,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       LoadProductVariantById event, Emitter<ProductState> emit) async {
         emit(ProductLoading());
         try {
-          final productVariants = await _productVariantApi.getProductVariants(event.productId);
+          final productVariants = await _productVariantApi.getProductVariants(productId: event.productId);
           debugPrint('Product Variants: $productVariants');
           emit(ProductVariantsLoaded(productVariants!));
         } on ApiException {
