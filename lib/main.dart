@@ -26,7 +26,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Vérifie si c'est le premier lancement
   final prefs = await SharedPreferences.getInstance();
   final isFirstLaunch = prefs.getBool('is_first_launch') ?? true;
 
@@ -36,7 +35,8 @@ void main() async {
 
   final authService = await AuthService.create();
   final token = await authService.getAccessToken();
-  final refresh = authService.getAccessToken();
+  // BUG CORRIGÉ: Utiliser getRefreshToken() au lieu de getAccessToken()
+  final refresh = await authService.getRefreshToken();
 
   debugPrint('Refresh token: $refresh');
   debugPrint('Token: $token');
@@ -162,50 +162,37 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Vérifie d'abord l'état de la connexion réseau
     return BlocBuilder<NetworkBloc, NetworkState>(
       builder: (context, networkState) {
-        // Si l'utilisateur est hors ligne, affiche la page offline
         if (networkState is NetworkOffline) {
           return const OfflinePage();
         }
 
-        // Si l'utilisateur est en ligne, procède avec l'authentification normale
-        return BlocConsumer<AuthBloc, AuthState>(
-          listener: (context, state) {
-            if (state is Unauthenticated) {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => LoginOptionsScreen()),
-                (Route<dynamic> route) => false,
-              );
-            } else if (state is Authenticated) {
-              debugPrint("hello we are in wapper");
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-                (Route<dynamic> route) => false,
-              );
-            } else if (state is AuthError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Erreur d\'authentification: ${state.message}'),
-                ),
-              );
-              // Redirige vers la connexion même en cas d'erreur grave
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => LoginOptionsScreen()),
-                (Route<dynamic> route) => false,
-              );
-            }
-          },
+        return BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
-            if (state is AuthLoading || state is AuthInitial) {
-              return SplashScreen(apiClient: apiClient);
-            } else if (state is Authenticated ||
-                state is AuthenticatedWithToken) {
-              debugPrint("hello we are in wapper");
-              return const HomeScreen();
-            } else {
-              return LoginOptionsScreen();
+            switch (state.runtimeType) {
+              case const (AuthInitial):
+              case const (AuthLoading):
+                return SplashScreen(apiClient: apiClient);
+
+              case Authenticated _:
+              case const (AuthenticatedWithToken):
+                return const HomeScreen();
+
+              case const (AuthError):
+                // Afficher l'erreur puis rediriger
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content:
+                            Text('Erreur: ${(state as AuthError).message}')),
+                  );
+                });
+                return LoginOptionsScreen();
+
+              case const (Unauthenticated):
+              default:
+                return LoginOptionsScreen();
             }
           },
         );

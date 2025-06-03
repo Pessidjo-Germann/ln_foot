@@ -31,24 +31,42 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onAppStarted(AppStarted event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
-    // Vérification initiale du token
-    final token = await authService.getAccessToken();
-    if (token != null && token.isNotEmpty) {
-      final user = await authService.getUserInfo();
-      if (user != null) {
-        emit(Authenticated(user));
-      } else {
-        emit(AuthError(ErrorMessages.userInfoLoadFailed));
-        await authService.logout();
+    
+    try {
+      // Vérifier d'abord si on a un token valide stocké
+      if (await authService.isTokenValid()) {
+        final user = await authService.getUserInfo();
+        if (user != null) {
+          emit(Authenticated(user));
+          return;
+        }
       }
-    } else {
+      
+      // Tenter un refresh si on a un refresh token
+      if (await authService.refreshTokenIfNeeded()) {
+        final user = await authService.getUserInfo();
+        if (user != null) {
+          emit(Authenticated(user));
+          return;
+        }
+      }
+      
+      // Aucune authentification valide trouvée
       emit(Unauthenticated());
+    } catch (e) {
+      emit(AuthError('Erreur lors de l\'initialisation: $e'));
     }
   }
 
+  // Simplifier la gestion des changements de stream
   Future<void> _onAuthStreamChanged(
       _AuthStreamChanged event, Emitter<AuthState> emit) async {
-    if (event.isLoggedIn) {
+    if (!event.isLoggedIn) {
+      emit(Unauthenticated());
+      return;
+    }
+    
+    try {
       final user = await authService.getUserInfo();
       if (user != null) {
         emit(Authenticated(user));
@@ -56,8 +74,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthError(ErrorMessages.userInfoLoadFailed));
         await authService.logout();
       }
-    } else {
-      emit(Unauthenticated());
+    } catch (e) {
+      emit(AuthError('Erreur lors de la récupération des informations utilisateur: $e'));
     }
   }
 

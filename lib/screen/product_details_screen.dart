@@ -16,7 +16,7 @@ import 'package:lnFoot_api/api.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final ProductDto product;
-
+  
   const ProductDetailsScreen({super.key, required this.product});
 
   @override
@@ -194,7 +194,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ProductImageSection(
                       imageUrl: _selectedVariant!.imageUrl!,
                       product: ProductDto(
-                          price: _selectedVariant!.price!,
+                          price: _selectedVariant!.price,
                           name: widget.product.name,
                           id: _selectedVariant!.id),
                       initialIsFavorite: _isFavorite,
@@ -261,7 +261,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               onAddToCart: () {
               // _selectedVariant is already confirmed not-null here
               _handleAddToCart(ProductDto(
-                price: _selectedVariant!.price ?? 0,
+                price: _selectedVariant!.price,
                 name: widget.product.name,
                 stockQuantity: _selectedVariant!.stockQuantity,
                 description: widget.product.description,

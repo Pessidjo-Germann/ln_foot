@@ -1,99 +1,98 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart'; // For debugPrint, optional
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:ln_foot/service.dart'; // Or wherever AuthService is
+import 'package:ln_foot/service.dart';
 
-class RefreshingHttpClient extends http.BaseClient { // Implement http.Client by extending BaseClient
+class RefreshingHttpClient extends http.BaseClient {
   final http.Client _inner;
   final AuthService authService;
+  static const int _maxRetries = 1;
 
   RefreshingHttpClient(this._inner, this.authService);
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
-    debugPrint('RefreshingHttpClient: send() called for ${request.method} ${request.url}');
+    debugPrint('RefreshingHttpClient: ${request.method} ${request.url}');
 
-    // Add initial token
+    // AMÉLIORATION: Utiliser refreshTokenIfNeeded au lieu de vérifie manuellement
+    await authService.refreshTokenIfNeeded();
+    
     final String? token = await authService.getAccessToken();
     if (token != null && token.isNotEmpty) {
       request.headers['Authorization'] = 'Bearer $token';
-      debugPrint('RefreshingHttpClient: Initial token added to request.');
+      debugPrint('RefreshingHttpClient: Token ajouté');
     } else {
-      debugPrint('RefreshingHttpClient: No initial token available for request.');
+      debugPrint('RefreshingHttpClient: Pas de token disponible');
     }
 
     http.StreamedResponse response;
     try {
       response = await _inner.send(request);
-      debugPrint('RefreshingHttpClient: Initial request sent. Status: ${response.statusCode}');
+      debugPrint('RefreshingHttpClient: Status ${response.statusCode}');
     } catch (e) {
-      // This catch block handles errors from the initial _inner.send(request)
-      // (e.g., network errors, DNS resolution failures before a response is received)
-      debugPrint('RefreshingHttpClient: Error during initial send: $e');
-      rethrow; // Rethrow the error if the send itself fails.
+      debugPrint('RefreshingHttpClient: Erreur réseau: $e');
+      rethrow;
     }
     
-
+    // AMÉLIORATION: Gestion plus robuste du 401
     if (response.statusCode == 401) {
-      debugPrint('RefreshingHttpClient: Received 401, attempting token refresh.');
-      // Attempt to refresh the token
-      bool refreshed = false; // Initialize to false
+      debugPrint('RefreshingHttpClient: 401 détecté, tentative de refresh...');
+      
       try {
-        refreshed = await authService.refreshToken();
-      } catch (e) {
-        // If authService.refreshToken() itself throws an error (e.g., network issue during refresh)
-        debugPrint('RefreshingHttpClient: Error during authService.refreshToken(): $e');
-        // In this case, we cannot refresh, so we return the original 401 response.
-        // No need to drain the stream of 'response' here as we are returning it directly.
-        return response;
-      }
-
-      if (refreshed) {
-        debugPrint('RefreshingHttpClient: Token refresh reported success.');
-        // Get the new token
-        final String? newToken = await authService.getAccessToken();
-        if (newToken != null && newToken.isNotEmpty) {
-          debugPrint('RefreshingHttpClient: New token obtained, updating header and retrying.');
-          // Update the request header with the new token
-          request.headers['Authorization'] = 'Bearer $newToken';
-          
-          // It's important to drain the stream of the previous 401 response
-          // before making a new request, to free up resources.
-          await response.stream.drain(); 
-          
-          try {
-            // Retry the request
-            // Note: Sending the same request again. This is generally fine for non-streamed requests
-            // or if the stream can be re-read. For simple GET/POST with string/byte bodies, it's okay.
-            response = await _inner.send(request);
-            debugPrint('RefreshingHttpClient: Retry request sent. Status: ${response.statusCode}');
-          } catch (e) {
-            // This catch block handles errors from the retry _inner.send(request)
-            debugPrint('RefreshingHttpClient: Error during retry send: $e');
-            // If the retry fails, rethrow the error. The caller will need to handle it.
-            // Alternatively, one might choose to return the original 401 response here too.
-            rethrow;
+        // Force le refresh (pas refreshTokenIfNeeded car on a déjà un 401)
+        final refreshed = await authService.refreshToken();
+        
+        if (refreshed) {
+          final String? newToken = await authService.getAccessToken();
+          if (newToken != null && newToken.isNotEmpty) {
+            debugPrint('RefreshingHttpClient: Retry avec nouveau token');
+            
+            // Créer une nouvelle requête avec le nouveau token
+            final newRequest = _copyRequest(request);
+            newRequest.headers['Authorization'] = 'Bearer $newToken';
+            
+            // Libérer les ressources de la réponse 401
+            await response.stream.drain();
+            
+            // Retry la requête
+            response = await _inner.send(newRequest);
+            debugPrint('RefreshingHttpClient: Retry status ${response.statusCode}');
           }
         } else {
-          debugPrint('RefreshingHttpClient: Refresh succeeded but new token is null or empty. Returning original 401 response.');
-          // If refresh was successful but no new token, return the original 401 response.
-          // No need to drain here as we are returning the original response object.
+          debugPrint('RefreshingHttpClient: Refresh échoué, retour 401');
         }
-      } else {
-        debugPrint('RefreshingHttpClient: Token refresh failed. Returning original 401 response.');
-        // If refresh failed, return the original 401 response.
-        // No need to drain here as we are returning the original response object.
+      } catch (e) {
+        debugPrint('RefreshingHttpClient: Erreur durant refresh: $e');
+        // Retourner la réponse 401 originale si le refresh échoue
       }
     }
+    
     return response;
+  }
+
+  // AMÉLIORATION: Méthode helper pour copier une requête
+  http.BaseRequest _copyRequest(http.BaseRequest original) {
+    if (original is http.Request) {
+      final newRequest = http.Request(original.method, original.url);
+      newRequest.headers.addAll(original.headers);
+      newRequest.body = original.body;
+      return newRequest;
+    } else if (original is http.MultipartRequest) {
+      final newRequest = http.MultipartRequest(original.method, original.url);
+      newRequest.headers.addAll(original.headers);
+      newRequest.fields.addAll(original.fields);
+      newRequest.files.addAll(original.files);
+      return newRequest;
+    } else {
+      // Pour les autres types, on retourne l'original
+      // Dans un cas réel, vous pourriez vouloir gérer plus de types
+      return original;
+    }
   }
 
   @override
   void close() {
-    debugPrint('RefreshingHttpClient: close() called.');
+    debugPrint('RefreshingHttpClient: Fermeture');
     _inner.close();
   }
-
-  // No need to override get, post, etc. if `send` handles token appropriately.
-  // BaseClient will construct the Request and call your `send` method.
 }
