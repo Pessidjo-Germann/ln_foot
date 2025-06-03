@@ -55,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final backgroundColor = theme.colorScheme.secondary;
 
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: Colors.white,
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Authenticated || state is AuthenticatedWithToken) {
@@ -72,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'images/LNFOOT2 1.png',
+                'images/LNFOOT2 1.jpg',
                 width: 150,
               ),
               const SizedBox(height: 24),
