@@ -11,7 +11,7 @@ abstract class SavedItemsEvent extends Equatable {
 class LoadSavedItems extends SavedItemsEvent {}
 
 class AddSavedItem extends SavedItemsEvent {
-  final ProductDto product;
+  final SavedProductDto product;
 
   const AddSavedItem(this.product);
 

@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:lnFoot_api/api.dart';
 import 'package:ln_foot/bloc/saved_items/saved_items_bloc.dart';
+import 'package:ln_foot/model/saved_product_dto.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductDto product;
   final VoidCallback? onTap;
   final VoidCallback? onFavoriteTap;
+  final String? imageUrl; // Custom image URL that overrides product.imageUrl
 
   static final NumberFormat _currencyFormatter = NumberFormat.currency(
     locale: 'fr_CM',
@@ -20,6 +22,7 @@ class ProductCard extends StatelessWidget {
     required this.product,
     this.onTap,
     this.onFavoriteTap,
+    this.imageUrl,
   });
 
   @override
@@ -44,10 +47,10 @@ class ProductCard extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    if (product.imageUrl != null &&
-                        product.imageUrl!.isNotEmpty)
+                    if ((imageUrl ?? product.imageUrl) != null &&
+                        (imageUrl ?? product.imageUrl)!.isNotEmpty)
                       Image.network(
-                        product.imageUrl!,
+                        imageUrl ?? product.imageUrl!,
                         fit: BoxFit.cover,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;
@@ -93,18 +96,41 @@ class ProductCard extends StatelessWidget {
                         child: InkWell(
                           borderRadius: BorderRadius.circular(8.0),
                           onTap: () {
-                            final bloc = context.read<SavedItemsBloc>();
-                            final state = bloc.state;
-                            if (state is SavedItemsLoaded) {
-                              final isFavorite = state.items
-                                  .any((item) => item.id == product.id);
-                              if (isFavorite) {
-                                bloc.add(RemoveSavedItem(product.id!));
+                            debugPrint(
+                                'DEBUG: Favorite button tapped for product: ${product.name}');
+                            if (onFavoriteTap != null) {
+                              debugPrint(
+                                  'DEBUG: Using custom onFavoriteTap callback');
+                              onFavoriteTap!();
+                            } else {
+                              debugPrint('DEBUG: Using default favorite logic');
+                              final bloc = context.read<SavedItemsBloc>();
+                              final state = bloc.state;
+                              debugPrint(
+                                  'DEBUG: Current SavedItemsBloc state: ${state.runtimeType}');
+                              if (state is SavedItemsLoaded) {
+                                final isFavorite = state.items.any(
+                                    (item) => item.product.id == product.id);
+                                debugPrint(
+                                    'DEBUG: Is currently favorite: $isFavorite');
+                                if (isFavorite) {
+                                  debugPrint(
+                                      'DEBUG: Removing from favorites...');
+                                  bloc.add(RemoveSavedItem(product.id!));
+                                } else {
+                                  debugPrint('DEBUG: Adding to favorites...');
+                                  final savedProduct = SavedProductDto(
+                                    product: product,
+                                    selectedVariantId: null,
+                                    variantImageUrl: null,
+                                  );
+                                  bloc.add(AddSavedItem(savedProduct));
+                                }
                               } else {
-                                bloc.add(AddSavedItem(product));
+                                debugPrint(
+                                    'DEBUG: SavedItemsBloc state is not loaded: ${state.runtimeType}');
                               }
                             }
-                            if (onFavoriteTap != null) onFavoriteTap!();
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(6.0),
@@ -112,8 +138,8 @@ class ProductCard extends StatelessWidget {
                               builder: (context, state) {
                                 bool isFavorite = false;
                                 if (state is SavedItemsLoaded) {
-                                  isFavorite = state.items
-                                      .any((item) => item.id == product.id);
+                                  isFavorite = state.items.any(
+                                      (item) => item.product.id == product.id);
                                 }
                                 return Icon(
                                   isFavorite

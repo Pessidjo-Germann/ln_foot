@@ -13,7 +13,7 @@ class SavedItemsInitial extends SavedItemsState {}
 class SavedItemsLoading extends SavedItemsState {}
 
 class SavedItemsLoaded extends SavedItemsState {
-  final List<ProductDto> items;
+  final List<SavedProductDto> items;
 
   const SavedItemsLoaded(this.items);
 

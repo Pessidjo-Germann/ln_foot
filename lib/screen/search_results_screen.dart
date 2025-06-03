@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart'; // Import Bloc
 import 'package:lnFoot_api/api.dart';
-import 'package:ln_foot/bloc/saved_items/saved_items_bloc.dart'; // Import SavedItemsBloc
 
 import 'package:ln_foot/screen/product_details_screen.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
@@ -43,10 +41,9 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
 
     setState(() {
       _searchResults = sampleProducts
-          .where((product) =>
-              product.name!
-                  .toLowerCase()
-                  .contains(widget.searchQuery.toLowerCase()))
+          .where((product) => product.name!
+              .toLowerCase()
+              .contains(widget.searchQuery.toLowerCase()))
           .toList();
 
       _isLoading = false;
@@ -57,43 +54,43 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   List<ProductDto> _getSampleProducts() {
     // Assurez-vous que les produits ont des IDs uniques si possible
     return [
-       ProductDto(
+      ProductDto(
         id: 'sample1', // Ajouter un ID
         imageUrl: 'images/Rectangle 857.png',
         name: 'Godass Nike Extra Long Name To Test Wrapping Behavior',
-       // category: 'Chaussure',
+        // category: 'Chaussure',
         price: 25000,
-       // oldPrice: 30000,
-       // rating: 4.8,
-       // reviewCount: 1270,
-       // isFavorite: false, // Sera déterminé par le Bloc
+        // oldPrice: 30000,
+        // rating: 4.8,
+        // reviewCount: 1270,
+        // isFavorite: false, // Sera déterminé par le Bloc
       ),
       ProductDto(
         id: 'sample2', // Ajouter un ID
         imageUrl: 'images/Rectangle 857.png',
         name: 'Maillot',
-       // category: 'Maillot',
+        // category: 'Maillot',
         price: 10000,
         //oldPrice: 15000,
         //rating: 4.8,
         // reviewCount: 1520,
         // isFavorite: false, // Sera déterminé par le Bloc
       ),
-       ProductDto(
+      ProductDto(
         id: 'sample3', // Ajouter un ID
         imageUrl: 'images/Rectangle 857.png',
         name: 'Ballon Pro',
-      //  category: 'Ballon',
+        //  category: 'Ballon',
         price: 8000,
         // rating: 4.7,
         // reviewCount: 95,
         // isFavorite: false,
       ),
-        ProductDto(
+      ProductDto(
         id: 'sample4', // Ajouter un ID
         imageUrl: 'images/Rectangle 857.png',
         name: 'Short Adidas Performance Ultra Light Weight',
-       // category: 'Vetement',
+        // category: 'Vetement',
         price: 7500,
         // rating: 4.5,
         // reviewCount: 80,
@@ -150,76 +147,27 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            // Utiliser BlocBuilder pour l'état des favoris
-            child: BlocBuilder<SavedItemsBloc, SavedItemsState>(
-              builder: (context, savedState) {
-                Set<String?> savedItemIds = {};
-                if (savedState is SavedItemsLoaded) {
-                  savedItemIds =
-                      savedState.items.map((item) => item.id).toSet();
-                }
+            child: GridView.builder(
+              itemCount: _searchResults.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: _gridChildAspectRatio,
+              ),
+              itemBuilder: (context, index) {
+                final product = _searchResults[index];
 
-                return GridView.builder(
-                  itemCount: _searchResults.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: _gridChildAspectRatio,
-                  ),
-                  itemBuilder: (context, index) {
-                    final product = _searchResults[index];
-                    final isFavorite = savedItemIds.contains(product.id);
-
-                    // Créer une copie du produit avec le bon état isFavorite
-                    final displayProduct = ProductDto(
-                      id: product.id,
-                      name: product.name,
-                      // category: product.category,
-                      imageUrl: product.imageUrl,
-                      price: product.price,
-                      // oldPrice: product.oldPrice,
-                      // rating: product.rating,
-                      // reviewCount: product.reviewCount,
-                      // isFavorite: isFavorite, // Utiliser l'état du Bloc
-                    );
-
-                    return ProductCard(
-                      product: displayProduct,
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProductDetailsScreen(
-                                    product: displayProduct)));
-                      },
-                      // onFavoriteTap: () {
-                      //   if (product.id != null) {
-                      //     // Créer un ProductDto minimal pour le BLoC si nécessaire
-                      //     // Ou adapter le BLoC pour accepter juste l'ID
-                      //     final productDto = ProductDto(
-                      //         id: product.id,
-                      //         name: product
-                      //             .name /* autres champs si AddSavedItem les requiert */);
-
-                      //     if (isFavorite) {
-                      //       context
-                      //           .read<SavedItemsBloc>()
-                      //           .add(RemoveSavedItem(product.id!));
-                      //     } else {
-                      //       // Assurez-vous que AddSavedItem peut gérer ce DTO
-                      //       context
-                      //           .read<SavedItemsBloc>()
-                      //           .add(AddSavedItem(productDto));
-                      //     }
-                      //   } else {
-                      //     ScaffoldMessenger.of(context).showSnackBar(
-                      //       const SnackBar(
-                      //           content: Text(
-                      //               'Erreur: ID de produit manquant pour l\'action favorite.')),
-                      //     );
-                      //   }
-                      // },
+                return ProductCard(
+                  product: product,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductDetailsScreen(
+                          product: product,
+                        ),
+                      ),
                     );
                   },
                 );

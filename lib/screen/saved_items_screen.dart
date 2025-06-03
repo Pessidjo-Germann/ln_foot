@@ -109,12 +109,15 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
                       itemBuilder: (context, index) {
                         final item = items[index];
                         return ProductCard(
-                          product: item,
+                          product: item.product,
+                          imageUrl:
+                              item.variantImageUrl ?? item.product.imageUrl,
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ProductDetailsScreen(
-                                product: item,
+                                product: item.product,
+                                selectedVariantId: item.selectedVariantId,
                               ),
                             ),
                           ),
