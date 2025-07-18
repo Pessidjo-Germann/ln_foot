@@ -46,7 +46,6 @@ void main() async {
   final refreshingClient = RefreshingHttpClient(baseHttpClient, authService);
   apiClient.client = refreshingClient;
   debugPrint('RefreshingHttpClient set on ApiClient.');
-
   final productApi = ProductControllerApi(apiClient);
   final orderControllerApi = OrderControllerApi(apiClient);
   final categoryControler = CategoryControllerApi(apiClient);
