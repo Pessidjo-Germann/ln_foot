@@ -39,8 +39,18 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>com.monapp</string>
+          <string>com.lnfoot</string>
         </array>
+        <key>CFBundleURLName</key>
+        <string>com.lnfoot.deeplink</string>
+      </dict>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>https</string>
+        </array>
+        <key>CFBundleURLName</key>
+        <string>lnfoot.com</string>
       </dict>
     </array>
     <key>UISupportedInterfaceOrientations~ipad</key>

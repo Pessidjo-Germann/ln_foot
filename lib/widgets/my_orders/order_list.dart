@@ -7,11 +7,14 @@ class OrderList extends StatelessWidget {
   final List<Map<String, dynamic>> orders;
   // Callback to show the review sheet from the screen
   final Function(BuildContext, Map<String, dynamic>) showReviewSheetCallback;
+  // Callback for order tap navigation
+  final Function(Map<String, dynamic>)? onOrderTap;
 
   const OrderList({
     super.key,
     required this.orders,
     required this.showReviewSheetCallback,
+    this.onOrderTap,
   });
 
   @override
@@ -28,6 +31,8 @@ class OrderList extends StatelessWidget {
           children: [
             OrderItemWidget(
               order: order,
+              orderDto: order['orderDto'], // Pass the full order object
+              onTap: onOrderTap != null ? () => onOrderTap!(order) : null,
               onReviewPressed: isReviewTab
                   ? () {
                       if (!reviewed) {

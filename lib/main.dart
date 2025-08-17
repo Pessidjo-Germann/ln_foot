@@ -19,6 +19,7 @@ import 'package:ln_foot/screen/splash_screen.dart';
 import 'package:ln_foot/theme/app_theme.dart';
 import 'package:ln_foot/service.dart';
 import 'package:ln_foot/service/refreshing_http_client.dart'; // Added import
+import 'package:ln_foot/service/deep_link_service.dart'; // Added import
 import 'package:http/http.dart' as http; // Added import
 import 'package:lnFoot_api/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';

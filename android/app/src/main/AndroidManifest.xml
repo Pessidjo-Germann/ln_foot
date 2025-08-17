@@ -16,6 +16,22 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="com.lnfoot" android:host="callback"/>
       </intent-filter>
+
+      <!-- Deep linking for payment return -->
+      <intent-filter android:label="payment">
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="com.lnfoot" android:host="payment"/>
+      </intent-filter>
+
+      <!-- HTTP/HTTPS deep linking -->
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="https" android:host="lnfoot.com"/>
+      </intent-filter>
     </activity>
 
     <meta-data android:name="flutterEmbedding" android:value="2"/>

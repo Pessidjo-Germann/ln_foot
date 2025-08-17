@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:ln_foot/theme/app_theme.dart';
+import 'package:ln_foot/model/order_status.dart';
+import 'package:lnFoot_api/api.dart';
 
 class OrderItemWidget extends StatelessWidget {
   final Map<String, dynamic> order;
   final VoidCallback? onReviewPressed;
+  final VoidCallback? onTap;
+  final OrderDto? orderDto; // Add the full order object for navigation
 
   const OrderItemWidget({
     super.key,
     required this.order,
     this.onReviewPressed,
+    this.onTap,
+    this.orderDto,
   });
 
   @override
@@ -30,12 +36,15 @@ class OrderItemWidget extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16.0),
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          crossAxisAlignment:
-              CrossAxisAlignment.start, // Align items to the top
-          children: [
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            crossAxisAlignment:
+                CrossAxisAlignment.start, // Align items to the top
+            children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: Image.network(
@@ -84,7 +93,8 @@ class OrderItemWidget extends StatelessWidget {
             const SizedBox(width: 12),
             // Status/Action Widget
             _buildStatusWidget(context, status, reviewed),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -95,31 +105,74 @@ class OrderItemWidget extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
-    switch (status) {
-      case 'ongoing':
-        return Padding(
-          padding: const EdgeInsets.only(top: 28),
-          child: const Text(
-            'suivi de commande',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: kAppOrangeColor),
-          ),
+    // Parse the status to get OrderStatus enum
+    final orderStatus = parseOrderStatus(status);
+
+    switch (orderStatus) {
+      case OrderStatus.created:
+      case OrderStatus.paymentPending:
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              orderStatus.displayName,
+              style: textTheme.bodySmall?.copyWith(
+                color: Colors.orange[700],
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 4),
+            ElevatedButton(
+              onPressed: onTap, // This will navigate to details where payment can be made
+              style: ElevatedButton.styleFrom(
+                backgroundColor: kAppOrangeColor,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              ),
+              child: Text(
+                'Payer',
+                style: textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
         );
-      case 'completed':
+      
+      case OrderStatus.paid:
+      case OrderStatus.processing:
+      case OrderStatus.shipped:
         return Padding(
-          // Add padding for alignment
           padding: const EdgeInsets.only(top: 28),
           child: Text(
-            'Livré',
+            orderStatus.displayName,
+            textAlign: TextAlign.center,
+            style: textTheme.bodyMedium?.copyWith(
+              color: Colors.blue[700],
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      
+      case OrderStatus.delivered:
+        return Padding(
+          padding: const EdgeInsets.only(top: 28),
+          child: Text(
+            orderStatus.displayName,
             style: textTheme.bodyMedium?.copyWith(
               color: Colors.green[700],
               fontWeight: FontWeight.bold,
             ),
           ),
         );
-      case 'review':
+      
+      case OrderStatus.cancelled:
+      case OrderStatus.failed:
         if (reviewed) {
-          // For reviewed items, just show text instead of a button
           return InkWell(
             onTap: onReviewPressed,
             child: Padding(
@@ -135,22 +188,38 @@ class OrderItemWidget extends StatelessWidget {
             ),
           );
         } else {
-          // For non-reviewed items, keep the button
-          return ElevatedButton(
-            onPressed: onReviewPressed,
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFF16A26).withOpacity(0.8),
-                foregroundColor: colorScheme.onTertiaryContainer,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                textStyle: textTheme.labelSmall
-                    ?.copyWith(fontWeight: FontWeight.bold)),
-            child: const Text('Revoir'),
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                orderStatus.displayName,
+                style: textTheme.bodySmall?.copyWith(
+                  color: Colors.red[700],
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 4),
+              ElevatedButton(
+                onPressed: onReviewPressed,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red.withValues(alpha: 0.8),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                ),
+                child: Text(
+                  'Avis',
+                  style: textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           );
         }
-      default:
-        return const SizedBox.shrink(); // Handle unknown status
     }
   }
 }
