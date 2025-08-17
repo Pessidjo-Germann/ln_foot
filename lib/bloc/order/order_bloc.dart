@@ -91,7 +91,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     emit(OrderLoading());
     try {
       final paymentResponse =
-          await orderControllerApi.confirmOrder(event.orderId, event.customer);
+          await orderControllerApi.finalyzeOrder(event.orderId, event.customer);
       emit(OrderConfirmed(paymentResponse!));
     } on ApiException {
       emit(OrderError(ErrorMessages.orderUpdateFailed));

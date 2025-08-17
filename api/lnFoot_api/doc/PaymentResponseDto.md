@@ -1,8 +1,8 @@
-# lnFoot_api.model.PaymentResponseDto
+# openapi.model.PaymentResponseDto
 
 ## Load the model package
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties
@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **id** | **String** |  | [optional] 
 **orderId** | **String** |  | [optional] 
 **paymentId** | **String** |  | [optional] 
+**paymentPageUrl** | **String** |  | [optional] 
 **status** | **String** |  | [optional] 
 **createdAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **updatedAt** | [**DateTime**](DateTime.md) |  | [optional] 

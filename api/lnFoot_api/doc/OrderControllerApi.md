@@ -1,67 +1,22 @@
-# lnFoot_api.api.OrderControllerApi
+# openapi.api.OrderControllerApi
 
 ## Load the API package
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 All URIs are relative to *https://api.ln-foot.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**confirmOrder**](OrderControllerApi.md#confirmorder) | **PUT** /api/orders/{id}/confirm | 
 [**createOrder**](OrderControllerApi.md#createorder) | **POST** /api/orders | 
 [**deleteOrder**](OrderControllerApi.md#deleteorder) | **DELETE** /api/orders/{id} | 
+[**finalyzeOrder**](OrderControllerApi.md#finalyzeorder) | **PUT** /api/orders/{id}/finalyze | 
 [**getAllOrders**](OrderControllerApi.md#getallorders) | **GET** /api/orders | 
 [**getOrderById**](OrderControllerApi.md#getorderbyid) | **GET** /api/orders/{id} | 
 [**getUserOrders**](OrderControllerApi.md#getuserorders) | **GET** /api/orders/user/orders | 
 [**updateOrder**](OrderControllerApi.md#updateorder) | **PUT** /api/orders/{id} | 
 
-
-# **confirmOrder**
-> PaymentResponseDto confirmOrder(id, customer)
-
-
-
-### Example
-```dart
-import 'package:lnFoot_api/api.dart';
-// TODO Configure OAuth2 access token for authorization: keycloak
-//defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
-
-final api_instance = OrderControllerApi();
-final id = id_example; // String | 
-final customer = Customer(); // Customer | 
-
-try {
-    final result = api_instance.confirmOrder(id, customer);
-    print(result);
-} catch (e) {
-    print('Exception when calling OrderControllerApi->confirmOrder: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **String**|  | 
- **customer** | [**Customer**](Customer.md)|  | 
-
-### Return type
-
-[**PaymentResponseDto**](PaymentResponseDto.md)
-
-### Authorization
-
-[keycloak](../README.md#keycloak)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: */*
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **createOrder**
 > OrderDto createOrder(orderDto)
@@ -70,7 +25,7 @@ Name | Type | Description  | Notes
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -113,7 +68,7 @@ Name | Type | Description  | Notes
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -148,6 +103,51 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **finalyzeOrder**
+> PaymentResponseDto finalyzeOrder(id, customer)
+
+
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+// TODO Configure OAuth2 access token for authorization: keycloak
+//defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
+
+final api_instance = OrderControllerApi();
+final id = id_example; // String | 
+final customer = Customer(); // Customer | 
+
+try {
+    final result = api_instance.finalyzeOrder(id, customer);
+    print(result);
+} catch (e) {
+    print('Exception when calling OrderControllerApi->finalyzeOrder: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **customer** | [**Customer**](Customer.md)|  | 
+
+### Return type
+
+[**PaymentResponseDto**](PaymentResponseDto.md)
+
+### Authorization
+
+[keycloak](../README.md#keycloak)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **getAllOrders**
 > List<OrderDto> getAllOrders()
 
@@ -155,7 +155,7 @@ void (empty response body)
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -194,7 +194,7 @@ This endpoint does not need any parameter.
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -237,7 +237,7 @@ Name | Type | Description  | Notes
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -276,7 +276,7 @@ This endpoint does not need any parameter.
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 

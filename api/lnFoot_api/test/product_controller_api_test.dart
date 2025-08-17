@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 import 'package:test/test.dart';
 
 
@@ -17,7 +17,7 @@ void main() {
   // final instance = ProductControllerApi();
 
   group('tests for ProductControllerApi', () {
-    //Future<ProductDto> createProduct(num price, { String id, String imageUrl, MultipartFile file, String name, String description, int stockQuantity, List<String> categoryNames, List<String> sizes }) async
+    //Future<ProductDto> createProduct(ProductDto productDto) async
     test('test createProduct', () async {
       // TODO
     });
@@ -37,7 +37,7 @@ void main() {
       // TODO
     });
 
-    //Future<ProductDto> updateProduct(String id, { ProductDto productDto }) async
+    //Future<ProductDto> updateProduct(String id, ProductDto productDto) async
     test('test updateProduct', () async {
       // TODO
     });

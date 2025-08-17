@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 import 'package:test/test.dart';
 
 
@@ -17,11 +17,6 @@ void main() {
   // final instance = OrderControllerApi();
 
   group('tests for OrderControllerApi', () {
-    //Future<PaymentResponseDto> confirmOrder(String id, Customer customer) async
-    test('test confirmOrder', () async {
-      // TODO
-    });
-
     //Future<OrderDto> createOrder(OrderDto orderDto) async
     test('test createOrder', () async {
       // TODO
@@ -29,6 +24,11 @@ void main() {
 
     //Future deleteOrder(String id) async
     test('test deleteOrder', () async {
+      // TODO
+    });
+
+    //Future<PaymentResponseDto> finalyzeOrder(String id, Customer customer) async
+    test('test finalyzeOrder', () async {
       // TODO
     });
 

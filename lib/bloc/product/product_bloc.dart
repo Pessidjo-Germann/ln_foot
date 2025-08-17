@@ -125,7 +125,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     try {
       final updatedProduct = await _productApi.updateProduct(
         event.productId,
-        productDto: event.productData,
+        event.productData,
+        //productDto: event.productData,
       );
       if (updatedProduct != null) {
         emit(ProductUpdated(updatedProduct));

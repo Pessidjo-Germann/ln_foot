@@ -299,7 +299,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 description: widget.product.description,
                 categoryNames: widget.product.categoryNames,
                 sizes: _selectedVariant!.sizes,
-                file: _selectedVariant!.file,
+                //file: _selectedVariant!.file,
                 imageUrl: _selectedVariant!.imageUrl,
                 id: _selectedVariant!.id));
           },

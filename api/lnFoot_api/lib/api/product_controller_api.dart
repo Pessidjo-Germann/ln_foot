@@ -19,78 +19,20 @@ class ProductControllerApi {
   /// Performs an HTTP 'POST /api/products' operation and returns the [Response].
   /// Parameters:
   ///
-  /// * [num] price (required):
-  ///
-  /// * [String] id:
-  ///
-  /// * [String] imageUrl:
-  ///
-  /// * [MultipartFile] file:
-  ///
-  /// * [String] name:
-  ///
-  /// * [String] description:
-  ///
-  /// * [int] stockQuantity:
-  ///
-  /// * [List<String>] categoryNames:
-  ///
-  /// * [List<String>] sizes:
-  Future<Response> createProductWithHttpInfo(num price, { String? id, String? imageUrl, MultipartFile? file, String? name, String? description, int? stockQuantity, List<String>? categoryNames, List<String>? sizes, }) async {
+  /// * [ProductDto] productDto (required):
+  Future<Response> createProductWithHttpInfo(ProductDto productDto,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/products';
 
     // ignore: prefer_final_locals
-    Object? postBody;
+    Object? postBody = productDto;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>['multipart/form-data'];
+    const contentTypes = <String>['application/json'];
 
-    bool hasFields = false;
-    final mp = MultipartRequest('POST', Uri.parse(path));
-    if (id != null) {
-      hasFields = true;
-      mp.fields[r'id'] = parameterToString(id);
-    }
-    if (imageUrl != null) {
-      hasFields = true;
-      mp.fields[r'imageUrl'] = parameterToString(imageUrl);
-    }
-    if (file != null) {
-      hasFields = true;
-      mp.fields[r'file'] = file.field;
-      mp.files.add(file);
-    }
-    if (name != null) {
-      hasFields = true;
-      mp.fields[r'name'] = parameterToString(name);
-    }
-    if (description != null) {
-      hasFields = true;
-      mp.fields[r'description'] = parameterToString(description);
-    }
-    if (price != null) {
-      hasFields = true;
-      mp.fields[r'price'] = parameterToString(price);
-    }
-    if (stockQuantity != null) {
-      hasFields = true;
-      mp.fields[r'stockQuantity'] = parameterToString(stockQuantity);
-    }
-    if (categoryNames != null) {
-      hasFields = true;
-      mp.fields[r'categoryNames'] = parameterToString(categoryNames);
-    }
-    if (sizes != null) {
-      hasFields = true;
-      mp.fields[r'sizes'] = parameterToString(sizes);
-    }
-    if (hasFields) {
-      postBody = mp;
-    }
 
     return apiClient.invokeAPI(
       path,
@@ -105,25 +47,9 @@ class ProductControllerApi {
 
   /// Parameters:
   ///
-  /// * [num] price (required):
-  ///
-  /// * [String] id:
-  ///
-  /// * [String] imageUrl:
-  ///
-  /// * [MultipartFile] file:
-  ///
-  /// * [String] name:
-  ///
-  /// * [String] description:
-  ///
-  /// * [int] stockQuantity:
-  ///
-  /// * [List<String>] categoryNames:
-  ///
-  /// * [List<String>] sizes:
-  Future<ProductDto?> createProduct(num price, { String? id, String? imageUrl, MultipartFile? file, String? name, String? description, int? stockQuantity, List<String>? categoryNames, List<String>? sizes, }) async {
-    final response = await createProductWithHttpInfo(price,  id: id, imageUrl: imageUrl, file: file, name: name, description: description, stockQuantity: stockQuantity, categoryNames: categoryNames, sizes: sizes, );
+  /// * [ProductDto] productDto (required):
+  Future<ProductDto?> createProduct(ProductDto productDto,) async {
+    final response = await createProductWithHttpInfo(productDto,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -274,8 +200,8 @@ class ProductControllerApi {
   ///
   /// * [String] id (required):
   ///
-  /// * [ProductDto] productDto:
-  Future<Response> updateProductWithHttpInfo(String id, { ProductDto? productDto, }) async {
+  /// * [ProductDto] productDto (required):
+  Future<Response> updateProductWithHttpInfo(String id, ProductDto productDto,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/products/{id}'
       .replaceAll('{id}', id);
@@ -305,9 +231,9 @@ class ProductControllerApi {
   ///
   /// * [String] id (required):
   ///
-  /// * [ProductDto] productDto:
-  Future<ProductDto?> updateProduct(String id, { ProductDto? productDto, }) async {
-    final response = await updateProductWithHttpInfo(id,  productDto: productDto, );
+  /// * [ProductDto] productDto (required):
+  Future<ProductDto?> updateProduct(String id, ProductDto productDto,) async {
+    final response = await updateProductWithHttpInfo(id, productDto,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

@@ -15,7 +15,6 @@ class ProductDto {
   ProductDto({
     this.id,
     this.imageUrl,
-    this.file,
     this.name,
     this.description,
     required this.price,
@@ -39,14 +38,6 @@ class ProductDto {
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
   String? imageUrl;
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  MultipartFile? file;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -82,7 +73,6 @@ class ProductDto {
   bool operator ==(Object other) => identical(this, other) || other is ProductDto &&
     other.id == id &&
     other.imageUrl == imageUrl &&
-    other.file == file &&
     other.name == name &&
     other.description == description &&
     other.price == price &&
@@ -95,7 +85,6 @@ class ProductDto {
     // ignore: unnecessary_parenthesis
     (id == null ? 0 : id!.hashCode) +
     (imageUrl == null ? 0 : imageUrl!.hashCode) +
-    (file == null ? 0 : file!.hashCode) +
     (name == null ? 0 : name!.hashCode) +
     (description == null ? 0 : description!.hashCode) +
     (price.hashCode) +
@@ -104,7 +93,7 @@ class ProductDto {
     (sizes.hashCode);
 
   @override
-  String toString() => 'ProductDto[id=$id, imageUrl=$imageUrl, file=$file, name=$name, description=$description, price=$price, stockQuantity=$stockQuantity, categoryNames=$categoryNames, sizes=$sizes]';
+  String toString() => 'ProductDto[id=$id, imageUrl=$imageUrl, name=$name, description=$description, price=$price, stockQuantity=$stockQuantity, categoryNames=$categoryNames, sizes=$sizes]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -117,11 +106,6 @@ class ProductDto {
       json[r'imageUrl'] = this.imageUrl;
     } else {
       json[r'imageUrl'] = null;
-    }
-    if (this.file != null) {
-      json[r'file'] = this.file;
-    } else {
-      json[r'file'] = null;
     }
     if (this.name != null) {
       json[r'name'] = this.name;
@@ -165,7 +149,6 @@ class ProductDto {
       return ProductDto(
         id: mapValueOfType<String>(json, r'id'),
         imageUrl: mapValueOfType<String>(json, r'imageUrl'),
-        file: null, // No support for decoding binary content from JSON
         name: mapValueOfType<String>(json, r'name'),
         description: mapValueOfType<String>(json, r'description'),
         price: num.parse('${json[r'price']}'),

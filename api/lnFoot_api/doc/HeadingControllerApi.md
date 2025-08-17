@@ -1,8 +1,8 @@
-# lnFoot_api.api.HeadingControllerApi
+# openapi.api.HeadingControllerApi
 
 ## Load the API package
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 All URIs are relative to *https://api.ln-foot.com*
@@ -22,7 +22,7 @@ Method | HTTP request | Description
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -65,7 +65,7 @@ Name | Type | Description  | Notes
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -107,7 +107,7 @@ void (empty response body)
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -146,7 +146,7 @@ This endpoint does not need any parameter.
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
