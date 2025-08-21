@@ -49,15 +49,15 @@ class DeepLinkService {
   // Handle payment return from payment service
   void _handlePaymentReturn(BuildContext context, Uri uri) {
     final status = uri.queryParameters['status'];
-    final orderId = uri.queryParameters['orderId'];
-    final paymentId = uri.queryParameters['paymentId'];
+    final reference = uri.queryParameters['reference'];
+    final ref = uri.queryParameters['ref'];
 
-    debugPrint('Payment return - Status: $status, OrderId: $orderId, PaymentId: $paymentId');
+    debugPrint('Payment return - Status: $status, Reference: $reference, Ref: $ref');
 
     // Navigate to appropriate screen based on payment status
-    if (status == 'success') {
-      _showPaymentSuccessDialog(context, orderId);
-    } else if (status == 'failed' || status == 'cancelled') {
+    if (status == 'complete' || status == 'success') {
+      _showPaymentSuccessDialog(context, ref, reference);
+    } else if (status == 'failed' || status == 'cancelled' || status == 'error') {
       _showPaymentFailedDialog(context, status);
     } else {
       _navigateToHome(context);
@@ -71,7 +71,7 @@ class DeepLinkService {
   }
 
   // Show success dialog and navigate to orders
-  void _showPaymentSuccessDialog(BuildContext context, String? orderId) {
+  void _showPaymentSuccessDialog(BuildContext context, String? ref, String? reference) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -87,11 +87,21 @@ class DeepLinkService {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text('Votre paiement a été traité avec succès.'),
-              if (orderId != null) ...[
+              if (ref != null) ...[
                 const SizedBox(height: 8),
                 Text(
-                  'Commande #$orderId',
+                  'Commande #$ref',
                   style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+              if (reference != null) ...[
+                const SizedBox(height: 4),
+                Text(
+                  'Référence: $reference',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
                 ),
               ],
             ],
@@ -158,28 +168,18 @@ class DeepLinkService {
   }
 
   // Generate payment return URLs for your payment service
-  static String getPaymentSuccessUrl() {
-    return 'com.lnfoot://payment?status=success&orderId={orderId}&paymentId={paymentId}';
+  // Provide a simple callback URL - the payment service will add the query parameters
+  static String getPaymentCallbackUrl() {
+    return 'com.lnfoot://payment';
   }
 
-  static String getPaymentFailureUrl() {
-    return 'com.lnfoot://payment?status=failed&orderId={orderId}';
+  // Alternative HTTP URL (if your payment service supports them)
+  static String getHttpPaymentCallbackUrl() {
+    return 'https://lnfoot.com/payment/callback';
   }
 
-  static String getPaymentCancelUrl() {
-    return 'com.lnfoot://payment?status=cancelled&orderId={orderId}';
-  }
-
-  // Alternative HTTP URLs (if your payment service supports them)
-  static String getHttpPaymentSuccessUrl() {
-    return 'https://lnfoot.com/payment/success?orderId={orderId}&paymentId={paymentId}';
-  }
-
-  static String getHttpPaymentFailureUrl() {
-    return 'https://lnfoot.com/payment/failed?orderId={orderId}';
-  }
-
-  static String getHttpPaymentCancelUrl() {
-    return 'https://lnfoot.com/payment/cancelled?orderId={orderId}';
-  }
+  // The payment service will automatically add query parameters like:
+  // Success: com.lnfoot://payment?reference=uyi&status=complete&ref=order_123
+  // Failed:  com.lnfoot://payment?reference=uyi&status=failed&ref=order_123
+  // Cancelled: com.lnfoot://payment?reference=uyi&status=cancelled&ref=order_123
 }

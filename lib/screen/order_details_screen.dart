@@ -8,6 +8,7 @@ import 'package:ln_foot/theme/app_theme.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
 import 'package:ln_foot/user_session_manager.dart';
+import 'package:ln_foot/service/deep_link_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
@@ -66,6 +67,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       ConfirmOrder(
         orderId: widget.order.id!,
         customer: customer,
+        callbackUrl: DeepLinkService.getPaymentCallbackUrl(),
       ),
     );
   }

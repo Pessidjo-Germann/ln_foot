@@ -104,7 +104,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **finalyzeOrder**
-> PaymentResponseDto finalyzeOrder(id, customer)
+> PaymentResponseDto finalyzeOrder(id, callbackUrl, customer)
 
 
 
@@ -116,10 +116,11 @@ import 'package:openapi/api.dart';
 
 final api_instance = OrderControllerApi();
 final id = id_example; // String | 
+final callbackUrl = callbackUrl_example; // String | 
 final customer = Customer(); // Customer | 
 
 try {
-    final result = api_instance.finalyzeOrder(id, customer);
+    final result = api_instance.finalyzeOrder(id, callbackUrl, customer);
     print(result);
 } catch (e) {
     print('Exception when calling OrderControllerApi->finalyzeOrder: $e\n');
@@ -131,6 +132,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
+ **callbackUrl** | **String**|  | 
  **customer** | [**Customer**](Customer.md)|  | 
 
 ### Return type

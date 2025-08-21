@@ -7,10 +7,9 @@ abstract class OrderEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-// Event to load all orders (potentially for admin)
 class LoadAllOrders extends OrderEvent {
   final String
-      userId; // Assuming admin needs to specify user, or maybe not needed depending on API
+      userId; 
 
   const LoadAllOrders({required this.userId});
 
@@ -41,8 +40,16 @@ class LoadOrderById extends OrderEvent {
 class ConfirmOrder extends OrderEvent {
   final String orderId;
   final Customer customer;
+  final String? callbackUrl;
 
-  const ConfirmOrder({required this.orderId, required this.customer});
+  const ConfirmOrder({
+    required this.orderId, 
+    required this.customer,
+    this.callbackUrl,
+  });
+
+  @override
+  List<Object?> get props => [orderId, customer, callbackUrl];
 }
 
 // Event to create a new order

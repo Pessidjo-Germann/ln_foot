@@ -1051,6 +1051,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "callback_url",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -3568,7 +3576,7 @@
             "type": "string",
             "format": "date-time"
           },
-          "priority": { 
+          "priority": {
             "type": "integer",
             "format": "int32"
           },

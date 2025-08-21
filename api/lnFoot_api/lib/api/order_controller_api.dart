@@ -108,8 +108,10 @@ class OrderControllerApi {
   ///
   /// * [String] id (required):
   ///
+  /// * [String] callbackUrl (required):
+  ///
   /// * [Customer] customer (required):
-  Future<Response> finalyzeOrderWithHttpInfo(String id, Customer customer,) async {
+  Future<Response> finalyzeOrderWithHttpInfo(String id, String callbackUrl, Customer customer,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/orders/{id}/finalyze'
       .replaceAll('{id}', id);
@@ -120,6 +122,8 @@ class OrderControllerApi {
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'callback_url', callbackUrl));
 
     const contentTypes = <String>['application/json'];
 
@@ -139,9 +143,11 @@ class OrderControllerApi {
   ///
   /// * [String] id (required):
   ///
+  /// * [String] callbackUrl (required):
+  ///
   /// * [Customer] customer (required):
-  Future<PaymentResponseDto?> finalyzeOrder(String id, Customer customer,) async {
-    final response = await finalyzeOrderWithHttpInfo(id, customer,);
+  Future<PaymentResponseDto?> finalyzeOrder(String id, String callbackUrl, Customer customer,) async {
+    final response = await finalyzeOrderWithHttpInfo(id, callbackUrl, customer,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
