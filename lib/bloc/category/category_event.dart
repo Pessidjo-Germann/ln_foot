@@ -7,7 +7,14 @@ abstract class CategoryEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoadAllCategories extends CategoryEvent {}
+class LoadAllCategories extends CategoryEvent {
+  final bool forceRefresh;
+  
+  const LoadAllCategories({this.forceRefresh = false});
+  
+  @override
+  List<Object?> get props => [forceRefresh];
+}
 
 class LoadCategoryById extends CategoryEvent {
   final String categoryId;

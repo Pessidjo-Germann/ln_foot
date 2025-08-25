@@ -6,7 +6,6 @@ import 'package:ln_foot/bloc/cart/cart_bloc.dart';
 import 'package:ln_foot/bloc/saved_items/saved_items_bloc.dart';
 import 'package:ln_foot/model/saved_product_dto.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
-import 'package:ln_foot/widgets/product_details/loading_bottom_sheet.dart';
 import 'package:ln_foot/widgets/product_details/product_details_loading.dart';
 import 'package:ln_foot/widgets/product_details/product_image_section.dart';
 import 'package:ln_foot/widgets/product_details/product_info_section.dart';
@@ -100,7 +99,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           AddToCart(
             product: product,
             size:
-                _selectedSize!, // Ensure _selectedSize is not null before calling this
+                _selectedSize!, 
             color: colorName,
             quantity: 1,
           ),
@@ -247,27 +246,29 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                           const SizedBox(height: 16),
                           // const Divider(thickness: 0.4),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 10),
                           ProductDescriptionSection(
                               description: widget.product.description ?? ''),
                           const SizedBox(height: 16),
                           const Divider(thickness: 0.15),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 10),
                           SizeSelector(
                             availableSizes: _selectedVariant!.sizes,
                             selectedSize: _selectedSize,
                             onSizeSelected: _handleSizeSelected,
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 12),
                           ColorSelector(
                             variants: _productVariants,
                             selectedVariant: _selectedVariant,
                             onVariantSelected: _handleVariantSelected,
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 12),
                           const Divider(thickness: 0.1),
 
                           // ReviewsSection(productId: product.id!),
+                          const SizedBox(height: 10),
+                          // Ajouter un padding en bas pour éviter que le contenu soit masqué par le bouton
                           const SizedBox(height: 100),
                         ],
                       ),
@@ -284,31 +285,45 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           },
         ),
       ),
-      bottomSheet:
-          BlocBuilder<ProductBloc, ProductState>(builder: (context, state) {
-        if (_selectedVariant == null) {
-          return const LoadingBottomSheet(); // Or a disabled AddToCartSection
-        }
-        return AddToCartSection(
-          onAddToCart: () {
-            // _selectedVariant is already confirmed not-null here
-            _handleAddToCart(ProductDto(
-                price: _selectedVariant!.price,
-                name: widget.product.name,
-                stockQuantity: _selectedVariant!.stockQuantity,
-                description: widget.product.description,
-                categoryNames: widget.product.categoryNames,
-                sizes: _selectedVariant!.sizes,
-                //file: _selectedVariant!.file,
-                imageUrl: _selectedVariant!.imageUrl,
-                id: _selectedVariant!.id));
-          },
-          canAddToCart: canAddToCart,
-        );
-      }
-              // return const LoadingBottomSheet();
-              //},
-              ),
+      persistentFooterButtons: [
+        SafeArea(
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(
+              left: 16.0,
+              right: 16.0,
+              top: 8.0,
+              bottom: MediaQuery.of(context).padding.bottom > 0 ? 4.0 : 8.0,
+            ),
+            child: BlocBuilder<ProductBloc, ProductState>(
+              builder: (context, state) {
+                if (_selectedVariant == null) {
+                  return const SizedBox(
+                    height: 56,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                return AddToCartSection(
+                  onAddToCart: () {
+                    _handleAddToCart(ProductDto(
+                        price: _selectedVariant!.price,
+                        name: widget.product.name,
+                        stockQuantity: _selectedVariant!.stockQuantity,
+                        description: widget.product.description,
+                        categoryNames: widget.product.categoryNames,
+                        sizes: _selectedVariant!.sizes,
+                        imageUrl: _selectedVariant!.imageUrl,
+                        id: _selectedVariant!.id));
+                  },
+                  canAddToCart: canAddToCart,
+                );
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

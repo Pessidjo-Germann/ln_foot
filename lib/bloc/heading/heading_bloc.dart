@@ -8,6 +8,8 @@ part 'heading_state.dart';
 class HeadingBloc extends Bloc<HeadingEvent, HeadingState> {
   final HeadingControllerApi _headingControllerApi;
   List<HeadingDto> _cachedHeadings = [];
+  DateTime? _lastFetchTime;
+  static const Duration _cacheExpiration = Duration(minutes: 5);
 
   HeadingBloc({required HeadingControllerApi headingControllerApi})
       : _headingControllerApi = headingControllerApi,
@@ -17,7 +19,12 @@ class HeadingBloc extends Bloc<HeadingEvent, HeadingState> {
 
   Future<void> _onLoadHeadings(
       LoadHeadings event, Emitter<HeadingState> emit) async {
-    if (!event.forceRefresh && _cachedHeadings.isNotEmpty) {
+    final now = DateTime.now();
+    final isCacheExpired = _lastFetchTime == null || 
+        now.difference(_lastFetchTime!) > _cacheExpiration;
+        
+    // Utiliser le cache si : pas de forceRefresh ET cache non vide ET cache non expiré
+    if (!event.forceRefresh && _cachedHeadings.isNotEmpty && !isCacheExpired) {
       emit(HeadingsLoaded(_cachedHeadings));
       return;
     }
@@ -26,6 +33,7 @@ class HeadingBloc extends Bloc<HeadingEvent, HeadingState> {
     try {
       final headings = await _headingControllerApi.getHeadings();
       _cachedHeadings = headings ?? [];
+      _lastFetchTime = now; // Mettre à jour le timestamp du cache
       emit(HeadingsLoaded(_cachedHeadings));
     } on ApiException catch (e) {
       emit(HeadingError(e.message ?? 'API Error fetching headings'));

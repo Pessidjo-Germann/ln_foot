@@ -7,11 +7,13 @@ import '../custom_button.dart';
 class LogoutConfirmationDialog extends StatelessWidget {
   final VoidCallback onConfirm;
   final VoidCallback onCancel;
+  final bool isLoggingOut;
 
   const LogoutConfirmationDialog({
     super.key,
     required this.onConfirm,
     required this.onCancel,
+    this.isLoggingOut = false,
   });
 
   @override
@@ -63,10 +65,24 @@ class LogoutConfirmationDialog extends StatelessWidget {
 
           // Confirmation Message
           Text(
-            'Etes vous sur de vouloir vous déconnecter ?', // Corrected typo
+            isLoggingOut 
+                ? 'Déconnexion en cours...' 
+                : 'Etes vous sur de vouloir vous déconnecter ?',
             textAlign: TextAlign.center,
             style: textTheme.bodyLarge, // Adjust style as needed
           ),
+          
+          // Indicateur de chargement si en cours de déconnexion
+          if (isLoggingOut) ...[
+            const SizedBox(height: 16.0),
+            const Center(
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            ),
+          ],
           const SizedBox(height: 24.0),
 
           // Action Buttons
@@ -76,15 +92,10 @@ class LogoutConfirmationDialog extends StatelessWidget {
               Expanded(
                 child: CustomButton(
                   text: 'Annulé',
-                  onPressed: onCancel,
-                  // Assuming CustomButton has styling options
+                  onPressed: isLoggingOut ? () {} : onCancel, // Désactiver si en cours
                   // Use light/grey style for cancel
-                  // Example: buttonStyle: ButtonStyle(backgroundColor: ...)
-                  // Or maybe a specific constructor/parameter like isSecondary: true
-                  // Adapt based on actual CustomButton implementation
-                  // For now, let's assume default or provide basic styling
-                  buttonColor: Colors.grey[200], // Use buttonColor parameter
-                  textColor: Colors.black87, // Example color
+                  buttonColor: Colors.grey[200],
+                  textColor: isLoggingOut ? Colors.grey : Colors.black87,
                 ),
               ),
               const SizedBox(width: 16.0), // Spacing between buttons
@@ -92,11 +103,11 @@ class LogoutConfirmationDialog extends StatelessWidget {
               // Confirm Button
               Expanded(
                 child: CustomButton(
-                  text: 'Oui, Déconnexion',
-                  onPressed: onConfirm,
+                  text: isLoggingOut ? 'Déconnexion...' : 'Oui, Déconnexion',
+                  onPressed: isLoggingOut ? () {} : onConfirm, // Fonction vide si en cours
                   // Use primary/red style for confirm
-                  buttonColor: Colors.red, // Use buttonColor parameter
-                  textColor: Colors.white, // Example color
+                  buttonColor: isLoggingOut ? Colors.grey : Colors.red,
+                  textColor: Colors.white,
                 ),
               ),
             ],
@@ -123,15 +134,35 @@ void showLogoutDialog(BuildContext context) {
                 .pushReplacement(MaterialPageRoute(builder: (context) {
               return LoginOptionsScreen();
             }));
+          } else if (state is AuthError) {
+            // Afficher un message d'erreur mais continuer la déconnexion
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.orange,
+                duration: const Duration(seconds: 2),
+              ),
+            );
           }
         },
-        child: LogoutConfirmationDialog(
-          onConfirm: () {
-            context.read<AuthBloc>().add(LogoutRequested());
-            Navigator.of(context).pop(); // Close bottom sheet
-          },
-          onCancel: () {
-            Navigator.of(context).pop(); // Close bottom sheet
+        child: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            return LogoutConfirmationDialog(
+              onConfirm: () {
+                // Ne fermer le dialog que si on n'est pas en cours de déconnexion
+                if (state is! AuthLoggingOut) {
+                  context.read<AuthBloc>().add(LogoutRequested());
+                  // Ne pas fermer tout de suite pour montrer l'indicateur de chargement
+                }
+              },
+              onCancel: () {
+                // Permettre l'annulation seulement si on n'est pas en cours de déconnexion
+                if (state is! AuthLoggingOut) {
+                  Navigator.of(context).pop(); // Close bottom sheet
+                }
+              },
+              isLoggingOut: state is AuthLoggingOut,
+            );
           },
         ),
       );

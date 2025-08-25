@@ -53,12 +53,21 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   Future<void> _onLoadAllProducts(
       LoadAllProducts event, Emitter<ProductState> emit) async {
+    // Si ce n'est pas un forceRefresh et qu'on a déjà des produits, on peut éviter l'état loading
+    if (!event.forceRefresh && _allProducts.isNotEmpty) {
+      _applyFiltersAndEmit(emit);
+      return;
+    }
+    
     emit(ProductLoading());
     try {
       final products = await _productApi.getAllProducts();
       _allProducts = products ?? [];
-      _currentSelectedCategoryName = null; 
-      _searchQuery = ""; 
+      if (event.forceRefresh) {
+        // Reset les filtres lors d'un refresh forcé
+        _currentSelectedCategoryName = null; 
+        _searchQuery = ""; 
+      }
       _applyFiltersAndEmit(emit);
     } on ApiException {
       emit(ProductError(ErrorMessages.productUpdateFailed));
