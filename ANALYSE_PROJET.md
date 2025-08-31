@@ -216,6 +216,4 @@ Ce projet constitue un excellent ajout au portfolio d'un étudiant :
 
 ---
 
-**Ce projet représente une opportunité exceptionnelle pour un étudiant en génie logiciel de développer des compétences techniques avancées tout en contribuant à une application réelle de qualité professionnelle.**
-
-*Analyse réalisée le 20 janvier 2025*
+*Analyse réalisée en août 2025*
