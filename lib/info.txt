@@ -1,0 +1,125 @@
+# Structure du dossier `lib`
+
+Ce document décrit la structure du dossier `lib` et le rôle de ses principaux fichiers et sous-dossiers.
+
+## Fichiers à la racine
+
+*   `main.dart`: Point d'entrée principal de l'application Flutter. Initialise l'application (`runApp`), configure le thème global (`appThemeData`) et définit l'écran initial (`SplashScreen`).
+
+## Sous-dossiers
+
+### `model/`
+
+Contient les classes définissant la structure des données (modèles) utilisées dans l'application.
+
+*   `notification.dart`: Modèle pour les données d'une notification.
+*   `product.dart`: Modèle pour les données d'un produit.
+
+### `screen/`
+
+Contient les différents écrans (ou pages) de l'application. Chaque fichier `.dart` représente généralement une vue plein écran.
+
+*   `email_login_screen.dart`: Écran de connexion via email.
+*   `email_signup_screen.dart`: Écran d'inscription via email.
+*   `forgot_password_screen.dart`: Écran pour demander la réinitialisation du mot de passe.
+*   `home_screen.dart`: Écran principal (page d'accueil) de l'application.
+*   `login_options_screen.dart`: Écran affichant les différentes méthodes de connexion.
+*   `notification_screen.dart`: Écran affichant la liste des notifications.
+*   `onboarding_screen.dart`: Écran(s) d'introduction affiché(s) au premier lancement.
+*   `otp_verification_screen.dart`: Écran pour vérifier un code reçu par OTP (One-Time Password).
+*   `reset_password_screen.dart`: Écran pour définir un nouveau mot de passe après réinitialisation.
+*   `search_screen.dart`: Écran affichant l'interface de recherche avec les suggestions et recherches populaires.
+*   `search_results_screen.dart`: Écran affichant les résultats d'une recherche de produits.
+*   `signup_options_screen.dart`: Écran affichant les différentes méthodes d'inscription.
+*   `splash_screen.dart`: Écran de chargement initial affiché au démarrage de l'application.
+*   `product_details_screen.dart`: Écran affichant les détails d'un produit spécifique.
+*   `cart_screen.dart`: Écran affichant le panier d'achat.
+*   `saved_items_screen.dart`: Écran affichant les articles sauvegardés/favoris.
+*   `add_card_screen.dart`: Écran pour ajouter une nouvelle carte de paiement.
+*   `checkout_screen.dart`: Écran du processus de paiement.
+*   `payment_method_screen.dart`: Écran pour sélectionner ou gérer les méthodes de paiement.
+*   `profile_screen.dart`: Écran principal du compte utilisateur, affichant les options de menu (profil, commandes, etc.).
+*   `profile_details_screen.dart`: Écran permettant à l'utilisateur de voir et modifier ses informations personnelles.
+*   `my_orders_screen.dart`: Écran affichant la liste des commandes de l'utilisateur, triées par statut (en cours, complétées, à revoir).
+
+### `theme/`
+
+Contient la configuration de l'apparence visuelle (thème) de l'application.
+
+*   `app_theme.dart`: Définit les styles globaux comme les couleurs, les polices, les thèmes des widgets (boutons, AppBar, etc.).
+
+### `utils/`
+
+Contient des classes et fonctions utilitaires réutilisables à travers l'application.
+
+*   `bottom_sheet_utils.dart`: Fonctions d'aide pour afficher des "bottom sheets" (panneaux glissant depuis le bas).
+*   `validators.dart`: Fonctions pour valider les entrées utilisateur (ex: format d'email, force du mot de passe).
+*   `bottom_sheet_review_all.dart`: Fonction d'aide pour afficher une "bottom sheet" avec toutes les évaluations.
+
+### `widgets/`
+
+Contient les composants d'interface utilisateur (widgets) réutilisables. Ce dossier est souvent subdivisé pour mieux organiser les widgets.
+
+*   **Widgets généraux (à la racine de `widgets/`)**: Widgets de base réutilisables partout.
+    *   `custom_app_bar.dart`: Une barre d'application personnalisée.
+    *   `custom_button.dart`: Un bouton personnalisé.
+    *   `custom_text_field.dart`: Un champ de saisie de texte personnalisé.
+    *   `social_button.dart`: Bouton pour l'authentification via réseaux sociaux (Google, Apple, etc.).
+*   **`common/`**: Widgets communs pouvant être utilisés dans différents contextes ou écrans.
+    *   `product_card.dart`: Carte UI pour afficher un aperçu d'un produit.
+    *   `product_loading_grid.dart`: Grille affichant des placeholders pendant le chargement des produits.
+*   **`checkout/`**: Widgets spécifiques à l'`checkout_screen`.
+    *   `address_section.dart`: Section pour afficher/modifier l'adresse de livraison.
+    *   `order_summary_section.dart`: Section affichant le résumé de la commande.
+    *   `payment_method_section.dart`: Section pour sélectionner la méthode de paiement.
+    *   `payment_success_dialog.dart`: Dialogue affiché après un paiement réussi.
+*   **`cart/`**: Widgets spécifiques à l'`cart_screen`.
+    *   `cart_item_list.dart`: Widget affichant la liste des articles dans le panier.
+    *   `cart_item_widget.dart`: Widget représentant un article individuel dans le panier.
+    *   `cart_summary.dart`: Widget affichant le résumé du panier (total, etc.).
+    *   `remove_item.dart`: Widget (probablement un bouton ou icône) pour supprimer un article du panier.
+*   **`home/`**: Widgets spécifiques à l'`home_screen`.
+    *   `categories_section.dart`: Section affichant les catégories de produits.
+    *   `home_app_bar.dart`: La barre d'application spécifique à l'écran d'accueil.
+    *   `promo_banner.dart`: Bannière pour afficher des promotions.
+    *   `search_bar_widget.dart`: Widget de barre de recherche (utilisé aussi dans `SearchScreen`). A été modifié pour être plus flexible (accepte un controller, callbacks, état `isSearching`).
+    *   `special_offers_section.dart`: Section affichant les offres spéciales.
+    *   **`categories/`**: Widgets liés à l'affichage des catégories dans la section `home`.
+        *   `category_item.dart`: Widget représentant un élément individuel dans la liste des catégories.
+*   **`notification/`**: Widgets spécifiques à l'`notification_screen`.
+    *   `date_header.dart`: En-tête pour regrouper les notifications par date.
+    *   `empty_notification_view.dart`: Widget affiché quand il n'y a aucune notification.
+    *   `notification_item.dart`: Widget représentant une notification individuelle dans la liste.
+    *   `notification_list_view.dart`: Widget affichant la liste scrollable des notifications.
+*   **`search/`**: Widgets spécifiques aux écrans `search_screen` et `search_results_screen`.
+    *   `empty_search_result.dart`: Widget affiché quand une recherche ne retourne aucun résultat.
+    *   `popular_search_item.dart`: Widget représentant un élément dans la liste des recherches populaires.
+    *   `popular_searches_section.dart`: Section affichant la liste des recherches populaires.
+    *   `search_suggestion_item.dart`: Widget représentant un élément dans la liste des suggestions de recherche.
+        *   `search_suggestions_section.dart`: Section affichant la liste des suggestions de recherche.
+        *   `search_input_field.dart`: Champ de saisie de texte spécifique pour la recherche.
+*   **`payment/`**: Widgets liés à la gestion des paiements.
+    *   `saved_card_item.dart`: Widget affichant une carte de paiement enregistrée.
+*   **`saved_items/`**: Widgets spécifiques à l'`saved_items_screen`.
+    *   `empty_saved_items_view.dart`: Widget affiché quand il n'y a aucun article sauvegardé.
+    *   `shimmer_product_card.dart`: Carte produit avec effet shimmer pour l'état de chargement.
+*   **`product_details/`**: Widgets spécifiques à l'`product_details_screen`.
+    *   `add_to_cart_section.dart`: Section inférieure contenant le bouton "Ajouter la carte".
+    *   `color_selector.dart`: Widget pour sélectionner la couleur du produit.
+    *   `product_description_section.dart`: Section affichant la description détaillée du produit.
+    *   `product_details_app_bar.dart`: La barre d'application spécifique à l'écran de détails du produit.
+    *   `product_image_section.dart`: Section affichant l'image principale du produit et le bouton favori.
+    *   `product_info_section.dart`: Section affichant le nom, le prix et la note du produit.
+    *   `reviews_section.dart`: Section extensible affichant les évaluations et avis des clients.
+    *   `size_selector.dart`: Widget pour sélectionner la taille du produit.
+    *   `review_item.dart`: Widget représentant un avis client individuel.
+    *   `loading_bottom_sheet.dart`: Bottom sheet affichée pendant certaines opérations de chargement.
+    *   `product_details_loading.dart`: Widget affichant un état de chargement pour les détails du produit.
+*   **`profile/`**: Widgets spécifiques aux écrans `profile_screen` et `profile_details_screen`.
+    *   `profile_menu_item.dart`: Widget réutilisable pour afficher une option de menu dans l'écran de profil (icône, titre, action).
+*   **`my_orders/`**: Widgets spécifiques à l'`my_orders_screen`.
+    *   `order_status_tabs.dart`: Widget affichant les onglets pour filtrer les commandes par statut (En cours, Complete, Revoir).
+    *   `order_item_widget.dart`: Widget représentant une commande individuelle dans la liste. Affiche l'image, le nom, la taille, le prix et le statut/action (Suivi, Livré, Revoir/Voir l'avis).
+    *   `order_list.dart`: Widget affichant la liste scrollable des `OrderItemWidget` pour un statut donné.
+    *   `empty_orders_view.dart`: Widget affiché lorsqu'il n'y a aucune commande pour un statut sélectionné.
+    *   `review_bottom_sheet.dart`: Bottom sheet permettant à l'utilisateur de noter et laisser un avis sur une commande complétée.

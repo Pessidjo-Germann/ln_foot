@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lnFoot_api/api.dart';
 import 'package:ln_foot/screen/login_options_screen.dart';
 import 'package:ln_foot/theme/app_theme.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
 
 class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({super.key});
+  final ApiClient apiClient;
+  const OnboardingScreen({super.key, required this.apiClient});
 
   // Removed local buttonOrange definition
 
@@ -61,7 +63,9 @@ class OnboardingScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                          builder: (context) => const LoginOptionsScreen()),
+                          builder: (context) =>  LoginOptionsScreen(
+                         
+                          )),
                     );
                   },
                 ),
