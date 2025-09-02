@@ -93,31 +93,43 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Ajoute d’autres champs si besoin
+              // Ajoute d'autres champs si besoin
 
               const SizedBox(height: 32),
+              // Padding supplémentaire pour éviter que le contenu soit masqué par le bouton fixe
+              const SizedBox(height: 100),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: CustomButton(
-          text: 'Enregistré',
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              // TODO: Implement save logic
-              print('Saving profile...');
-              print('Name: ${_nameController.text}');
-              print('Email: ${_emailController.text}');
-              print('DOB: ${_dobController.text}');
-              print('Gender: $_selectedGender');
-              print('Phone: ${_phoneController.text}');
-              Navigator.pop(context);
-            }
-          },
+      persistentFooterButtons: [
+        SafeArea(
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(
+              left: 16.0,
+              right: 16.0,
+              top: 8.0,
+              bottom: MediaQuery.of(context).padding.bottom > 0 ? 4.0 : 8.0,
+            ),
+            child: CustomButton(
+              text: 'Enregistrer',
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  // TODO: Implement save logic
+                  print('Saving profile...');
+                  print('Name: ${_nameController.text}');
+                  print('Email: ${_emailController.text}');
+                  print('DOB: ${_dobController.text}');
+                  print('Gender: $_selectedGender');
+                  print('Phone: ${_phoneController.text}');
+                  Navigator.pop(context);
+                }
+              },
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 

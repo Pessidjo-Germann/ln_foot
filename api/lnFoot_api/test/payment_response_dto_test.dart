@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 import 'package:test/test.dart';
 
 // tests for PaymentResponseDto
@@ -28,6 +28,11 @@ void main() {
 
     // String paymentId
     test('to test the property `paymentId`', () async {
+      // TODO
+    });
+
+    // String paymentPageUrl
+    test('to test the property `paymentPageUrl`', () async {
       // TODO
     });
 

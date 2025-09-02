@@ -11,8 +11,8 @@ import '../widgets/custom_app_bar.dart';
 // Import the newly created widgets
 import '../widgets/my_orders/order_status_tabs.dart';
 import '../widgets/my_orders/order_list.dart';
-
 import '../widgets/my_orders/review_bottom_sheet.dart';
+import '../screen/order_details_screen.dart'; // Add import for order details
 
 class MyOrdersScreen extends StatefulWidget {
   const MyOrdersScreen({super.key});
@@ -71,12 +71,15 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
     }
   }
 
-  // Nouvelle version asynchrone
+  // Nouvelle version asynchrone avec support pour les nouveaux statuts
   Future<List<Map<String, dynamic>>> _mapOrders(
-      List<OrderDto> orders, OrderStatus status) async {
+      List<OrderDto> orders, OrderTab tab) async {
     final filteredOrders = orders
-        .where((order) =>
-            order.status != null && order.status == status.displayName)
+        .where((order) {
+          if (order.status == null) return false;
+          final orderStatus = parseOrderStatus(order.status);
+          return orderStatus.tab == tab;
+        })
         .toList();
 
     final List<Map<String, dynamic>> mappedOrders = [];
@@ -141,8 +144,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
           'name': productName,
           'size': item?.size != null ? 'Taille: ${item!.size}' : '',
           'price': _safeParsePrice(item?.price),
-          'status': _mapOrderStatus(order.status),
+          'status': order.status, // Keep original API status
           'reviewed': false,
+          'orderDto': order, // Add the full order object for navigation
         };
 
         debugPrint('Commande mappée: $orderMap');
@@ -170,16 +174,6 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
     return '0';
   }
 
-  String _mapOrderStatus(String? status) {
-    switch (status?.toLowerCase()) {
-      case 'pending':
-        return OrderStatus.ongoing.displayName;
-      case 'completed':
-        return OrderStatus.completed.displayName;
-      default:
-        return OrderStatus.review.displayName;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -212,9 +206,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
                 // Utilisation de FutureBuilder pour gérer le mapping asynchrone
                 return FutureBuilder<List<List<Map<String, dynamic>>>>(
                   future: Future.wait([
-                    _mapOrders(state.orders, OrderStatus.ongoing),
-                    _mapOrders(state.orders, OrderStatus.completed),
-                    _mapOrders(state.orders, OrderStatus.review),
+                    _mapOrders(state.orders, OrderTab.ongoing),
+                    _mapOrders(state.orders, OrderTab.completed),
+                    _mapOrders(state.orders, OrderTab.cancelled),
                   ]),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -230,7 +224,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
                     }
                     final ongoing = data[0];
                     final completed = data[1];
-                    final review = data[2];
+                    final cancelled = data[2];
                     return Column(
                       children: [
                         OrderStatusTabs(tabController: _tabController),
@@ -239,11 +233,11 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
                             controller: _tabController,
                             children: [
                               // Tab 1: Ongoing Orders
-                              _buildTabView(ongoing, OrderStatus.ongoing),
+                              _buildTabView(ongoing, OrderTab.ongoing),
                               // Tab 2: Completed Orders
-                              _buildTabView(completed, OrderStatus.completed),
-                              // Tab 3: Review Orders
-                              _buildTabView(review, OrderStatus.review),
+                              _buildTabView(completed, OrderTab.completed),
+                              // Tab 3: Cancelled Orders
+                              _buildTabView(cancelled, OrderTab.cancelled),
                             ],
                           ),
                         ),
@@ -264,7 +258,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
   }
 
   // Helper to build the content for each tab (corrigé pour List<Map<String, dynamic>>)
-  Widget _buildTabView(List<Map<String, dynamic>> orders, OrderStatus status) {
+  Widget _buildTabView(List<Map<String, dynamic>> orders, OrderTab tab) {
     // Parameter type changed
     if (orders.isEmpty) {
       return Center(
@@ -274,6 +268,20 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
       return OrderList(
         orders: orders,
         showReviewSheetCallback: _showReviewBottomSheet, // Pass the callback
+        onOrderTap: _navigateToOrderDetails, // Add navigation callback
+      );
+    }
+  }
+
+  // Add navigation method
+  void _navigateToOrderDetails(Map<String, dynamic> orderMap) {
+    final orderDto = orderMap['orderDto'] as OrderDto?;
+    if (orderDto != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OrderDetailsScreen(order: orderDto),
+        ),
       );
     }
   }

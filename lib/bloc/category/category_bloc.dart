@@ -7,6 +7,7 @@ part 'category_state.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   final CategoryControllerApi categoryControllerApi;
+  List<CategoryDto> _cachedCategories = [];
 
   CategoryBloc({required this.categoryControllerApi})
       : super(CategoryInitial()) {
@@ -19,10 +20,17 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
   Future<void> _onLoadAllCategories(
       LoadAllCategories event, Emitter<CategoryState> emit) async {
+    // Si ce n'est pas un forceRefresh et qu'on a déjà des catégories, les retourner
+    if (!event.forceRefresh && _cachedCategories.isNotEmpty) {
+      emit(CategoriesLoaded(_cachedCategories));
+      return;
+    }
+    
     emit(CategoryLoading());
     try {
       final categories = await categoryControllerApi.getAllCategories();
-      emit(CategoriesLoaded(categories ?? []));
+      _cachedCategories = categories ?? [];
+      emit(CategoriesLoaded(_cachedCategories));
     } on ApiException catch (e) {
       emit(CategoryError('API Error ${e.code}: ${e.message ?? e.toString()}'));
     } catch (e) {

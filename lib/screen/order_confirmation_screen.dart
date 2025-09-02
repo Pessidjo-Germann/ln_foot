@@ -4,6 +4,7 @@ import 'package:lnFoot_api/api.dart'; // For PaymentResponseDto
 import 'package:ln_foot/screen/home_screen.dart'; // For navigation
 import 'package:ln_foot/widgets/custom_button.dart'; // For the button
 import 'package:ln_foot/theme/app_theme.dart'; // For kAppOrangeColor or other theme colors
+import 'package:url_launcher/url_launcher.dart'; // For opening URLs
 
 class OrderConfirmationScreen extends StatelessWidget {
   final PaymentResponseDto paymentResponse;
@@ -26,6 +27,25 @@ class OrderConfirmationScreen extends StatelessWidget {
   String _formatCurrency(double amount) {
     // Adjust for your specific currency and locale if needed
     return NumberFormat.currency(locale: 'fr_FR', symbol: 'XAF').format(amount);
+  }
+
+  Future<void> _openPaymentUrl() async {
+    final paymentUrl = paymentResponse.paymentPageUrl;
+    if (paymentUrl != null && paymentUrl.isNotEmpty) {
+      final uri = Uri.parse(paymentUrl);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(
+          uri,
+          mode: LaunchMode.inAppWebView, // Ouvre dans une WebView intégrée
+          webViewConfiguration: const WebViewConfiguration(
+            enableJavaScript: true,
+            enableDomStorage: true,
+          ),
+        );
+      } else {
+        debugPrint('Could not launch $paymentUrl');
+      }
+    }
   }
 
   @override
@@ -51,7 +71,7 @@ class OrderConfirmationScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             Text(
-              'Paiement En cours !',
+              'Commande Prête !',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
@@ -60,7 +80,7 @@ class OrderConfirmationScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8.0),
             Text(
-              'Merci pour votre achat, $customerName !',
+              'Merci $customerName ! Procédez au paiement pour finaliser votre commande.',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleMedium,
             ),
@@ -95,14 +115,36 @@ class OrderConfirmationScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32.0),
-            CustomButton(
-              text: 'OK',
+            // Bouton pour procéder au paiement
+            if (paymentResponse.paymentPageUrl != null && paymentResponse.paymentPageUrl!.isNotEmpty)
+              CustomButton(
+                text: 'Procéder au paiement',
+                onPressed: _openPaymentUrl,
+              ),
+            const SizedBox(height: 16.0),
+            // Bouton pour retourner à l'accueil
+            OutlinedButton(
               onPressed: () {
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => const HomeScreen()),
                   (Route<dynamic> route) => false, // Clears all routes
                 );
               },
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                side: BorderSide(color: kAppOrangeColor),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+              child: Text(
+                'Retour à l\'accueil',
+                style: TextStyle(
+                  color: kAppOrangeColor,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ],
         ),

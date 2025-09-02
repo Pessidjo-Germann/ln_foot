@@ -16,7 +16,6 @@ class HeadingDto {
     this.id,
     this.title,
     this.imageUrl,
-    this.file,
   });
 
   ///
@@ -43,31 +42,21 @@ class HeadingDto {
   ///
   String? imageUrl;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  MultipartFile? file;
-
   @override
   bool operator ==(Object other) => identical(this, other) || other is HeadingDto &&
     other.id == id &&
     other.title == title &&
-    other.imageUrl == imageUrl &&
-    other.file == file;
+    other.imageUrl == imageUrl;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (id == null ? 0 : id!.hashCode) +
     (title == null ? 0 : title!.hashCode) +
-    (imageUrl == null ? 0 : imageUrl!.hashCode) +
-    (file == null ? 0 : file!.hashCode);
+    (imageUrl == null ? 0 : imageUrl!.hashCode);
 
   @override
-  String toString() => 'HeadingDto[id=$id, title=$title, imageUrl=$imageUrl, file=$file]';
+  String toString() => 'HeadingDto[id=$id, title=$title, imageUrl=$imageUrl]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -85,11 +74,6 @@ class HeadingDto {
       json[r'imageUrl'] = this.imageUrl;
     } else {
       json[r'imageUrl'] = null;
-    }
-    if (this.file != null) {
-      json[r'file'] = this.file;
-    } else {
-      json[r'file'] = null;
     }
     return json;
   }
@@ -116,7 +100,6 @@ class HeadingDto {
         id: mapValueOfType<String>(json, r'id'),
         title: mapValueOfType<String>(json, r'title'),
         imageUrl: mapValueOfType<String>(json, r'imageUrl'),
-        file: null, // No support for decoding binary content from JSON
       );
     }
     return null;

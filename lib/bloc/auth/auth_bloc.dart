@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ln_foot/service.dart';
 import 'package:ln_foot/constants/error_messages.dart';
+import 'package:ln_foot/model/logout_result.dart';
 import 'dart:async';
 
 part 'auth_event.dart';
@@ -98,8 +99,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onLogoutRequested(
       LogoutRequested event, Emitter<AuthState> emit) async {
-    await authService.logout();
-    emit(Unauthenticated());
+    emit(AuthLoggingOut());
+    
+    try {
+      final result = await authService.logout();
+      
+      if (result.isSuccess) {
+        // Déconnexion réussie
+        if (result.type == LogoutType.localOnly) {
+          // Informer que la déconnexion était locale uniquement
+          emit(Unauthenticated());
+          // Optionnellement, vous pourriez émettre un événement différent
+          // pour indiquer que c'était une déconnexion locale
+        } else {
+          emit(Unauthenticated());
+        }
+      } else {
+        // Échec de la déconnexion - mais nettoyer quand même
+        emit(AuthError('Déconnexion partielle: ${result.error}'));
+        // Après un délai court, passer à Unauthenticated pour forcer la déconnexion
+        await Future.delayed(const Duration(seconds: 2));
+        emit(Unauthenticated());
+      }
+    } catch (e) {
+      // Erreur critique - forcer la déconnexion
+      emit(AuthError('Erreur critique lors de la déconnexion: $e'));
+      await Future.delayed(const Duration(seconds: 2));
+      emit(Unauthenticated());
+    }
   }
 
   Future<void> _onCheckToken(CheckToken event, Emitter<AuthState> emit) async {

@@ -19,72 +19,20 @@ class ProductVariantControllerApi {
   /// Performs an HTTP 'POST /api/product-variants' operation and returns the [Response].
   /// Parameters:
   ///
-  /// * [num] price (required):
-  ///
-  /// * [String] id:
-  ///
-  /// * [String] imageUrl:
-  ///
-  /// * [MultipartFile] file:
-  ///
-  /// * [String] colorCode:
-  ///
-  /// * [String] productId:
-  ///
-  /// * [int] stockQuantity:
-  ///
-  /// * [List<String>] sizes:
-  Future<Response> createProductVariantWithHttpInfo(num price, { String? id, String? imageUrl, MultipartFile? file, String? colorCode, String? productId, int? stockQuantity, List<String>? sizes, }) async {
+  /// * [ProductVariantDto] productVariantDto (required):
+  Future<Response> createProductVariantWithHttpInfo(ProductVariantDto productVariantDto,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/product-variants';
 
     // ignore: prefer_final_locals
-    Object? postBody;
+    Object? postBody = productVariantDto;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>['multipart/form-data'];
+    const contentTypes = <String>['application/json'];
 
-    bool hasFields = false;
-    final mp = MultipartRequest('POST', Uri.parse(path));
-    if (id != null) {
-      hasFields = true;
-      mp.fields[r'id'] = parameterToString(id);
-    }
-    if (imageUrl != null) {
-      hasFields = true;
-      mp.fields[r'imageUrl'] = parameterToString(imageUrl);
-    }
-    if (file != null) {
-      hasFields = true;
-      mp.fields[r'file'] = file.field;
-      mp.files.add(file);
-    }
-    if (colorCode != null) {
-      hasFields = true;
-      mp.fields[r'colorCode'] = parameterToString(colorCode);
-    }
-    if (productId != null) {
-      hasFields = true;
-      mp.fields[r'productId'] = parameterToString(productId);
-    }
-    if (price != null) {
-      hasFields = true;
-      mp.fields[r'price'] = parameterToString(price);
-    }
-    if (stockQuantity != null) {
-      hasFields = true;
-      mp.fields[r'stockQuantity'] = parameterToString(stockQuantity);
-    }
-    if (sizes != null) {
-      hasFields = true;
-      mp.fields[r'sizes'] = parameterToString(sizes);
-    }
-    if (hasFields) {
-      postBody = mp;
-    }
 
     return apiClient.invokeAPI(
       path,
@@ -99,23 +47,9 @@ class ProductVariantControllerApi {
 
   /// Parameters:
   ///
-  /// * [num] price (required):
-  ///
-  /// * [String] id:
-  ///
-  /// * [String] imageUrl:
-  ///
-  /// * [MultipartFile] file:
-  ///
-  /// * [String] colorCode:
-  ///
-  /// * [String] productId:
-  ///
-  /// * [int] stockQuantity:
-  ///
-  /// * [List<String>] sizes:
-  Future<ProductVariantDto?> createProductVariant(num price, { String? id, String? imageUrl, MultipartFile? file, String? colorCode, String? productId, int? stockQuantity, List<String>? sizes, }) async {
-    final response = await createProductVariantWithHttpInfo(price,  id: id, imageUrl: imageUrl, file: file, colorCode: colorCode, productId: productId, stockQuantity: stockQuantity, sizes: sizes, );
+  /// * [ProductVariantDto] productVariantDto (required):
+  Future<ProductVariantDto?> createProductVariant(ProductVariantDto productVariantDto,) async {
+    final response = await createProductVariantWithHttpInfo(productVariantDto,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -132,29 +66,20 @@ class ProductVariantControllerApi {
   /// Performs an HTTP 'POST /api/product-variants/bulk' operation and returns the [Response].
   /// Parameters:
   ///
-  /// * [List<ProductVariantDto>] variants (required):
-  Future<Response> createProductVariantsWithHttpInfo(List<ProductVariantDto> variants,) async {
+  /// * [BulkProductVariantDto] bulkProductVariantDto (required):
+  Future<Response> createProductVariantsWithHttpInfo(BulkProductVariantDto bulkProductVariantDto,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/product-variants/bulk';
 
     // ignore: prefer_final_locals
-    Object? postBody;
+    Object? postBody = bulkProductVariantDto;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>['multipart/form-data'];
+    const contentTypes = <String>['application/json'];
 
-    bool hasFields = false;
-    final mp = MultipartRequest('POST', Uri.parse(path));
-    if (variants != null) {
-      hasFields = true;
-      mp.fields[r'variants'] = parameterToString(variants);
-    }
-    if (hasFields) {
-      postBody = mp;
-    }
 
     return apiClient.invokeAPI(
       path,
@@ -169,9 +94,9 @@ class ProductVariantControllerApi {
 
   /// Parameters:
   ///
-  /// * [List<ProductVariantDto>] variants (required):
-  Future<List<ProductVariantDto>?> createProductVariants(List<ProductVariantDto> variants,) async {
-    final response = await createProductVariantsWithHttpInfo(variants,);
+  /// * [BulkProductVariantDto] bulkProductVariantDto (required):
+  Future<List<ProductVariantDto>?> createProductVariants(BulkProductVariantDto bulkProductVariantDto,) async {
+    final response = await createProductVariantsWithHttpInfo(bulkProductVariantDto,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -335,8 +260,8 @@ class ProductVariantControllerApi {
   ///
   /// * [String] id (required):
   ///
-  /// * [ProductVariantDto] productVariantDto:
-  Future<Response> updateProductVariantWithHttpInfo(String id, { ProductVariantDto? productVariantDto, }) async {
+  /// * [ProductVariantDto] productVariantDto (required):
+  Future<Response> updateProductVariantWithHttpInfo(String id, ProductVariantDto productVariantDto,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/product-variants/{id}'
       .replaceAll('{id}', id);
@@ -366,9 +291,9 @@ class ProductVariantControllerApi {
   ///
   /// * [String] id (required):
   ///
-  /// * [ProductVariantDto] productVariantDto:
-  Future<ProductVariantDto?> updateProductVariant(String id, { ProductVariantDto? productVariantDto, }) async {
-    final response = await updateProductVariantWithHttpInfo(id,  productVariantDto: productVariantDto, );
+  /// * [ProductVariantDto] productVariantDto (required):
+  Future<ProductVariantDto?> updateProductVariant(String id, ProductVariantDto productVariantDto,) async {
+    final response = await updateProductVariantWithHttpInfo(id, productVariantDto,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

@@ -1,8 +1,8 @@
-# lnFoot_api.model.ProductVariantDto
+# openapi.model.ProductVariantDto
 
 ## Load the model package
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 ## Properties
@@ -10,7 +10,6 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | [optional] 
 **imageUrl** | **String** |  | [optional] 
-**file** | [**MultipartFile**](MultipartFile.md) |  | [optional] 
 **colorCode** | **String** |  | [optional] 
 **productId** | **String** |  | [optional] 
 **price** | **num** |  | 

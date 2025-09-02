@@ -46,7 +46,6 @@ void main() async {
   final refreshingClient = RefreshingHttpClient(baseHttpClient, authService);
   apiClient.client = refreshingClient;
   debugPrint('RefreshingHttpClient set on ApiClient.');
-
   final productApi = ProductControllerApi(apiClient);
   final orderControllerApi = OrderControllerApi(apiClient);
   final categoryControler = CategoryControllerApi(apiClient);
@@ -102,7 +101,7 @@ class MyApp extends StatelessWidget {
           create: (_) => ProductBloc(
               productApi: productApi,
               productVariantApi: productVariantControllerApi)
-            ..add(LoadAllProducts()),
+            ..add(const LoadAllProducts()),
         ),
         BlocProvider<SavedItemsBloc>(
           create: (_) => SavedItemsBloc()..add(LoadSavedItems()),
@@ -113,17 +112,14 @@ class MyApp extends StatelessWidget {
         BlocProvider<CategoryBloc>(
           create: (_) =>
               CategoryBloc(categoryControllerApi: categoryControllerApi)
-                ..add(LoadAllCategories()), // Use const
+                ..add(const LoadAllCategories()), // Use const
         ),
         BlocProvider<HeadingBloc>(
           // Add HeadingBloc provider
           create: (_) => HeadingBloc(headingControllerApi: headingControllerApi)
             ..add(const LoadHeadings()), // Dispatch initial event, use const
         ),
-        // BlocProvider<ColoredProductBloc>(
-        //   create: (_) => ColoredProductBloc(
-        //       coloredProductControllerApi: coloredProductControllerApi),
-        // ),
+         
         BlocProvider<CartBloc>(
           create: (_) => CartBloc()..add(LoadCart()),
         ),
@@ -173,6 +169,7 @@ class AuthWrapper extends StatelessWidget {
             switch (state.runtimeType) {
               case const (AuthInitial):
               case const (AuthLoading):
+              case const (AuthLoggingOut): // Afficher le splash pendant la déconnexion
                 return SplashScreen(apiClient: apiClient);
 
               case Authenticated _:

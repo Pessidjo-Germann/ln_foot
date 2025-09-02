@@ -6,6 +6,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:keycloak_wrapper/keycloak_wrapper.dart';
 import 'package:ln_foot/user_session_manager.dart';
+import 'package:ln_foot/model/logout_result.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class AuthService {
   final KeycloakWrapper _keycloak;
@@ -175,27 +177,102 @@ class AuthService {
     }
   }
 
-  Future<bool> logout() async {
+  Future<LogoutResult> logout() async {
+    return await logoutWithTimeout();
+  }
+
+  Future<LogoutResult> logoutWithTimeout() async {
     try {
-      // Annuler le timer de refresh
-      _refreshTimer?.cancel();
-      _refreshTimer = null;
-
-      // Déconnexion de Keycloak
-      await _keycloak.logout();
+      return await _performLogout().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () async {
+          debugPrint('Timeout lors de la déconnexion - nettoyage local uniquement');
+          await _cleanLocalData();
+          return LogoutResult.error('Timeout de déconnexion', LogoutType.localOnly);
+        },
+      );
     } catch (e) {
-      debugPrint('Erreur lors de la déconnexion Keycloak: $e');
+      debugPrint('Erreur inattendue lors de la déconnexion: $e');
+      await _cleanLocalData();
+      return LogoutResult.error('Erreur inattendue: $e', LogoutType.localOnly);
     }
+  }
 
-    // Nettoyer le stockage local
-    await _secureStorage.delete(key: 'access_token');
-    await UserSessionManager.clearUserSession();
+  Future<LogoutResult> _performLogout() async {
+    // Annuler le timer de refresh dès le début
+    _cancelRefreshTimer();
     
-    // Réinitialiser les états
-    _isRefreshing = false;
-    _refreshCompleter = null;
-    
-    return true;
+    try {
+      // Vérifier la connectivité réseau
+      final hasConnection = await _checkConnectivity();
+      
+      if (hasConnection) {
+        debugPrint('Connexion réseau disponible - déconnexion complète');
+        
+        try {
+          // Tentative de déconnexion Keycloak
+          await _keycloak.logout();
+          await _cleanLocalData();
+          return LogoutResult.success(LogoutType.full);
+        } catch (keycloakError) {
+          debugPrint('Erreur Keycloak lors de la déconnexion: $keycloakError');
+          // Continuer avec le nettoyage local même si Keycloak échoue
+          await _cleanLocalData();
+          return LogoutResult.error(
+            'Déconnexion serveur échouée: $keycloakError', 
+            LogoutType.localOnly
+          );
+        }
+      } else {
+        debugPrint('Pas de connexion réseau - déconnexion locale uniquement');
+        await _cleanLocalData();
+        return LogoutResult.success(LogoutType.localOnly);
+      }
+    } catch (e) {
+      debugPrint('Erreur lors de la déconnexion: $e');
+      await _cleanLocalData();
+      return LogoutResult.error('Erreur de déconnexion: $e', LogoutType.localOnly);
+    }
+  }
+
+  Future<void> _cleanLocalData() async {
+    try {
+      // Nettoyer le stockage sécurisé
+      await _secureStorage.delete(key: 'access_token');
+      await UserSessionManager.clearUserSession();
+      
+      // Réinitialiser les états internes
+      _isRefreshing = false;
+      _refreshCompleter = null;
+      
+      debugPrint('Nettoyage local terminé');
+    } catch (e) {
+      debugPrint('Erreur lors du nettoyage local: $e');
+    }
+  }
+
+  void _cancelRefreshTimer() {
+    _refreshTimer?.cancel();
+    _refreshTimer = null;
+  }
+
+  Future<bool> _checkConnectivity() async {
+    try {
+      final connectivityResults = await Connectivity().checkConnectivity();
+      // Vérifier si au moins une connexion est disponible
+      return !connectivityResults.every((result) => result == ConnectivityResult.none);
+    } catch (e) {
+      debugPrint('Erreur lors de la vérification de connectivité: $e');
+      // En cas d'erreur, assumer qu'il y a une connexion
+      return true;
+    }
+  }
+
+  // Méthode deprecated pour la rétrocompatibilité
+  @Deprecated('Utiliser logout() qui retourne LogoutResult au lieu de bool')
+  Future<bool> logoutLegacy() async {
+    final result = await logout();
+    return result.isSuccess;
   }
 
   Future<String?> getAccessToken() async {

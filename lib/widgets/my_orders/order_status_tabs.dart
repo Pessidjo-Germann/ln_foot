@@ -37,8 +37,8 @@ class OrderStatusTabs extends StatelessWidget implements PreferredSizeWidget {
         indicatorSize: TabBarIndicatorSize.tab,
         tabs: const [
           Tab(text: 'En cours'),
-          Tab(text: 'Complete'),
-          Tab(text: 'Revoir'),
+          Tab(text: 'Terminées'),
+          Tab(text: 'Annulées'),
         ],
         dividerColor: Colors.transparent,
       ),

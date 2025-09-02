@@ -6,6 +6,7 @@ import 'package:ln_foot/bloc/order/order_bloc.dart';
 import 'package:ln_foot/user_session_manager.dart';
 import 'package:ln_foot/widgets/custom_app_bar.dart';
 import 'package:ln_foot/widgets/custom_button.dart';
+import 'package:ln_foot/service/deep_link_service.dart';
 // Import the newly created widgets
 import 'package:ln_foot/widgets/checkout/address_section.dart';
 import 'package:ln_foot/widgets/checkout/payment_method_section.dart';
@@ -190,7 +191,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               context.read<OrderBloc>().add(ConfirmOrder(
                   orderId: widget.orderDto.id!,
                   customer:
-                      Customer(name: nom, phone: "+237$phone", email: email)));
+                      Customer(name: nom, phone: "+237$phone", email: email),
+                  callbackUrl: DeepLinkService.getPaymentCallbackUrl(),
+              ));
             },
           ),
         ),

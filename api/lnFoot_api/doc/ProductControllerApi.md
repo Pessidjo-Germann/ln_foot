@@ -1,8 +1,8 @@
-# lnFoot_api.api.ProductControllerApi
+# openapi.api.ProductControllerApi
 
 ## Load the API package
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 ```
 
 All URIs are relative to *https://api.ln-foot.com*
@@ -17,29 +17,21 @@ Method | HTTP request | Description
 
 
 # **createProduct**
-> ProductDto createProduct(price, id, imageUrl, file, name, description, stockQuantity, categoryNames, sizes)
+> ProductDto createProduct(productDto)
 
 
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
 final api_instance = ProductControllerApi();
-final price = 8.14; // num | 
-final id = id_example; // String | 
-final imageUrl = imageUrl_example; // String | 
-final file = BINARY_DATA_HERE; // MultipartFile | 
-final name = name_example; // String | 
-final description = description_example; // String | 
-final stockQuantity = 56; // int | 
-final categoryNames = []; // List<String> | 
-final sizes = []; // List<String> | 
+final productDto = ProductDto(); // ProductDto | 
 
 try {
-    final result = api_instance.createProduct(price, id, imageUrl, file, name, description, stockQuantity, categoryNames, sizes);
+    final result = api_instance.createProduct(productDto);
     print(result);
 } catch (e) {
     print('Exception when calling ProductControllerApi->createProduct: $e\n');
@@ -50,15 +42,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **price** | **num**|  | 
- **id** | **String**|  | [optional] 
- **imageUrl** | **String**|  | [optional] 
- **file** | **MultipartFile**|  | [optional] 
- **name** | **String**|  | [optional] 
- **description** | **String**|  | [optional] 
- **stockQuantity** | **int**|  | [optional] 
- **categoryNames** | [**List<String>**](String.md)|  | [optional] 
- **sizes** | [**List<String>**](String.md)|  | [optional] 
+ **productDto** | [**ProductDto**](ProductDto.md)|  | 
 
 ### Return type
 
@@ -70,8 +54,8 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: multipart/form-data
- - **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: */*
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -82,7 +66,7 @@ Name | Type | Description  | Notes
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -124,7 +108,7 @@ void (empty response body)
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -163,7 +147,7 @@ This endpoint does not need any parameter.
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -206,7 +190,7 @@ Name | Type | Description  | Notes
 
 ### Example
 ```dart
-import 'package:lnFoot_api/api.dart';
+import 'package:openapi/api.dart';
 // TODO Configure OAuth2 access token for authorization: keycloak
 //defaultApiClient.getAuthentication<OAuth>('keycloak').accessToken = 'YOUR_ACCESS_TOKEN';
 
@@ -227,7 +211,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **productDto** | [**ProductDto**](ProductDto.md)|  | [optional] 
+ **productDto** | [**ProductDto**](ProductDto.md)|  | 
 
 ### Return type
 

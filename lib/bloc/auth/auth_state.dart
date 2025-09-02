@@ -9,6 +9,8 @@ class AuthInitial extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
+class AuthLoggingOut extends AuthState {}
+
 class Authenticated extends AuthState {
   final Map<String, dynamic> user;
 

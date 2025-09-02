@@ -28,8 +28,38 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _selectedIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   void _onItemTapped(int index) {
+    // Calculer la distance avant de changer _selectedIndex
+    final int distance = (index - _selectedIndex).abs();
+    final duration = Duration(milliseconds: 200 + (distance * 100));
+    
+    setState(() {
+      _selectedIndex = index;
+    });
+    
+    // Animer vers la page sélectionnée avec une durée adaptée à la distance
+    _pageController.animateToPage(
+      index,
+      duration: duration,
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _onPageChanged(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -45,7 +75,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screens[_selectedIndex],
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: _onPageChanged,
+        physics: const BouncingScrollPhysics(), // Animation plus naturelle
+        children: screens,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
@@ -89,33 +124,53 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
   @override
   bool get wantKeepAlive => true;
   late TextEditingController _searchController;
+  
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController(); // Initialize controller
+    WidgetsBinding.instance.addObserver(this);
+    _loadInitialData();
+  }
+  
+  void _loadInitialData() {
     _loadProducts(); // Defaults to forceRefresh: false
     _loadCategories(); // Defaults to forceRefresh: false
     _loadHeadings(); // Call _loadHeadings
   }
+  
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      // Rafraîchir les données quand l'app revient en premier plan
+      _refreshData();
+    }
+  }
+  
+  void _refreshData() {
+    _loadProducts(forceRefresh: true);
+    _loadCategories(forceRefresh: true);
+    _loadHeadings(forceRefresh: true);
+  }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _searchController.dispose(); // Dispose controller
     super.dispose();
   }
 
   void _loadProducts({bool forceRefresh = false}) {
-    // Add optional parameter
-    context.read<ProductBloc>().add(LoadAllProducts());
+    context.read<ProductBloc>().add(LoadAllProducts(forceRefresh: forceRefresh));
   }
 
   void _loadCategories({bool forceRefresh = false}) {
-    // Add optional parameter
-    context.read<CategoryBloc>().add(LoadAllCategories());
+    context.read<CategoryBloc>().add(LoadAllCategories(forceRefresh: forceRefresh));
   }
 
   void _loadHeadings({bool forceRefresh = false}) {
@@ -142,9 +197,7 @@ class _HomeContentState extends State<HomeContent>
               appBar: const HomeAppBar(),
               body: RefreshIndicator(
                 onRefresh: () async {
-                  _loadProducts(forceRefresh: true);
-                  _loadCategories(forceRefresh: true);
-                  _loadHeadings(forceRefresh: true);
+                  _refreshData();
                 },
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),

@@ -16,6 +16,7 @@ class PaymentResponseDto {
     this.id,
     this.orderId,
     this.paymentId,
+    this.paymentPageUrl,
     this.status,
     this.createdAt,
     this.updatedAt,
@@ -51,6 +52,14 @@ class PaymentResponseDto {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
+  String? paymentPageUrl;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
   String? status;
 
   ///
@@ -74,6 +83,7 @@ class PaymentResponseDto {
     other.id == id &&
     other.orderId == orderId &&
     other.paymentId == paymentId &&
+    other.paymentPageUrl == paymentPageUrl &&
     other.status == status &&
     other.createdAt == createdAt &&
     other.updatedAt == updatedAt;
@@ -84,12 +94,13 @@ class PaymentResponseDto {
     (id == null ? 0 : id!.hashCode) +
     (orderId == null ? 0 : orderId!.hashCode) +
     (paymentId == null ? 0 : paymentId!.hashCode) +
+    (paymentPageUrl == null ? 0 : paymentPageUrl!.hashCode) +
     (status == null ? 0 : status!.hashCode) +
     (createdAt == null ? 0 : createdAt!.hashCode) +
     (updatedAt == null ? 0 : updatedAt!.hashCode);
 
   @override
-  String toString() => 'PaymentResponseDto[id=$id, orderId=$orderId, paymentId=$paymentId, status=$status, createdAt=$createdAt, updatedAt=$updatedAt]';
+  String toString() => 'PaymentResponseDto[id=$id, orderId=$orderId, paymentId=$paymentId, paymentPageUrl=$paymentPageUrl, status=$status, createdAt=$createdAt, updatedAt=$updatedAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -107,6 +118,11 @@ class PaymentResponseDto {
       json[r'paymentId'] = this.paymentId;
     } else {
       json[r'paymentId'] = null;
+    }
+    if (this.paymentPageUrl != null) {
+      json[r'paymentPageUrl'] = this.paymentPageUrl;
+    } else {
+      json[r'paymentPageUrl'] = null;
     }
     if (this.status != null) {
       json[r'status'] = this.status;
@@ -148,6 +164,7 @@ class PaymentResponseDto {
         id: mapValueOfType<String>(json, r'id'),
         orderId: mapValueOfType<String>(json, r'orderId'),
         paymentId: mapValueOfType<String>(json, r'paymentId'),
+        paymentPageUrl: mapValueOfType<String>(json, r'paymentPageUrl'),
         status: mapValueOfType<String>(json, r'status'),
         createdAt: mapDateTime(json, r'createdAt', r''),
         updatedAt: mapDateTime(json, r'updatedAt', r''),

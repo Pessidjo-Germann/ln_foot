@@ -182,16 +182,56 @@ class ApiClient {
           return valueString == 'true' || valueString == '1';
         case 'DateTime':
           return value is DateTime ? value : DateTime.tryParse(value);
+        case 'AdvertisementDto':
+          return AdvertisementDto.fromJson(value);
+        case 'BulkProductVariantDto':
+          return BulkProductVariantDto.fromJson(value);
         case 'CategoryDto':
           return CategoryDto.fromJson(value);
+        case 'CreateAdvertisementDto':
+          return CreateAdvertisementDto.fromJson(value);
+        case 'CreateFixtureDto':
+          return CreateFixtureDto.fromJson(value);
+        case 'CreateHighlightDto':
+          return CreateHighlightDto.fromJson(value);
+        case 'CreateLeagueDto':
+          return CreateLeagueDto.fromJson(value);
+        case 'CreateNewsArticleDto':
+          return CreateNewsArticleDto.fromJson(value);
         case 'Customer':
           return Customer.fromJson(value);
+        case 'DeleteImageDto':
+          return DeleteImageDto.fromJson(value);
+        case 'FixtureDto':
+          return FixtureDto.fromJson(value);
         case 'HeadingDto':
           return HeadingDto.fromJson(value);
+        case 'HighlightDto':
+          return HighlightDto.fromJson(value);
+        case 'ImagePresignedUrlRequestDto':
+          return ImagePresignedUrlRequestDto.fromJson(value);
+        case 'ImagePresignedUrlResponseDto':
+          return ImagePresignedUrlResponseDto.fromJson(value);
+        case 'LeagueDto':
+          return LeagueDto.fromJson(value);
+        case 'NewsArticleDto':
+          return NewsArticleDto.fromJson(value);
         case 'OrderDto':
           return OrderDto.fromJson(value);
         case 'OrderItemDto':
           return OrderItemDto.fromJson(value);
+        case 'PageAdvertisementDto':
+          return PageAdvertisementDto.fromJson(value);
+        case 'PageFixtureDto':
+          return PageFixtureDto.fromJson(value);
+        case 'PageHighlightDto':
+          return PageHighlightDto.fromJson(value);
+        case 'PageLeagueDto':
+          return PageLeagueDto.fromJson(value);
+        case 'Pageable':
+          return Pageable.fromJson(value);
+        case 'PageableObject':
+          return PageableObject.fromJson(value);
         case 'PaymentResponseDto':
           return PaymentResponseDto.fromJson(value);
         case 'ProductDto':
@@ -202,8 +242,30 @@ class ApiClient {
           return PromotionProductDto.fromJson(value);
         case 'ReviewDto':
           return ReviewDto.fromJson(value);
+        case 'SimpleTeamDto':
+          return SimpleTeamDto.fromJson(value);
         case 'SizeDto':
           return SizeDto.fromJson(value);
+        case 'SortObject':
+          return SortObject.fromJson(value);
+        case 'SyncStatusDto':
+          return SyncStatusDto.fromJson(value);
+        case 'TeamDto':
+          return TeamDto.fromJson(value);
+        case 'UpdateAdvertisementDto':
+          return UpdateAdvertisementDto.fromJson(value);
+        case 'UpdateFixtureDto':
+          return UpdateFixtureDto.fromJson(value);
+        case 'UpdateHighlightDto':
+          return UpdateHighlightDto.fromJson(value);
+        case 'UpdateLeagueDto':
+          return UpdateLeagueDto.fromJson(value);
+        case 'UpdateNewsArticleDto':
+          return UpdateNewsArticleDto.fromJson(value);
+        case 'UpdateUserRoleDto':
+          return UpdateUserRoleDto.fromJson(value);
+        case 'UserDto':
+          return UserDto.fromJson(value);
         default:
           dynamic match;
           if (value is List && (match = _regList.firstMatch(targetType)?.group(1)) != null) {
